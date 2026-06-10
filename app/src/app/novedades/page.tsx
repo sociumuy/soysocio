@@ -2,10 +2,11 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import NavBar from '@/components/NavBar'
+import { motion, AnimatePresence } from 'framer-motion'
 
 type Categoria = 'Todos' | 'Torneos' | 'Institucional' | 'Indumentaria' | 'Salud'
 
@@ -54,6 +55,8 @@ export default function NovedadesPage() {
   const [loading, setLoading] = useState(true)
   const [categoriaActiva, setCategoriaActiva] = useState<Categoria>('Todos')
   const [novedadSel, setNovedadSel] = useState<Novedad | null>(null)
+  const [slideDir, setSlideDir] = useState(0)
+  const prevCatIndex = useRef(0)
 
   useEffect(() => {
     async function cargar() {
@@ -115,56 +118,89 @@ export default function NovedadesPage() {
         <p className="text-[#555] text-sm mt-1">Club Carrasco</p>
       </div>
 
-      <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-24 flex flex-col gap-4">
+      <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-32 flex flex-col gap-4">
 
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-          {CATEGORIAS.map(cat => (
-            <button key={cat} onClick={() => setCategoriaActiva(cat)}
-              className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${categoriaActiva === cat ? 'bg-[#0D0D0D] text-white' : 'bg-white text-[#888] shadow-sm'}`}>
-              {cat}
+          {CATEGORIAS.map((cat, i) => (
+            <button key={cat} onClick={() => {
+              const dir = i > prevCatIndex.current ? 1 : -1
+              setSlideDir(dir)
+              prevCatIndex.current = i
+              setCategoriaActiva(cat)
+            }}
+              className="relative flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-colors"
+              style={{ color: categoriaActiva === cat ? '#fff' : '#888' }}
+            >
+              {categoriaActiva === cat && (
+                <motion.span
+                  layoutId="cat-pill"
+                  className="absolute inset-0 rounded-full bg-[#0D0D0D]"
+                  transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+                  style={{ zIndex: 0 }}
+                />
+              )}
+              <span className="relative z-10">{cat}</span>
             </button>
           ))}
         </div>
 
+        <AnimatePresence mode="wait" custom={slideDir}>
+
         {loading ? (
           <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" /></div>
-        ) : filtradas.length === 0 ? (
-          <div className="text-center py-16 text-[#aaa] text-sm">No hay novedades publicadas</div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {filtradas.map((n, i) => {
-              const badge = CAT_BADGE[n.categoria] ?? CAT_BADGE['Todos']
-              const isDestacada = n.destacada && categoriaActiva === 'Todos' && i === 0
-              return (
-                <button key={n.id} onClick={() => setNovedadSel(n)}
-                  className={`bg-white rounded-2xl shadow-sm text-left hover:shadow-md transition-shadow overflow-hidden w-full ${isDestacada ? 'ring-1 ring-[#B8975A]/30' : ''}`}>
-                  <div className="h-1 w-full" style={{ background: CAT_COLORS[n.categoria]?.text ?? '#888' }} />
-                  {n.imagen_url && (
-                    <img src={n.imagen_url} alt={n.titulo} className="w-full h-36 object-cover" />
-                  )}
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
-                        style={{ background: badge.bg, color: badge.text }}>
-                        {n.categoria}
-                      </span>
-                      {isDestacada && <span className="text-[10px] text-[#B8975A] font-semibold uppercase tracking-wider">Destacado</span>}
-                      <span className="text-[#ccc] text-[10px] ml-auto">{formatFecha(n.created_at)}</span>
-                    </div>
-                    <h3 className="text-[#0D0D0D] text-sm font-bold leading-snug mb-1">{n.titulo}</h3>
-                    <p className="text-[#888] text-xs leading-relaxed line-clamp-2">{n.resumen}</p>
-                    <div className="flex items-center justify-end mt-3">
-                      <span className="text-[#B8975A] text-[10px] font-semibold flex items-center gap-1">
-                        Leer más
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
+          <motion.div
+            key={categoriaActiva}
+            custom={slideDir}
+            initial={{ opacity: 0, x: slideDir * 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: slideDir * -24 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            {filtradas.length === 0 ? (
+              <div className="text-center py-16 text-[#aaa] text-sm">No hay novedades publicadas</div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {filtradas.map((n, i) => {
+                  const badge = CAT_BADGE[n.categoria] ?? CAT_BADGE['Todos']
+                  const isDestacada = n.destacada && categoriaActiva === 'Todos' && i === 0
+                  return (
+                    <motion.button
+                      key={n.id}
+                      onClick={() => setNovedadSel(n)}
+                      whileTap={{ scale: 0.98 }}
+                      className={`bg-white rounded-2xl shadow-sm text-left overflow-hidden w-full ${isDestacada ? 'ring-1 ring-[#B8975A]/30' : ''}`}
+                    >
+                      <div className="h-1 w-full" style={{ background: CAT_COLORS[n.categoria]?.text ?? '#888' }} />
+                      {n.imagen_url && (
+                        <img src={n.imagen_url} alt={n.titulo} className="w-full h-36 object-cover" />
+                      )}
+                      <div className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                            style={{ background: badge.bg, color: badge.text }}>
+                            {n.categoria}
+                          </span>
+                          {isDestacada && <span className="text-[10px] text-[#B8975A] font-semibold uppercase tracking-wider">Destacado</span>}
+                          <span className="text-[#ccc] text-[10px] ml-auto">{formatFecha(n.created_at)}</span>
+                        </div>
+                        <h3 className="text-[#0D0D0D] text-sm font-bold leading-snug mb-1">{n.titulo}</h3>
+                        <p className="text-[#888] text-xs leading-relaxed line-clamp-2">{n.resumen}</p>
+                        <div className="flex items-center justify-end mt-3">
+                          <span className="text-[#B8975A] text-[10px] font-semibold flex items-center gap-1">
+                            Leer más
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+                          </span>
+                        </div>
+                      </div>
+                    </motion.button>
+                  )
+                })}
+              </div>
+            )}
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
       <NavBar />
     </main>

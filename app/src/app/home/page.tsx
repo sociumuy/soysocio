@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import NavBar from '@/components/NavBar'
+import BorderBeamButton from '@/components/BorderBeamButton'
+import AnimatedNumber from '@/components/AnimatedNumber'
 
 type Socio = {
   id: string
@@ -121,7 +123,7 @@ export default function HomePage() {
       </div>
 
       {/* Contenido */}
-      <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-8 flex flex-col gap-5">
+      <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-32 flex flex-col gap-5">
 
         {/* Cuota card */}
         <div className={`rounded-2xl p-5 ${socio?.cuota_al_dia ? 'bg-[#0D0D0D]' : 'bg-[#7D1A1A]'}`}>
@@ -134,13 +136,13 @@ export default function HomePage() {
               {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
             </div>
           </div>
-          <div className="text-white font-serif text-3xl font-semibold mb-1">$2.400</div>
+          <div className="text-white font-serif text-3xl font-semibold mb-1">
+            $<AnimatedNumber value={2400} />
+          </div>
           <div className="text-[rgba(255,255,255,0.35)] text-xs mb-4">UYU · mensual</div>
-          <button
-            onClick={() => router.push('/cuota')}
-            className="w-full bg-[#B8975A] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity">
+          <BorderBeamButton onClick={() => router.push('/cuota')} className="w-full">
             Pagar cuota
-          </button>
+          </BorderBeamButton>
         </div>
 
         {/* Próxima reserva */}
