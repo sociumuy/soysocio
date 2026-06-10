@@ -37,26 +37,13 @@ export default function LandingPage() {
       const lista: Club[] = data ?? []
       setClubs(lista)
 
-      // No clubs or single club → skip selector
       if (lista.length === 0) {
-        // No clubs in DB yet — go straight to role selector with no club context
         setStep('roles')
         return
       }
 
-      if (lista.length === 1) {
-        const c = lista[0]
-        const club: ClubStored = {
-          id: c.id, nombre: c.nombre,
-          iniciales: getIniciales(c.nombre),
-          gradiente: getClubGradient(0),
-        }
-        setSelectedClub(club)
-        setStoredClub(club)
-        setStep('roles')
-      } else {
-        setStep('clubs')
-      }
+      // Always show club selector — even with 1 club, confirm which club the user is entering
+      setStep('clubs')
     }
     init()
   }, [])
