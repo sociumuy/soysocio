@@ -16,8 +16,24 @@ type Socio = {
   cuota_al_dia: boolean
 }
 
+type MetodoPago = {
+  id: string
+  tipo: string
+  ultimos4: string
+  nombre_titular: string
+  vencimiento: string
+}
+
 const MONTO = 2400
+const CARGO_PCT = 0.005
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+
+const CARD_ICONS: Record<string, string> = {
+  visa: 'VISA',
+  mastercard: 'MC',
+  oca: 'OCA',
+  amex: 'AMEX',
+}
 
 function historialSimulado(cuotaAlDia: boolean) {
   const hoy = new Date()
@@ -33,44 +49,82 @@ function historialSimulado(cuotaAlDia: boolean) {
   })
 }
 
+type Paso = 'resumen' | 'metodo' | 'agregar' | 'procesando' | null
+
 export default function CuotaPage() {
   const router = useRouter()
   const supabase = createClient()
   const [socios, setSocios] = useState<Socio[]>([])
   const [socioActivo, setSocioActivo] = useState<Socio | null>(null)
   const [loading, setLoading] = useState(true)
-  const [pagando, setPagando] = useState(false)
   const [exito, setExito] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
+
+  // Checkout
+  const [paso, setPaso] = useState<Paso>(null)
+  const [metodos, setMetodos] = useState<MetodoPago[]>([])
+  const [metodoSel, setMetodoSel] = useState<MetodoPago | null>(null)
+
+  // Formulario nueva tarjeta
+  const [nuevaTarjeta, setNuevaTarjeta] = useState({
+    tipo: 'visa', numero: '', titular: '', vencimiento: ''
+  })
+  const [guardando, setGuardando] = useState(false)
+
+  const cargo = Math.round(MONTO * CARGO_PCT)
+  const total = MONTO + cargo
 
   useEffect(() => {
     async function cargar() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
+      setUserId(user.id)
 
-      const { data } = await supabase
-        .from('socios')
-        .select('id, nombre, apellido, numero_socio, categoria, cuota_al_dia')
-        .eq('user_id', user.id)
-        .order('nombre')
+      const [sociosRes, metodosRes] = await Promise.all([
+        supabase.from('socios').select('id, nombre, apellido, numero_socio, categoria, cuota_al_dia').eq('user_id', user.id).order('nombre'),
+        supabase.from('metodos_pago').select('*').eq('user_id', user.id).order('created_at'),
+      ])
 
-      const lista = data ?? []
+      const lista = sociosRes.data ?? []
       setSocios(lista)
       setSocioActivo(lista[0] ?? null)
+      setMetodos(metodosRes.data ?? [])
+      if (metodosRes.data?.length) setMetodoSel(metodosRes.data[0])
       setLoading(false)
     }
     cargar()
   }, [])
 
-  async function simularPago() {
+  async function guardarTarjeta() {
+    if (!userId) return
+    setGuardando(true)
+    const ultimos4 = nuevaTarjeta.numero.replace(/\s/g, '').slice(-4)
+    const { data, error } = await supabase.from('metodos_pago').insert({
+      user_id: userId,
+      tipo: nuevaTarjeta.tipo,
+      ultimos4,
+      nombre_titular: nuevaTarjeta.titular,
+      vencimiento: nuevaTarjeta.vencimiento,
+    }).select().single()
+    if (!error && data) {
+      setMetodos(prev => [...prev, data])
+      setMetodoSel(data)
+      setNuevaTarjeta({ tipo: 'visa', numero: '', titular: '', vencimiento: '' })
+    }
+    setGuardando(false)
+    setPaso('resumen')
+  }
+
+  async function confirmarPago() {
     if (!socioActivo) return
-    setPagando(true)
-    await new Promise(r => setTimeout(r, 1800))
+    setPaso('procesando')
+    await new Promise(r => setTimeout(r, 2000))
     await supabase.from('socios').update({ cuota_al_dia: true }).eq('id', socioActivo.id)
     setSocios(prev => prev.map(s => s.id === socioActivo.id ? { ...s, cuota_al_dia: true } : s))
     setSocioActivo(prev => prev ? { ...prev, cuota_al_dia: true } : prev)
-    setPagando(false)
+    setPaso(null)
     setExito(true)
-    setTimeout(() => setExito(false), 3000)
+    setTimeout(() => setExito(false), 4000)
   }
 
   if (loading) {
@@ -90,13 +144,8 @@ export default function CuotaPage() {
 
       {/* Header */}
       <div className="px-5 pt-12 pb-6">
-        <button
-          onClick={() => router.push('/home')}
-          className="flex items-center gap-2 text-[#555] text-xs mb-6 hover:text-white transition-colors"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+        <button onClick={() => router.push('/home')} className="flex items-center gap-2 text-[#555] text-xs mb-6 hover:text-white transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>
           Volver
         </button>
         <h1 className="text-white font-serif text-3xl font-semibold">Cuotas</h1>
@@ -105,18 +154,9 @@ export default function CuotaPage() {
         {socios.length > 1 && (
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
             {socios.map(s => (
-              <button
-                key={s.id}
-                onClick={() => setSocioActivo(s)}
-                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  socioActivo?.id === s.id
-                    ? 'bg-[#B8975A] text-white'
-                    : 'bg-white/10 text-[#888] hover:bg-white/15'
-                }`}
-              >
-                <span className="w-5 h-5 rounded-full bg-[#B8975A]/30 flex items-center justify-center text-[10px] font-bold text-[#B8975A]">
-                  {s.nombre[0]}
-                </span>
+              <button key={s.id} onClick={() => setSocioActivo(s)}
+                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${socioActivo?.id === s.id ? 'bg-[#B8975A] text-white' : 'bg-white/10 text-[#888] hover:bg-white/15'}`}>
+                <span className="w-5 h-5 rounded-full bg-[#B8975A]/30 flex items-center justify-center text-[10px] font-bold text-[#B8975A]">{s.nombre[0]}</span>
                 {s.nombre}
                 {!s.cuota_al_dia && <span className="w-1.5 h-1.5 rounded-full bg-red-400" />}
               </button>
@@ -130,15 +170,9 @@ export default function CuotaPage() {
 
         {pendientes.length > 0 && !exito && (
           <div className="bg-[#FEF0F0] border border-red-200 rounded-2xl px-4 py-3 flex items-start gap-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2" strokeLinecap="round" className="mt-0.5 flex-shrink-0">
-              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2" strokeLinecap="round" className="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
             <div>
-              <div className="text-[#C0392B] text-xs font-bold">
-                {pendientes.length === 1
-                  ? `${pendientes[0].nombre} tiene una cuota pendiente`
-                  : `${pendientes.length} socios tienen cuotas pendientes`}
-              </div>
+              <div className="text-[#C0392B] text-xs font-bold">{pendientes.length === 1 ? `${pendientes[0].nombre} tiene una cuota pendiente` : `${pendientes.length} socios tienen cuotas pendientes`}</div>
               <div className="text-[#E07070] text-xs mt-0.5">Seleccioná cada socio para pagar</div>
             </div>
           </div>
@@ -146,66 +180,73 @@ export default function CuotaPage() {
 
         {exito && (
           <div className="bg-[#EAF7EE] border border-green-200 rounded-2xl px-4 py-3 flex items-center gap-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#219653" strokeWidth="2.5" strokeLinecap="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#219653" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
             <span className="text-[#219653] text-xs font-bold">¡Pago registrado correctamente!</span>
           </div>
         )}
 
-        {/* Card cuota actual */}
+        {/* Cuota actual */}
         {socio && (
           <div className={`rounded-2xl p-5 ${socio.cuota_al_dia ? 'bg-[#0D0D0D]' : 'bg-[#7D1A1A]'}`}>
             <div className="flex items-start justify-between mb-4">
               <div>
-                <div className="text-[rgba(255,255,255,0.4)] text-xs uppercase tracking-widest mb-1">
-                  {socios.length > 1 ? socio.nombre : 'Mi cuota'}
-                </div>
-                <div className="text-white font-serif text-4xl font-semibold">
-                  ${MONTO.toLocaleString('es-UY')}
-                </div>
+                <div className="text-[rgba(255,255,255,0.4)] text-xs uppercase tracking-widest mb-1">{socios.length > 1 ? socio.nombre : 'Mi cuota'}</div>
+                <div className="text-white font-serif text-4xl font-semibold">${MONTO.toLocaleString('es-UY')}</div>
                 <div className="text-[rgba(255,255,255,0.3)] text-xs mt-1">UYU · mensual · {socio.categoria}</div>
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${
-                socio.cuota_al_dia ? 'bg-[#B8975A]/20 text-[#B8975A]' : 'bg-red-900/50 text-red-300'
-              }`}>
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${socio.cuota_al_dia ? 'bg-[#B8975A]/20 text-[#B8975A]' : 'bg-red-900/50 text-red-300'}`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${socio.cuota_al_dia ? 'bg-[#B8975A]' : 'bg-red-400'}`} />
                 {socio.cuota_al_dia ? 'Al día' : 'Pendiente'}
               </div>
             </div>
-
             {!socio.cuota_al_dia && (
-              <button
-                onClick={simularPago}
-                disabled={pagando}
-                className="w-full bg-[#B8975A] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {pagando ? (
-                  <>
-                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Procesando...
-                  </>
-                ) : (
-                  <>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                      <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
-                    </svg>
-                    Pagar cuota — ${MONTO.toLocaleString('es-UY')}
-                  </>
-                )}
+              <button onClick={() => setPaso('resumen')}
+                className="w-full bg-[#B8975A] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
+                Pagar cuota
               </button>
             )}
-
             {socio.cuota_al_dia && (
               <div className="flex items-center gap-2 text-[rgba(255,255,255,0.25)] text-xs">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
                 Próximo vencimiento: 1 de julio
               </div>
             )}
           </div>
         )}
+
+        {/* Métodos de pago guardados */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-[#888] text-xs uppercase tracking-widest">Métodos de pago</div>
+            <button onClick={() => setPaso('agregar')} className="text-[#B8975A] text-xs font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+              Agregar
+            </button>
+          </div>
+          {metodos.length === 0 ? (
+            <div className="bg-white rounded-2xl p-5 shadow-sm text-center">
+              <div className="text-[#ccc] text-sm mb-1">Sin métodos guardados</div>
+              <div className="text-[#ddd] text-xs">Agregá una tarjeta para pagar más rápido</div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {metodos.map(m => (
+                <div key={m.id} className="bg-white rounded-2xl px-5 py-4 shadow-sm flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-7 bg-[#0D0D0D] rounded-md flex items-center justify-center flex-shrink-0">
+                      <span className="text-[#B8975A] text-[9px] font-black tracking-wider">{CARD_ICONS[m.tipo] ?? m.tipo.toUpperCase()}</span>
+                    </div>
+                    <div>
+                      <div className="text-[#0D0D0D] text-sm font-semibold">•••• {m.ultimos4}</div>
+                      <div className="text-[#aaa] text-xs">{m.nombre_titular} · {m.vencimiento}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* N° de socio */}
         {socio && (
@@ -216,9 +257,7 @@ export default function CuotaPage() {
               <div className="text-[#aaa] text-xs mt-0.5">{socio.categoria}</div>
             </div>
             <div className="w-12 h-12 bg-[#F4F3EF] rounded-2xl flex items-center justify-center">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
-              </svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
             </div>
           </div>
         )}
@@ -231,15 +270,9 @@ export default function CuotaPage() {
               <div key={i} className={`flex items-center justify-between px-5 py-3.5 ${i < historial.length - 1 ? 'border-b border-[#F4F3EF]' : ''}`}>
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${h.pagado ? 'bg-[#EAF7EE]' : 'bg-[#FEF0F0]'}`}>
-                    {h.pagado ? (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#219653" strokeWidth="2.5" strokeLinecap="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    ) : (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2.5" strokeLinecap="round">
-                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                    )}
+                    {h.pagado
+                      ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#219653" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+                      : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>}
                   </div>
                   <div>
                     <div className="text-[#0D0D0D] text-sm font-semibold">{h.mes}</div>
@@ -247,21 +280,192 @@ export default function CuotaPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-sm font-bold ${h.pagado ? 'text-[#0D0D0D]' : 'text-[#C0392B]'}`}>
-                    ${h.monto.toLocaleString('es-UY')}
-                  </div>
-                  <div className={`text-[10px] font-semibold ${h.pagado ? 'text-[#219653]' : 'text-[#C0392B]'}`}>
-                    {h.pagado ? 'Pagado' : 'Pendiente'}
-                  </div>
+                  <div className={`text-sm font-bold ${h.pagado ? 'text-[#0D0D0D]' : 'text-[#C0392B]'}`}>${h.monto.toLocaleString('es-UY')}</div>
+                  <div className={`text-[10px] font-semibold ${h.pagado ? 'text-[#219653]' : 'text-[#C0392B]'}`}>{h.pagado ? 'Pagado' : 'Pendiente'}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-
       </div>
 
       <NavBar />
+
+      {/* ── MODAL CHECKOUT ── */}
+      {paso && paso !== 'procesando' && (
+        <div className="fixed inset-0 bg-black/60 flex items-end justify-center z-50">
+          <div className="bg-white rounded-t-3xl w-full max-w-lg px-6 pt-6 pb-10 flex flex-col gap-5">
+
+            {/* PASO: Resumen */}
+            {paso === 'resumen' && (
+              <>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[#0D0D0D] text-lg font-serif font-semibold">Confirmar pago</h2>
+                  <button onClick={() => setPaso(null)} className="text-[#aaa] hover:text-[#0D0D0D]">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                  </button>
+                </div>
+
+                {/* Desglose */}
+                <div className="bg-[#F4F3EF] rounded-2xl p-4 flex flex-col gap-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#555]">Cuota mensual — {socio?.nombre}</span>
+                    <span className="text-[#0D0D0D] font-semibold">${MONTO.toLocaleString('es-UY')}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#555]">Cargo por servicio (0,5%)</span>
+                    <span className="text-[#0D0D0D] font-semibold">${cargo.toLocaleString('es-UY')}</span>
+                  </div>
+                  <div className="h-px bg-[#E0DED9]" />
+                  <div className="flex justify-between">
+                    <span className="text-[#0D0D0D] font-bold">Total</span>
+                    <span className="text-[#0D0D0D] text-lg font-serif font-bold">${total.toLocaleString('es-UY')}</span>
+                  </div>
+                </div>
+
+                {/* Método seleccionado */}
+                <div>
+                  <div className="text-[#888] text-xs uppercase tracking-widest mb-2">Método de pago</div>
+                  {metodoSel ? (
+                    <button onClick={() => setPaso('metodo')} className="w-full bg-[#F4F3EF] rounded-2xl px-4 py-3.5 flex items-center justify-between hover:bg-[#ECEAE4] transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-7 bg-[#0D0D0D] rounded-md flex items-center justify-center">
+                          <span className="text-[#B8975A] text-[9px] font-black tracking-wider">{CARD_ICONS[metodoSel.tipo] ?? metodoSel.tipo.toUpperCase()}</span>
+                        </div>
+                        <span className="text-[#0D0D0D] text-sm font-semibold">•••• {metodoSel.ultimos4}</span>
+                      </div>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+                    </button>
+                  ) : (
+                    <button onClick={() => setPaso('agregar')} className="w-full bg-[#F4F3EF] rounded-2xl px-4 py-3.5 flex items-center justify-center gap-2 text-[#B8975A] text-sm font-semibold hover:bg-[#ECEAE4] transition-colors">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                      Agregar método de pago
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  onClick={confirmarPago}
+                  disabled={!metodoSel}
+                  className="w-full bg-[#0D0D0D] text-white rounded-xl py-4 text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity disabled:opacity-30"
+                >
+                  Pagar ${total.toLocaleString('es-UY')} UYU
+                </button>
+              </>
+            )}
+
+            {/* PASO: Elegir método */}
+            {paso === 'metodo' && (
+              <>
+                <div className="flex items-center justify-between">
+                  <button onClick={() => setPaso('resumen')} className="text-[#aaa] flex items-center gap-1 text-xs hover:text-[#0D0D0D]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>
+                    Volver
+                  </button>
+                  <h2 className="text-[#0D0D0D] text-base font-serif font-semibold">Elegir tarjeta</h2>
+                  <div className="w-12" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  {metodos.map(m => (
+                    <button key={m.id} onClick={() => { setMetodoSel(m); setPaso('resumen') }}
+                      className={`flex items-center justify-between px-4 py-3.5 rounded-2xl border-2 transition-all ${metodoSel?.id === m.id ? 'border-[#B8975A] bg-[#B8975A]/5' : 'border-[#E0DED9] bg-white'}`}>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-7 bg-[#0D0D0D] rounded-md flex items-center justify-center">
+                          <span className="text-[#B8975A] text-[9px] font-black tracking-wider">{CARD_ICONS[m.tipo] ?? m.tipo.toUpperCase()}</span>
+                        </div>
+                        <div className="text-left">
+                          <div className="text-[#0D0D0D] text-sm font-semibold">•••• {m.ultimos4}</div>
+                          <div className="text-[#aaa] text-xs">{m.nombre_titular}</div>
+                        </div>
+                      </div>
+                      {metodoSel?.id === m.id && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setPaso('agregar')} className="flex items-center justify-center gap-2 text-[#B8975A] text-sm font-semibold py-2 hover:opacity-70 transition-opacity">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                  Agregar nueva tarjeta
+                </button>
+              </>
+            )}
+
+            {/* PASO: Agregar tarjeta */}
+            {paso === 'agregar' && (
+              <>
+                <div className="flex items-center justify-between">
+                  <button onClick={() => setPaso(metodos.length ? 'metodo' : 'resumen')} className="text-[#aaa] flex items-center gap-1 text-xs hover:text-[#0D0D0D]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>
+                    Volver
+                  </button>
+                  <h2 className="text-[#0D0D0D] text-base font-serif font-semibold">Nueva tarjeta</h2>
+                  <div className="w-12" />
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Tipo</label>
+                    <select value={nuevaTarjeta.tipo} onChange={e => setNuevaTarjeta(f => ({ ...f, tipo: e.target.value }))}
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] bg-white outline-none focus:border-[#B8975A]">
+                      <option value="visa">Visa</option>
+                      <option value="mastercard">Mastercard</option>
+                      <option value="oca">OCA</option>
+                      <option value="amex">American Express</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Número de tarjeta</label>
+                    <input type="text" maxLength={19} placeholder="1234 5678 9012 3456"
+                      value={nuevaTarjeta.numero}
+                      onChange={e => {
+                        const v = e.target.value.replace(/\D/g, '').slice(0, 16)
+                        const fmt = v.replace(/(.{4})/g, '$1 ').trim()
+                        setNuevaTarjeta(f => ({ ...f, numero: fmt }))
+                      }}
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] tracking-widest" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Titular</label>
+                    <input type="text" placeholder="Como figura en la tarjeta"
+                      value={nuevaTarjeta.titular}
+                      onChange={e => setNuevaTarjeta(f => ({ ...f, titular: e.target.value }))}
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A]" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Vencimiento</label>
+                    <input type="text" placeholder="MM/AA" maxLength={5}
+                      value={nuevaTarjeta.vencimiento}
+                      onChange={e => {
+                        const v = e.target.value.replace(/\D/g, '').slice(0, 4)
+                        const fmt = v.length > 2 ? `${v.slice(0, 2)}/${v.slice(2)}` : v
+                        setNuevaTarjeta(f => ({ ...f, vencimiento: fmt }))
+                      }}
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A]" />
+                  </div>
+                </div>
+
+                <button
+                  onClick={guardarTarjeta}
+                  disabled={guardando || !nuevaTarjeta.numero || !nuevaTarjeta.titular || !nuevaTarjeta.vencimiento}
+                  className="w-full bg-[#0D0D0D] text-white rounded-xl py-4 text-xs font-bold tracking-widest uppercase hover:opacity-80 disabled:opacity-30 transition-opacity flex items-center justify-center gap-2"
+                >
+                  {guardando ? <><div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />Guardando...</> : 'Guardar tarjeta'}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── PROCESANDO ── */}
+      {paso === 'procesando' && (
+        <div className="fixed inset-0 bg-black/70 flex flex-col items-center justify-center z-50 gap-5">
+          <div className="w-16 h-16 border-3 border-[#B8975A] border-t-transparent rounded-full animate-spin" style={{ borderWidth: 3 }} />
+          <div className="text-white font-serif text-xl">Procesando pago...</div>
+          <div className="text-[#555] text-xs">No cerrés esta pantalla</div>
+        </div>
+      )}
     </main>
   )
 }
