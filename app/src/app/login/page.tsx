@@ -27,16 +27,16 @@ export default function LoginPage() {
 
     // Detectar rol: admin o socio
     const userId = authData.user?.id
-    const { data: adminData } = await supabase
+    const { data: adminData, error: adminError } = await supabase
       .from('admins')
       .select('id')
       .eq('id', userId)
       .single()
 
     if (adminData) {
-      router.push('/admin')
+      window.location.href = '/admin'
     } else {
-      router.push('/home')
+      window.location.href = '/home'
     }
   }
 
