@@ -134,17 +134,29 @@ export default function HomePage() {
 
         {/* Noticias */}
         <div>
-          <div className="text-[#888] text-xs uppercase tracking-widest mb-3">Novedades</div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-[#888] text-xs uppercase tracking-widest">Novedades</div>
+            <button
+              onClick={() => router.push('/novedades')}
+              className="text-[#B8975A] text-xs font-semibold hover:opacity-70 transition-opacity"
+            >
+              Ver todas
+            </button>
+          </div>
           <div className="flex flex-col gap-2">
             {[
-              { titulo: 'Torneo de verano — Inscripciones abiertas', fecha: 'Hoy · 10:30 hs' },
-              { titulo: 'Nueva colección de indumentaria disponible', fecha: 'Ayer · 15:00 hs' },
-              { titulo: 'Asamblea ordinaria — 15 de junio, 19 hs', fecha: 'Jun 5 · 09:00 hs' },
+              { titulo: 'Torneo de verano — Inscripciones abiertas', fecha: 'Hoy · 10:30 hs', cat: 'Torneos', color: '#1A5C9E' },
+              { titulo: 'Nueva colección de indumentaria disponible', fecha: 'Ayer · 15:00 hs', cat: 'Indumentaria', color: '#A03030' },
+              { titulo: 'Asamblea ordinaria — 15 de junio, 19 hs', fecha: 'Jun 5 · 09:00 hs', cat: 'Institucional', color: '#1A6B3A' },
             ].map((n, i) => (
-              <div key={i} className="bg-white rounded-xl px-4 py-3.5 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow">
-                <div className={`w-1 h-8 rounded-full flex-shrink-0 ${i === 0 ? 'bg-[#B8975A]' : 'bg-[#E0DED9]'}`} />
-                <div>
-                  <div className="text-[#0D0D0D] text-sm font-semibold leading-snug">{n.titulo}</div>
+              <div
+                key={i}
+                onClick={() => router.push('/novedades')}
+                className="bg-white rounded-xl px-4 py-3.5 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow"
+              >
+                <div className="w-1 h-8 rounded-full flex-shrink-0" style={{ background: n.color }} />
+                <div className="flex-1 min-w-0">
+                  <div className="text-[#0D0D0D] text-sm font-semibold leading-snug truncate">{n.titulo}</div>
                   <div className="text-[#aaa] text-xs mt-0.5">{n.fecha}</div>
                 </div>
               </div>
