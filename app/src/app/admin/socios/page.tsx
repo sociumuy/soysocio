@@ -236,7 +236,7 @@ export default function AdminSociosPage() {
                     required
                     value={form.nombre}
                     onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B8975A] transition-colors"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
                     placeholder="Juan"
                   />
                 </div>
@@ -246,7 +246,7 @@ export default function AdminSociosPage() {
                     required
                     value={form.apellido}
                     onChange={e => setForm(f => ({ ...f, apellido: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B8975A] transition-colors"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
                     placeholder="García"
                   />
                 </div>
@@ -259,7 +259,7 @@ export default function AdminSociosPage() {
                   type="email"
                   value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B8975A] transition-colors"
+                  className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
                   placeholder="juan@email.com"
                 />
               </div>
@@ -271,7 +271,7 @@ export default function AdminSociosPage() {
                     required
                     value={form.numero_socio}
                     onChange={e => setForm(f => ({ ...f, numero_socio: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B8975A] transition-colors"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
                     placeholder="1234"
                   />
                 </div>
