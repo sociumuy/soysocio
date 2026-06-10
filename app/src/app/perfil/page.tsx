@@ -144,7 +144,7 @@ export default function PerfilPage() {
           <div className="text-[#888] text-xs uppercase tracking-widest mb-3">Estado de cuenta</div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[#0D0D0D] text-lg font-serif font-semibold">$2.400 UYU</div>
+              <div className="text-[#0D0D0D] text-lg font-mono font-semibold">$2.400 UYU</div>
               <div className="text-[#aaa] text-xs mt-0.5">Cuota mensual</div>
             </div>
             <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${socio?.cuota_al_dia ? 'bg-[#EAF7EE] text-[#219653]' : 'bg-[#FEF0F0] text-[#C0392B]'}`}>

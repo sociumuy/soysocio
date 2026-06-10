@@ -197,8 +197,8 @@ export default function HomePage() {
                   </div>
 
                   <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-white/40 font-serif text-xl">$</span>
-                    <span className="text-white font-serif text-5xl font-semibold tracking-tight leading-none">
+                    <span className="text-white/40 font-mono text-xl">$</span>
+                    <span className="text-white font-mono text-5xl font-semibold tracking-tight leading-none">
                       <AnimatedNumber value={2400} />
                     </span>
                   </div>

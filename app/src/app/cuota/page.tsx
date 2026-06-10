@@ -192,7 +192,7 @@ export default function CuotaPage() {
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="text-[rgba(255,255,255,0.4)] text-xs uppercase tracking-widest mb-1">{socios.length > 1 ? socio.nombre : 'Mi cuota'}</div>
-                <div className="text-white font-serif text-4xl font-semibold">${MONTO.toLocaleString('es-UY')}</div>
+                <div className="text-white font-mono text-4xl font-semibold">${MONTO.toLocaleString('es-UY')}</div>
                 <div className="text-[rgba(255,255,255,0.3)] text-xs mt-1">UYU · mensual · {socio.categoria}</div>
               </div>
               <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${socio.cuota_al_dia ? 'bg-[#B8975A]/20 text-[#B8975A]' : 'bg-red-900/50 text-red-300'}`}>
@@ -284,7 +284,7 @@ export default function CuotaPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-sm font-bold ${h.pagado ? 'text-[#0D0D0D]' : 'text-[#C0392B]'}`}>${h.monto.toLocaleString('es-UY')}</div>
+                  <div className={`text-sm font-bold font-mono ${h.pagado ? 'text-[#0D0D0D]' : 'text-[#C0392B]'}`}>${h.monto.toLocaleString('es-UY')}</div>
                   <div className={`text-[10px] font-semibold ${h.pagado ? 'text-[#219653]' : 'text-[#C0392B]'}`}>{h.pagado ? 'Pagado' : 'Pendiente'}</div>
                 </div>
               </div>
@@ -314,16 +314,16 @@ export default function CuotaPage() {
                 <div className="bg-[#F4F3EF] rounded-2xl p-4 flex flex-col gap-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-[#555]">Cuota mensual — {socio?.nombre}</span>
-                    <span className="text-[#0D0D0D] font-semibold">${MONTO.toLocaleString('es-UY')}</span>
+                    <span className="text-[#0D0D0D] font-mono font-semibold">${MONTO.toLocaleString('es-UY')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-[#555]">Cargo por servicio (0,5%)</span>
-                    <span className="text-[#0D0D0D] font-semibold">${cargo.toLocaleString('es-UY')}</span>
+                    <span className="text-[#0D0D0D] font-mono font-semibold">${cargo.toLocaleString('es-UY')}</span>
                   </div>
                   <div className="h-px bg-[#E0DED9]" />
                   <div className="flex justify-between">
                     <span className="text-[#0D0D0D] font-bold">Total</span>
-                    <span className="text-[#0D0D0D] text-lg font-serif font-bold">${total.toLocaleString('es-UY')}</span>
+                    <span className="text-[#0D0D0D] text-lg font-mono font-bold">${total.toLocaleString('es-UY')}</span>
                   </div>
                 </div>
 
