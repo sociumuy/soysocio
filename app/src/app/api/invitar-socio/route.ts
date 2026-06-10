@@ -18,18 +18,14 @@ export async function POST(request: Request) {
   })
 
   if (inviteError) {
-    // El email ya existe — buscar el user_id de un socio existente con ese email
-    const { data: existingSocio } = await supabase
-      .from('socios')
-      .select('user_id')
-      .eq('email', email)
-      .limit(1)
-      .single()
+    // El email ya existe — buscar el user en auth.users por email
+    const { data: { users } } = await supabase.auth.admin.listUsers({ perPage: 1000 })
+    const existingUser = users.find(u => u.email === email)
 
-    if (!existingSocio?.user_id) {
+    if (!existingUser) {
       return NextResponse.json({ error: 'No se pudo vincular la cuenta existente. Verificá el email.' }, { status: 400 })
     }
-    userId = existingSocio.user_id
+    userId = existingUser.id
   } else {
     userId = inviteData.user.id
   }
