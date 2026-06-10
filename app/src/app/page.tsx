@@ -1,17 +1,18 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LandingPage() {
   const router = useRouter()
   const supabase = createClient()
+  const [verificando, setVerificando] = useState(true)
 
   useEffect(() => {
     async function checkSession() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) { setVerificando(false); return }
 
       const { data: adminData } = await supabase
         .from('admins')
@@ -23,6 +24,14 @@ export default function LandingPage() {
     }
     checkSession()
   }, [])
+
+  if (verificando) {
+    return (
+      <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" />
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col items-center justify-between px-6 py-14">
