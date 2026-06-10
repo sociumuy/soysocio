@@ -149,7 +149,9 @@ export default function PerfilPage() {
               {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
             </div>
           </div>
-          <button className="w-full mt-4 bg-[#0D0D0D] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity">
+          <button
+            onClick={() => router.push('/cuota')}
+            className="w-full mt-4 bg-[#0D0D0D] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity">
             Pagar cuota
           </button>
         </div>

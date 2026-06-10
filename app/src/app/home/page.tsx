@@ -106,7 +106,9 @@ export default function HomePage() {
           </div>
           <div className="text-white font-serif text-3xl font-semibold mb-1">$2.400</div>
           <div className="text-[rgba(255,255,255,0.35)] text-xs mb-4">UYU · mensual</div>
-          <button className="w-full bg-[#B8975A] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity">
+          <button
+            onClick={() => router.push('/cuota')}
+            className="w-full bg-[#B8975A] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity">
             Pagar cuota
           </button>
         </div>
