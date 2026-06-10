@@ -88,7 +88,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       const { data } = await supabase
         .from('admins')
-        .select('id, nombre, apellido, rol')
+        .select('id, nombre, apellido, rol, club_id')
         .eq('id', user.id)
         .single()
 

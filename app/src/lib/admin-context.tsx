@@ -9,6 +9,7 @@ export type AdminData = {
   nombre: string
   apellido: string
   rol: RolAdmin
+  club_id: string
 }
 
 export const ROL_ACCESO: Record<RolAdmin, string[]> = {
