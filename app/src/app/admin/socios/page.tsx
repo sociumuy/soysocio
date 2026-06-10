@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useAdmin, tieneAcceso } from '@/lib/admin-context'
+import AccesoDenegado from '@/components/AccesoDenegado'
 
 type Socio = {
   id: string
@@ -13,6 +15,7 @@ type Socio = {
 }
 
 export default function AdminSociosPage() {
+  const admin = useAdmin()
   const [socios, setSocios] = useState<Socio[]>([])
   const [loading, setLoading] = useState(true)
   const [busqueda, setBusqueda] = useState('')
@@ -31,7 +34,14 @@ export default function AdminSociosPage() {
     cargar()
   }, [])
 
+  if (!admin) return null
+  if (!tieneAcceso(admin.rol, 'socios')) return <AccesoDenegado />
+
+  // Solo director y secretaria pueden modificar cuotas; recepcion solo lee
+  const puedeEditar = admin.rol === 'director' || admin.rol === 'secretaria'
+
   async function toggleCuota(id: string, actual: boolean) {
+    if (!puedeEditar) return
     await supabase.from('socios').update({ cuota_al_dia: !actual }).eq('id', id)
     setSocios(prev => prev.map(s => s.id === id ? { ...s, cuota_al_dia: !actual } : s))
   }
@@ -53,14 +63,11 @@ export default function AdminSociosPage() {
 
   return (
     <div className="max-w-3xl">
-
-      {/* Encabezado */}
       <div className="mb-6">
         <h1 className="text-[#0D0D0D] text-2xl font-serif font-semibold">Socios</h1>
         <p className="text-[#888] text-sm mt-1">{socios.length} miembros registrados</p>
       </div>
 
-      {/* Búsqueda y filtros */}
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="flex-1 relative">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-[#aaa]" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -89,7 +96,6 @@ export default function AdminSociosPage() {
         </div>
       </div>
 
-      {/* Tabla */}
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
@@ -115,9 +121,7 @@ export default function AdminSociosPage() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-[#F4F3EF] rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-[#888] text-xs font-semibold">
-                          {s.nombre[0]}{s.apellido[0]}
-                        </span>
+                        <span className="text-[#888] text-xs font-semibold">{s.nombre[0]}{s.apellido[0]}</span>
                       </div>
                       <div>
                         <div className="text-[#0D0D0D] text-sm font-semibold">{s.apellido}, {s.nombre}</div>
@@ -130,11 +134,10 @@ export default function AdminSociosPage() {
                   <td className="px-5 py-3.5 text-center">
                     <button
                       onClick={() => toggleCuota(s.id, s.cuota_al_dia)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all hover:opacity-80 ${
-                        s.cuota_al_dia
-                          ? 'bg-[#EAF7EE] text-[#219653]'
-                          : 'bg-[#FEF0F0] text-[#C0392B]'
-                      }`}
+                      disabled={!puedeEditar}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                        puedeEditar ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'
+                      } ${s.cuota_al_dia ? 'bg-[#EAF7EE] text-[#219653]' : 'bg-[#FEF0F0] text-[#C0392B]'}`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${s.cuota_al_dia ? 'bg-[#219653]' : 'bg-[#C0392B]'}`} />
                       {s.cuota_al_dia ? 'Al día' : 'Pendiente'}
@@ -146,7 +149,6 @@ export default function AdminSociosPage() {
           </table>
         )}
       </div>
-
     </div>
   )
 }

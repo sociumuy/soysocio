@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useAdmin, tieneAcceso } from '@/lib/admin-context'
+import AccesoDenegado from '@/components/AccesoDenegado'
 
 type Stats = {
   totalSocios: number
@@ -12,6 +14,7 @@ type Stats = {
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const admin = useAdmin()
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
@@ -19,7 +22,6 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function cargar() {
       const { data: socios } = await supabase.from('socios').select('cuota_al_dia')
-
       if (socios) {
         setStats({
           totalSocios: socios.length,
@@ -31,6 +33,9 @@ export default function AdminDashboard() {
     }
     cargar()
   }, [])
+
+  if (!admin) return null
+  if (!tieneAcceso(admin.rol, 'dashboard')) return <AccesoDenegado />
 
   const METRICAS = [
     {
@@ -72,23 +77,20 @@ export default function AdminDashboard() {
     },
   ]
 
-  const ACCIONES = [
-    { label: 'Gestionar socios', desc: 'Ver, agregar y editar miembros', href: '/admin/socios', gold: true },
-    { label: 'Aprobar pagos', desc: 'Confirmar transferencias pendientes', href: '/admin/pagos', gold: false },
-    { label: 'Publicar novedad', desc: 'Crear un anuncio para los socios', href: '/admin/novedades', gold: false },
-    { label: 'Ver reservas', desc: 'Agenda del día por espacio', href: '/admin/reservas', gold: false },
-  ]
+  const ACCIONES_POR_ROL = [
+    { seccion: 'socios',    label: 'Gestionar socios',   desc: 'Ver, agregar y editar miembros',          href: '/admin/socios',    gold: true  },
+    { seccion: 'pagos',     label: 'Aprobar pagos',       desc: 'Confirmar transferencias pendientes',     href: '/admin/pagos',     gold: false },
+    { seccion: 'novedades', label: 'Publicar novedad',    desc: 'Crear un anuncio para los socios',        href: '/admin/novedades', gold: false },
+    { seccion: 'reservas',  label: 'Ver reservas',        desc: 'Agenda del día por espacio',              href: '/admin/reservas',  gold: false },
+  ].filter(a => tieneAcceso(admin.rol, a.seccion))
 
   return (
     <div className="max-w-3xl">
-
-      {/* Encabezado */}
       <div className="mb-8">
         <h1 className="text-[#0D0D0D] text-2xl font-serif font-semibold">Dashboard</h1>
         <p className="text-[#888] text-sm mt-1">Resumen general del club</p>
       </div>
 
-      {/* Métricas */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {METRICAS.map((m, i) => (
           <div key={i} className="bg-white rounded-2xl p-5 shadow-sm">
@@ -108,25 +110,25 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Acciones rápidas */}
-      <div className="mb-2">
-        <div className="text-[#888] text-xs uppercase tracking-widest mb-4">Acciones rápidas</div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {ACCIONES.map((a, i) => (
-            <button
-              key={i}
-              onClick={() => router.push(a.href)}
-              className={`rounded-2xl p-5 text-left hover:opacity-90 transition-opacity shadow-sm ${
-                a.gold ? 'bg-[#0D0D0D]' : 'bg-white'
-              }`}
-            >
-              <div className={`text-sm font-bold mb-1 ${a.gold ? 'text-white' : 'text-[#0D0D0D]'}`}>{a.label}</div>
-              <div className={`text-xs ${a.gold ? 'text-[#B8975A]' : 'text-[#aaa]'}`}>{a.desc}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
+      {ACCIONES_POR_ROL.length > 0 && (
+        <>
+          <div className="text-[#888] text-xs uppercase tracking-widest mb-4">Acciones rápidas</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {ACCIONES_POR_ROL.map((a, i) => (
+              <button
+                key={i}
+                onClick={() => router.push(a.href)}
+                className={`rounded-2xl p-5 text-left hover:opacity-90 transition-opacity shadow-sm ${
+                  a.gold ? 'bg-[#0D0D0D]' : 'bg-white'
+                }`}
+              >
+                <div className={`text-sm font-bold mb-1 ${a.gold ? 'text-white' : 'text-[#0D0D0D]'}`}>{a.label}</div>
+                <div className={`text-xs ${a.gold ? 'text-[#B8975A]' : 'text-[#aaa]'}`}>{a.desc}</div>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 }

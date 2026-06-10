@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { useAdmin, tieneAcceso } from '@/lib/admin-context'
+import AccesoDenegado from '@/components/AccesoDenegado'
 
 const NOVEDADES_MOCK = [
   { titulo: 'Torneo de verano — Inscripciones abiertas', categoria: 'Torneos', fecha: 'Hoy · 10:30 hs' },
@@ -10,10 +12,14 @@ const NOVEDADES_MOCK = [
 ]
 
 export default function AdminNovedadesPage() {
+  const admin = useAdmin()
   const [mostrarForm, setMostrarForm] = useState(false)
   const [titulo, setTitulo] = useState('')
   const [cuerpo, setCuerpo] = useState('')
   const [categoria, setCategoria] = useState('Institucional')
+
+  if (!admin) return null
+  if (!tieneAcceso(admin.rol, 'novedades')) return <AccesoDenegado />
 
   return (
     <div className="max-w-3xl">
@@ -33,7 +39,6 @@ export default function AdminNovedadesPage() {
         </button>
       </div>
 
-      {/* Formulario */}
       {mostrarForm && (
         <div className="bg-white rounded-2xl shadow-sm p-5 mb-5">
           <h2 className="text-[#0D0D0D] text-sm font-bold mb-4">Publicar novedad</h2>
@@ -85,7 +90,6 @@ export default function AdminNovedadesPage() {
         </div>
       )}
 
-      {/* Lista */}
       <div className="flex flex-col gap-3">
         {NOVEDADES_MOCK.map((n, i) => (
           <div key={i} className="bg-white rounded-2xl shadow-sm px-5 py-4 flex items-center justify-between">
