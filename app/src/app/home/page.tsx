@@ -105,7 +105,7 @@ export default function HomePage() {
                     : 'bg-white/10 text-[#888] hover:bg-white/15'
                 }`}
               >
-                <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">
+                <span className="w-5 h-5 rounded-full bg-[#B8975A]/30 flex items-center justify-center text-[10px] font-bold text-[#B8975A]">
                   {s.nombre[0]}
                 </span>
                 {s.nombre}
