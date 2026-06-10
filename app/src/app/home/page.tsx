@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import NavBar from '@/components/NavBar'
-import BorderBeamButton from '@/components/BorderBeamButton'
+import PremiumButton from '@/components/PremiumButton'
 import AnimatedNumber from '@/components/AnimatedNumber'
 import GrainOverlay from '@/components/GrainOverlay'
 import ShiftCard from '@/components/ShiftCard'
@@ -204,9 +204,9 @@ export default function HomePage() {
                   </div>
                   <p className="text-white/20 text-xs tracking-wider mb-4">UYU · mensual</p>
 
-                  <BorderBeamButton onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }} className="w-full">
+                  <PremiumButton onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }} fullWidth size="lg">
                     {socio?.cuota_al_dia ? 'Ver historial de pagos' : 'Pagar cuota ahora'}
-                  </BorderBeamButton>
+                  </PremiumButton>
                 </div>
 
                 {/* ── Expanded: historial mini ── */}

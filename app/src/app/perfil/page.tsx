@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import NavBar from '@/components/NavBar'
+import PremiumButton from '@/components/PremiumButton'
 
 type Socio = {
   nombre: string
@@ -151,11 +152,11 @@ export default function PerfilPage() {
               {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
             </div>
           </div>
-          <button
-            onClick={() => router.push('/cuota')}
-            className="w-full mt-4 bg-[#0D0D0D] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity">
-            Pagar cuota
-          </button>
+          <div className="mt-4">
+            <PremiumButton fullWidth size="md" onClick={() => router.push('/cuota')}>
+              Pagar cuota
+            </PremiumButton>
+          </div>
         </div>
 
         {/* Datos personales */}

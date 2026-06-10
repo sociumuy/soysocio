@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import GrainOverlay from '@/components/GrainOverlay'
 import AnimatedMesh from '@/components/AnimatedMesh'
 import ShiftCard from '@/components/ShiftCard'
+import PremiumButton from '@/components/PremiumButton'
 import { setStoredClub, getIniciales, getClubGradient, type ClubStored } from '@/lib/club-storage'
 
 type Club = { id: string; nombre: string }
@@ -229,18 +230,9 @@ export default function LandingPage() {
                     exit={{ opacity: 0, y: 20 }}
                     className="mt-5"
                   >
-                    <motion.button
-                      onClick={handleContinue}
-                      whileTap={{ scale: 0.97 }}
-                      className="w-full relative overflow-hidden rounded-2xl py-4 text-sm font-bold tracking-widest uppercase"
-                      style={{
-                        background: `linear-gradient(135deg, ${selectedClub.gradiente[0]}, ${selectedClub.gradiente[1]})`,
-                        color: '#fff',
-                      }}
-                    >
-                      <GrainOverlay opacity={0.06} />
-                      <span className="relative z-10">Continuar con {selectedClub.nombre}</span>
-                    </motion.button>
+                    <PremiumButton onClick={handleContinue} fullWidth size="lg">
+                      Continuar con {selectedClub.nombre}
+                    </PremiumButton>
                   </motion.div>
                 )}
               </AnimatePresence>

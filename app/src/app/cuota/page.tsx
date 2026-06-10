@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import NavBar from '@/components/NavBar'
+import PremiumButton from '@/components/PremiumButton'
 
 type Socio = {
   id: string
@@ -200,11 +201,14 @@ export default function CuotaPage() {
               </div>
             </div>
             {!socio.cuota_al_dia && (
-              <button onClick={() => setPaso('resumen')}
-                className="w-full bg-[#B8975A] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
+              <PremiumButton
+                fullWidth
+                size="lg"
+                onClick={() => setPaso('resumen')}
+                icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>}
+              >
                 Pagar cuota
-              </button>
+              </PremiumButton>
             )}
             {socio.cuota_al_dia && (
               <div className="flex items-center gap-2 text-[rgba(255,255,255,0.25)] text-xs">
@@ -344,13 +348,14 @@ export default function CuotaPage() {
                   )}
                 </div>
 
-                <button
+                <PremiumButton
+                  fullWidth
+                  size="lg"
                   onClick={confirmarPago}
                   disabled={!metodoSel}
-                  className="w-full bg-[#0D0D0D] text-white rounded-xl py-4 text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity disabled:opacity-30"
                 >
                   Pagar ${total.toLocaleString('es-UY')} UYU
-                </button>
+                </PremiumButton>
               </>
             )}
 
@@ -445,13 +450,19 @@ export default function CuotaPage() {
                   </div>
                 </div>
 
-                <button
+                <PremiumButton
+                  fullWidth
+                  size="lg"
                   onClick={guardarTarjeta}
                   disabled={guardando || !nuevaTarjeta.numero || !nuevaTarjeta.titular || !nuevaTarjeta.vencimiento}
-                  className="w-full bg-[#0D0D0D] text-white rounded-xl py-4 text-xs font-bold tracking-widest uppercase hover:opacity-80 disabled:opacity-30 transition-opacity flex items-center justify-center gap-2"
                 >
-                  {guardando ? <><div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />Guardando...</> : 'Guardar tarjeta'}
-                </button>
+                  {guardando ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      Guardando...
+                    </span>
+                  ) : 'Guardar tarjeta'}
+                </PremiumButton>
               </>
             )}
           </div>

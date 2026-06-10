@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useAdmin, tieneAcceso } from '@/lib/admin-context'
 import AccesoDenegado from '@/components/AccesoDenegado'
+import PremiumButton from '@/components/PremiumButton'
 
 type Novedad = {
   id: string
@@ -109,15 +110,14 @@ export default function AdminNovedadesPage() {
           <h1 className="text-[#0D0D0D] text-2xl font-serif font-semibold">Novedades</h1>
           <p className="text-[#888] text-sm mt-1">{novedades.length} publicaciones</p>
         </div>
-        <button
+        <PremiumButton
+          variant="dark"
+          size="sm"
           onClick={() => setMostrarForm(!mostrarForm)}
-          className="bg-[#0D0D0D] text-white px-4 py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity flex items-center gap-2"
+          icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
           Nueva
-        </button>
+        </PremiumButton>
       </div>
 
       {/* Formulario */}
@@ -188,14 +188,19 @@ export default function AdminNovedadesPage() {
               )}
             </div>
             <div className="flex gap-3">
-              <button type="submit" disabled={publicando}
-                className="flex-1 bg-[#B8975A] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 disabled:opacity-50 transition-opacity flex items-center justify-center gap-2">
-                {publicando ? <><div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />Publicando...</> : 'Publicar'}
-              </button>
-              <button type="button" onClick={() => setMostrarForm(false)}
-                className="px-5 bg-[#F4F3EF] text-[#888] rounded-xl text-xs font-semibold hover:opacity-80 transition-opacity">
+              <div className="flex-1">
+                <PremiumButton type="submit" fullWidth size="md" disabled={publicando}>
+                  {publicando ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      Publicando...
+                    </span>
+                  ) : 'Publicar'}
+                </PremiumButton>
+              </div>
+              <PremiumButton variant="ghost" size="md" onClick={() => setMostrarForm(false)}>
                 Cancelar
-              </button>
+              </PremiumButton>
             </div>
           </div>
         </form>

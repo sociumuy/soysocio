@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import GrainOverlay from '@/components/GrainOverlay'
-import BorderBeamButton from '@/components/BorderBeamButton'
+import PremiumButton from '@/components/PremiumButton'
 import { getStoredClub } from '@/lib/club-storage'
 
 function LoginForm() {
@@ -185,30 +185,23 @@ function LoginForm() {
             )}
 
             <div className="mt-2">
-              <BorderBeamButton
-                className="w-full"
-                disabled={loading}
-              >
+              <PremiumButton type="submit" fullWidth size="lg" disabled={loading}>
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                     Ingresando...
                   </span>
                 ) : 'Ingresar'}
-              </BorderBeamButton>
+              </PremiumButton>
             </div>
           </form>
 
-          <button
-            type="button"
-            onClick={() => router.push('/')}
-            className="mt-5 w-full text-xs text-[#aaa] hover:text-[#0D0D0D] transition-colors flex items-center justify-center gap-1"
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Volver al inicio
-          </button>
+          <div className="mt-4 flex justify-center">
+            <PremiumButton variant="ghost" size="sm" onClick={() => router.push('/')}
+              icon={<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>}>
+              Volver al inicio
+            </PremiumButton>
+          </div>
         </div>
       </motion.div>
 

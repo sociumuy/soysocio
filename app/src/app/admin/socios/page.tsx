@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useAdmin, tieneAcceso } from '@/lib/admin-context'
 import AccesoDenegado from '@/components/AccesoDenegado'
+import PremiumButton from '@/components/PremiumButton'
 
 type Socio = {
   id: string
@@ -109,15 +110,14 @@ export default function AdminSociosPage() {
           <p className="text-[#888] text-sm mt-1">{socios.length} miembros registrados</p>
         </div>
         {puedeEditar && (
-          <button
+          <PremiumButton
+            variant="dark"
+            size="sm"
             onClick={() => setModalAbierto(true)}
-            className="flex items-center gap-2 bg-[#0D0D0D] text-white px-4 py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity"
+            icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
             Nuevo socio
-          </button>
+          </PremiumButton>
         )}
       </div>
 
@@ -292,20 +292,23 @@ export default function AdminSociosPage() {
               )}
 
               <div className="flex gap-3 mt-1">
-                <button
-                  type="button"
+                <PremiumButton
+                  variant="ghost"
+                  size="md"
                   onClick={() => { setModalAbierto(false); setErrorMsg(null) }}
-                  className="flex-1 border border-[#E0DED9] text-[#888] rounded-xl py-3 text-xs font-semibold hover:border-[#0D0D0D] transition-colors"
                 >
                   Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={enviando}
-                  className="flex-1 bg-[#0D0D0D] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-80 transition-opacity disabled:opacity-50"
-                >
-                  {enviando ? 'Enviando...' : 'Enviar invitación'}
-                </button>
+                </PremiumButton>
+                <div className="flex-1">
+                  <PremiumButton type="submit" fullWidth size="md" disabled={enviando}>
+                    {enviando ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                        Enviando...
+                      </span>
+                    ) : 'Enviar invitación'}
+                  </PremiumButton>
+                </div>
               </div>
             </form>
           </div>
