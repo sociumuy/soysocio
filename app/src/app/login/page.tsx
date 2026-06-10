@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import GrainOverlay from '@/components/GrainOverlay'
 import BorderBeamButton from '@/components/BorderBeamButton'
+import { getStoredClub } from '@/lib/club-storage'
 
 function LoginForm() {
   const searchParams = useSearchParams()
@@ -20,6 +21,7 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
+  const storedClub = getStoredClub()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -107,8 +109,8 @@ function LoginForm() {
         </div>
 
         <h1 className="font-serif text-2xl font-semibold"
-          style={{ background: 'linear-gradient(135deg, #fff 40%, rgba(184,151,90,0.8) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          Club Carrasco
+          style={{ background: storedClub ? `linear-gradient(135deg, ${storedClub.gradiente[2]} 0%, #fff 50%, ${storedClub.gradiente[2]} 100%)` : 'linear-gradient(135deg, #fff 40%, rgba(184,151,90,0.8) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          {storedClub?.nombre ?? 'SoySocio'}
         </h1>
 
         <motion.span
