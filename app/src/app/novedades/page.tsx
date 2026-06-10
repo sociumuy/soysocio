@@ -16,6 +16,7 @@ type Novedad = {
   cuerpo: string
   categoria: Categoria
   destacada: boolean
+  imagen_url: string | null
   created_at: string
 }
 
@@ -89,6 +90,9 @@ export default function NovedadesPage() {
           <h1 className="text-white font-serif text-2xl font-semibold leading-snug">{novedadSel.titulo}</h1>
           <p className="text-[#555] text-xs mt-3">{formatFecha(novedadSel.created_at)}</p>
         </div>
+        {novedadSel.imagen_url && (
+          <img src={novedadSel.imagen_url} alt={novedadSel.titulo} className="w-full h-52 object-cover" />
+        )}
         <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-28">
           <div className="bg-white rounded-2xl p-5 shadow-sm">
             {novedadSel.cuerpo.split('\n').map((parrafo, i) => (
@@ -135,6 +139,9 @@ export default function NovedadesPage() {
                 <button key={n.id} onClick={() => setNovedadSel(n)}
                   className={`bg-white rounded-2xl shadow-sm text-left hover:shadow-md transition-shadow overflow-hidden w-full ${isDestacada ? 'ring-1 ring-[#B8975A]/30' : ''}`}>
                   <div className="h-1 w-full" style={{ background: CAT_COLORS[n.categoria]?.text ?? '#888' }} />
+                  {n.imagen_url && (
+                    <img src={n.imagen_url} alt={n.titulo} className="w-full h-36 object-cover" />
+                  )}
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"

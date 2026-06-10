@@ -14,6 +14,7 @@ type Novedad = {
   cuerpo: string
   categoria: string
   destacada: boolean
+  imagen_url: string | null
   created_at: string
 }
 
@@ -43,6 +44,8 @@ export default function AdminNovedadesPage() {
   const [mostrarForm, setMostrarForm] = useState(false)
   const [publicando, setPublicando] = useState(false)
   const [form, setForm] = useState({ titulo: '', resumen: '', cuerpo: '', categoria: 'Institucional', destacada: false })
+  const [imagenFile, setImagenFile] = useState<File | null>(null)
+  const [imagenPreview, setImagenPreview] = useState<string | null>(null)
 
   useEffect(() => { cargar() }, [])
 
@@ -52,10 +55,28 @@ export default function AdminNovedadesPage() {
     setLoading(false)
   }
 
+  function handleImagenChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null
+    setImagenFile(file)
+    setImagenPreview(file ? URL.createObjectURL(file) : null)
+  }
+
   async function publicar(e: React.FormEvent) {
     e.preventDefault()
     if (!admin) return
     setPublicando(true)
+
+    let imagen_url: string | null = null
+    if (imagenFile) {
+      const ext = imagenFile.name.split('.').pop()
+      const path = `${admin.club_id}/${Date.now()}.${ext}`
+      const { error: upErr } = await supabase.storage.from('novedades').upload(path, imagenFile, { upsert: true })
+      if (!upErr) {
+        const { data: urlData } = supabase.storage.from('novedades').getPublicUrl(path)
+        imagen_url = urlData.publicUrl
+      }
+    }
+
     await supabase.from('novedades').insert({
       club_id: admin.club_id,
       titulo: form.titulo,
@@ -63,8 +84,11 @@ export default function AdminNovedadesPage() {
       cuerpo: form.cuerpo,
       categoria: form.categoria,
       destacada: form.destacada,
+      imagen_url,
     })
     setForm({ titulo: '', resumen: '', cuerpo: '', categoria: 'Institucional', destacada: false })
+    setImagenFile(null)
+    setImagenPreview(null)
     setMostrarForm(false)
     setPublicando(false)
     cargar()
@@ -138,6 +162,31 @@ export default function AdminNovedadesPage() {
                 rows={6} placeholder="Escribí el cuerpo de la noticia..."
                 className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors resize-none" />
             </div>
+            <div>
+              <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Imagen (opcional)</label>
+              <label className="flex items-center gap-3 cursor-pointer border border-dashed border-[#E0DED9] rounded-xl px-4 py-3 hover:border-[#B8975A] transition-colors group">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <span className="text-sm text-[#888] group-hover:text-[#B8975A] transition-colors">
+                  {imagenFile ? imagenFile.name : 'Seleccionar imagen'}
+                </span>
+                <input type="file" accept="image/*" onChange={handleImagenChange} className="hidden" />
+              </label>
+              {imagenPreview && (
+                <div className="mt-2 relative">
+                  <img src={imagenPreview} alt="preview" className="w-full h-36 object-cover rounded-xl" />
+                  <button type="button" onClick={() => { setImagenFile(null); setImagenPreview(null) }}
+                    className="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-colors">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="flex gap-3">
               <button type="submit" disabled={publicando}
                 className="flex-1 bg-[#B8975A] text-white rounded-xl py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 disabled:opacity-50 transition-opacity flex items-center justify-center gap-2">
@@ -164,6 +213,9 @@ export default function AdminNovedadesPage() {
           {novedades.map(n => (
             <div key={n.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <div className="h-1 w-full" style={{ background: CAT_COLORS[n.categoria] ?? '#888' }} />
+              {n.imagen_url && (
+                <img src={n.imagen_url} alt={n.titulo} className="w-full h-28 object-cover" />
+              )}
               <div className="px-5 py-4 flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
