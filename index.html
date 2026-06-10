@@ -213,12 +213,14 @@
     ══════════════════════════════ */
     .home-header {
       background:
-        radial-gradient(ellipse 120% 80% at 50% -30%, rgba(184,151,90,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 100% 100%, rgba(184,151,90,0.07) 0%, transparent 50%),
-        #080807;
-      padding:14px 24px 26px;
-      border-radius:0 0 28px 28px;
-      border-bottom: 1px solid rgba(184,151,90,0.12);
+        radial-gradient(ellipse 140% 100% at 50% -40%, rgba(184,151,90,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 60% at 100% 120%, rgba(184,151,90,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 0% 80%, rgba(100,80,30,0.10) 0%, transparent 50%),
+        #05050A;
+      padding:14px 24px 28px;
+      border-radius:0 0 32px 32px;
+      border-bottom: 1px solid rgba(184,151,90,0.14);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.30);
     }
     .h-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
     .brand-row { display:flex; align-items:center; gap:10px; }
@@ -227,27 +229,40 @@
     .b-status { font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); margin-top:3px; }
     .icon-btn { width:36px; height:36px; background:rgba(255,255,255,0.07); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; }
     .welcome-row { display:flex; justify-content:space-between; align-items:flex-end; }
-    .welcome-row h2 { font-family:var(--serif); font-size:26px; font-weight:500; color:#fff; line-height:1.25; }
+    .welcome-row h2 { font-family:var(--serif); font-size:38px; font-weight:500; color:#fff; line-height:1.1; }
     .welcome-row h2 em { font-style:normal; color:var(--gold); }
+    .welcome-sub { font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-top:4px; }
     .socio-tag { background:rgba(184,151,90,0.15); border:1px solid rgba(184,151,90,0.35); border-radius:20px; padding:5px 12px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
 
     .home-body { padding:22px 20px; flex:1; overflow-y:auto; }
-    .sec-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--light); margin-bottom:14px; }
+    .sec-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--light); margin-bottom:14px; display:flex; align-items:center; gap:9px; }
+    .sec-label::before { content:''; width:14px; height:1.5px; background:var(--gold); flex-shrink:0; border-radius:2px; }
     .quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:28px; }
-    .q-card { background: linear-gradient(145deg, #FFFFFF 0%, #F6F5F0 100%); border-radius:var(--r); padding:18px 16px; cursor:pointer; box-shadow:var(--sh); transition:transform 0.15s; }
+    .q-card { background:#fff; border-radius:var(--r); padding:18px 16px; cursor:pointer; border:1px solid rgba(0,0,0,0.06); }
     .q-card:active { transform:scale(0.96); }
-    .q-card.dark {
-      background: radial-gradient(ellipse 140% 80% at 10% 0%, rgba(184,151,90,0.14) 0%, transparent 55%), #0D0D0B;
-      border: 1px solid rgba(184,151,90,0.12);
-    }
-    .q-icon { width:36px; height:36px; background: linear-gradient(145deg, var(--bg) 0%, #EAE8E0 100%); border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+    .q-card.dark { background:#0B0B09; border:1px solid rgba(184,151,90,0.16); }
+    .q-card.wide { grid-column:span 2; padding:20px 22px; display:flex; align-items:center; gap:16px; }
+    .q-card.wide .q-icon { width:48px; height:48px; border-radius:14px; margin-bottom:0; flex-shrink:0; }
+    .q-card.wide .q-info { flex:1; min-width:0; }
+    .q-card.wide .q-title { font-size:15px; }
+    .q-next { font-size:10px; color:rgba(255,255,255,0.38); margin-top:7px; display:flex; align-items:center; gap:6px; }
+    .q-next-dot { width:5px; height:5px; background:var(--green); border-radius:50%; flex-shrink:0; animation:livepulse 2.5s infinite; }
+    @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.35;transform:scale(0.65);} }
+    .q-icon { width:38px; height:38px; background:var(--bg); border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
     .q-card.dark .q-icon { background:rgba(255,255,255,0.07); }
     .q-title { font-size:13px; font-weight:700; color:var(--dark); display:block; margin-bottom:2px; }
     .q-card.dark .q-title { color:#fff; }
     .q-sub { font-size:11px; color:var(--light); display:block; }
-    .q-card.dark .q-sub { color:rgba(255,255,255,0.35); }
+    .q-card.dark .q-sub { color:rgba(255,255,255,0.32); }
+    .stat-strip { display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; margin-bottom:22px; }
+    .stat-strip::-webkit-scrollbar { display:none; }
+    .ss-chip { flex-shrink:0; display:flex; align-items:center; gap:7px; padding:7px 13px; background:#fff; border-radius:20px; border:1px solid rgba(0,0,0,0.07); font-size:11px; font-weight:600; color:var(--dark); cursor:pointer; white-space:nowrap; transition:all 0.15s; }
+    .ss-chip:active { background:var(--dark); color:#fff; }
+    .ss-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .ss-dot.green { background:var(--green); animation:livepulse 2.5s infinite; }
+    .ss-dot.gold { background:var(--gold); }
 
-    .news-item { background: linear-gradient(145deg, #FFFFFF 0%, #F8F7F2 100%); border-radius:var(--rs); padding:16px 18px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; box-shadow:var(--sh); }
+    .news-item { background:#fff; border-radius:var(--rs); padding:16px 18px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; border:1px solid rgba(0,0,0,0.055); }
     .news-line { width:2px; height:32px; background:var(--gold); border-radius:2px; flex-shrink:0; }
     .news-line.dim { background:var(--border); }
     .n-title { font-size:13px; font-weight:600; color:var(--dark); margin-bottom:3px; line-height:1.35; }
@@ -257,14 +272,15 @@
        SHARED HEADER
     ══════════════════════════════ */
     .screen-header {
-      background: linear-gradient(180deg, #FFFFFF 0%, #FAFAF7 100%);
-      padding:14px 22px 18px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding: 14px 22px 18px;
       display:flex; align-items:center; gap:14px;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 2px 12px rgba(0,0,0,0.04);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
     }
     .back-btn { width:36px; height:36px; background:var(--bg); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
-    .screen-header h2 { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--dark); }
+    .screen-header h2 { font-family:var(--serif); font-size:22px; font-weight:600; color:var(--dark); }
     .screen-body { flex:1; overflow-y:auto; padding:20px; }
 
     /* ══════════════════════════════
@@ -341,11 +357,11 @@
     .cuota-pill { display:inline-flex; align-items:center; gap:7px; background:rgba(39,174,96,0.12); border:1px solid rgba(39,174,96,0.25); color:#27AE60; font-size:11px; font-weight:700; padding:6px 14px; border-radius:20px; }
     .c-dot { width:6px; height:6px; background:#27AE60; border-radius:50%; }
     .p-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:20px; }
-    .stat-box { background: linear-gradient(145deg, #FFFFFF 0%, #F5F4EF 100%); border-radius:var(--rs); padding:14px 10px; text-align:center; box-shadow:var(--sh); }
+    .stat-box { background: #FFFFFF; border-radius:var(--rs); padding:14px 10px; text-align:center; border:1px solid rgba(0,0,0,0.07); }
     .stat-n { font-family:var(--serif); font-size:26px; font-weight:600; color:var(--dark); }
     .stat-l { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--light); margin-top:3px; }
     .menu-list { padding:0 20px; }
-    .m-item { background: linear-gradient(145deg, #FFFFFF 0%, #F8F7F2 100%); border-radius:var(--rs); padding:15px 16px; margin-bottom:9px; display:flex; align-items:center; gap:13px; cursor:pointer; box-shadow:var(--sh); transition:opacity 0.15s; }
+    .m-item { background: #FFFFFF; border-radius:var(--rs); padding:15px 16px; margin-bottom:9px; display:flex; align-items:center; gap:13px; cursor:pointer; border:1px solid rgba(0,0,0,0.07); transition:opacity 0.15s; }
     .m-item:active { opacity:0.7; }
     .m-ico { width:36px; height:36px; background:var(--bg); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .m-text { flex:1; }
@@ -408,24 +424,28 @@
        BOTTOM NAV
     ══════════════════════════════ */
     .bnav {
-      background: rgba(248,247,242,0.88);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border-top: 1px solid rgba(0,0,0,0.07);
-      display:flex; padding:10px 0 26px;
+      display: flex;
+      margin: 6px 14px 22px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.7);
+      padding: 7px 0 7px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09), 0 1px 0 rgba(255,255,255,0.8) inset;
     }
-    .bn-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:6px 0; transition:opacity 0.15s; position:relative; }
-    .bn-item:active { opacity:0.6; }
+    .bn-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:6px 0; transition:transform 0.18s cubic-bezier(0.22,1,0.36,1), opacity 0.15s; position:relative; }
+    .bn-item:active { opacity:0.6; transform:scale(0.85); }
     .bn-item.active::before {
       content:'';
-      position:absolute; top:0; left:50%; transform:translateX(-50%);
-      width:24px; height:2.5px;
+      position:absolute; top:-7px; left:50%; transform:translateX(-50%);
+      width:28px; height:3px;
       background: var(--dark);
-      border-radius:0 0 3px 3px;
+      border-radius:0 0 4px 4px;
     }
     .bn-lbl { font-size:9px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--light); }
     .bn-item.active .bn-lbl { color:var(--dark); }
-    .bn-item svg { opacity:0.28; }
+    .bn-item svg { opacity:0.22; }
     .bn-item.active svg { opacity:1; }
     /* Cart badge */
     .cart-badge {
@@ -443,6 +463,24 @@
       line-height: 1;
     }
     .cart-badge.visible { display:flex; }
+
+    /* ── STAGGERED ENTRY ANIMATIONS ── */
+    @keyframes cardIn {
+      from { opacity:0; transform:translateY(18px) scale(0.97); }
+      to   { opacity:1; transform:translateY(0)    scale(1); }
+    }
+    #screen-home.active .q-card:nth-child(1) { animation: cardIn 0.42s 0.05s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .q-card:nth-child(2) { animation: cardIn 0.42s 0.11s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .q-card:nth-child(3) { animation: cardIn 0.42s 0.16s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .q-card:nth-child(4) { animation: cardIn 0.42s 0.21s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .q-card:nth-child(5) { animation: cardIn 0.42s 0.26s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .q-card:nth-child(6) { animation: cardIn 0.42s 0.31s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .news-item:nth-child(1) { animation: cardIn 0.38s 0.20s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .news-item:nth-child(2) { animation: cardIn 0.38s 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .news-item:nth-child(3) { animation: cardIn 0.38s 0.36s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .ss-chip:nth-child(1) { animation: cardIn 0.35s 0.08s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .ss-chip:nth-child(2) { animation: cardIn 0.35s 0.14s cubic-bezier(0.22,1,0.36,1) both; }
+    #screen-home.active .ss-chip:nth-child(3) { animation: cardIn 0.35s 0.20s cubic-bezier(0.22,1,0.36,1) both; }
 
     /* ══════════════════════════════
        MICRO-INTERACTIONS
@@ -817,6 +855,22 @@
     .btn-bs-add:hover { opacity:.88; } .btn-bs-add:active { transform:scale(0.97); }
 
     /* ══════════════════════════════
+       SCREEN — CARNET DIGITAL
+    ══════════════════════════════ */
+    .carnet-body { flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:22px 20px 28px; }
+    .carnet-wrap { width:100%; perspective:900px; cursor:pointer; margin-bottom:12px; }
+    .carnet-inner { position:relative; width:100%; transition:transform 0.65s cubic-bezier(0.22,1,0.36,1); transform-style:preserve-3d; height:286px; }
+    .carnet-face { position:absolute; inset:0; -webkit-backface-visibility:hidden; backface-visibility:hidden; background:#080806; border-radius:18px; border:1px solid rgba(184,151,90,0.18); padding:20px; display:flex; flex-direction:column; align-items:center; }
+    .carnet-back { transform:rotateY(180deg); align-items:stretch; }
+    .carnet-gold { height:1px; background:rgba(184,151,90,0.45); width:100%; }
+    .carnet-hint { font-size:11px; color:var(--light); margin-bottom:12px; text-align:center; }
+    .btn-bright { width:100%; padding:13px; background:var(--dark); color:#fff; border:none; border-radius:10px; font-size:11px; font-weight:700; font-family:var(--sans); letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:opacity 0.15s,transform 0.12s; margin-bottom:14px; }
+    .btn-bright:hover { opacity:0.88; }
+    .btn-bright:active { opacity:0.8; transform:scale(0.97); }
+    .carnet-status { display:flex; align-items:center; justify-content:center; gap:6px; }
+    .phone[data-bright] { filter:brightness(1.25); }
+
+    /* ══════════════════════════════
        DARK MODE
     ══════════════════════════════ */
     .phone[data-dark] { --bg:#121212; --white:#1D1D1B; --dark:#F0F0EE; --mid:#9A9A96; --light:#5A5A56; --border:#2A2A28; --gold-lt:#2A2318; }
@@ -1013,24 +1067,35 @@
       </div>
     </div>
     <div class="welcome-row">
-      <h2>Hola,<br><em>Francisco</em></h2>
+      <div>
+        <div class="welcome-sub">Bienvenido de vuelta</div>
+        <h2>Hola,<br><em>Francisco</em></h2>
+      </div>
       <div class="socio-tag">Socio #4821</div>
     </div>
   </div>
   <div class="home-body">
+    <div class="stat-strip">
+      <div class="ss-chip"><span class="ss-dot green"></span>Próxima reserva: Jue 19 hs</div>
+      <div class="ss-chip"><span class="ss-dot gold"></span>Cuota al día</div>
+      <div class="ss-chip">3° en tabla</div>
+    </div>
     <p class="sec-label">Accesos rápidos</p>
     <div class="quick-grid">
-      <div class="q-card dark" onclick="goTo('reservas')">
-        <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-        <span class="q-title">Reservas</span><span class="q-sub">Gym, canchas y más</span>
+      <div class="q-card dark wide" onclick="goTo('reservas')">
+        <div class="q-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="q-info">
+          <span class="q-title">Reservas</span><span class="q-sub">Gym, canchas y más</span>
+          <div class="q-next"><span class="q-next-dot"></span>Próxima: Jue 19 hs · Gym</div>
+        </div>
       </div>
       <div class="q-card" onclick="goTo('tienda')">
         <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
         <span class="q-title">Tienda</span><span class="q-sub">Merchandising oficial</span>
       </div>
-      <div class="q-card" onclick="goTo('perfil')">
-        <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <span class="q-title">Mi perfil</span><span class="q-sub">Cuota al día ✓</span>
+      <div class="q-card dark" onclick="goTo('carnet')">
+        <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="19" y2="10"/><line x1="14" y1="14" x2="17" y2="14"/></svg></div>
+        <span class="q-title">Carnet</span><span class="q-sub">Mostrar en el ingreso</span>
       </div>
       <div class="q-card" onclick="goTo('galeria')">
         <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
@@ -1040,9 +1105,12 @@
         <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
         <span class="q-title">Tabla</span><span class="q-sub">Posiciones y fixture</span>
       </div>
-      <div class="q-card" onclick="goTo('eventos')">
-        <div class="q-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg></div>
-        <span class="q-title">Eventos</span><span class="q-sub">Agenda del club</span>
+      <div class="q-card wide" onclick="goTo('eventos')">
+        <div class="q-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg></div>
+        <div class="q-info">
+          <span class="q-title">Eventos</span><span class="q-sub">Agenda del club</span>
+          <div class="q-next" style="color:var(--light)"><span style="width:5px;height:5px;background:var(--gold);border-radius:50%;flex-shrink:0;display:inline-block;"></span>Próximo: Asamblea · 15 Jun, 19 hs</div>
+        </div>
       </div>
     </div>
     <p class="sec-label">Novedades</p>
@@ -1218,6 +1286,7 @@
     <div class="stat-box"><div class="stat-n">12</div><div class="stat-l">Años socio</div></div>
   </div>
   <div class="menu-list">
+    <div class="m-item" onclick="goTo('carnet')" style="background:linear-gradient(145deg,#0D0D0B 0%,#1A1A17 100%);border:1px solid rgba(184,151,90,0.18);"><div class="m-ico" style="background:rgba(184,151,90,0.12);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="19" y2="10"/><line x1="14" y1="14" x2="17" y2="14"/></svg></div><div class="m-text"><div class="m-title" style="color:#fff;">Carnet Digital</div><div class="m-sub" style="color:rgba(255,255,255,0.35);">Mostrá tu QR en el ingreso</div></div><svg class="m-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(184,151,90,0.4)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
     <div class="m-item"><div class="m-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="m-text"><div class="m-title">Mis cuotas</div><div class="m-sub">Historial de pagos</div></div><svg class="m-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
     <div class="m-item" onclick="goTo('mis-pedidos')"><div class="m-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="m-text"><div class="m-title">Mis pedidos</div><div class="m-sub">3 pedidos realizados</div></div><svg class="m-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
     <div class="m-item" onclick="goTo('mis-reservas')"><div class="m-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--mid)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="m-text"><div class="m-title">Mis reservas</div><div class="m-sub">Próxima: Gym · martes 09:00</div></div><svg class="m-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
@@ -2160,6 +2229,83 @@
 </div>
 
 <!-- ═══════════════════════════════════
+     SCREEN — CARNET DIGITAL
+═══════════════════════════════════ -->
+<div class="screen" id="screen-carnet" style="flex-direction:column;">
+  <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+  <div class="screen-header">
+    <div class="back-btn" onclick="goTo('perfil')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+    <h2>Carnet Digital</h2>
+  </div>
+  <div class="carnet-body">
+
+    <div class="carnet-wrap" onclick="flipCarnet()" title="Tocá para ver el reverso">
+      <div class="carnet-inner" id="carnet-inner">
+
+        <!-- Frente: QR -->
+        <div class="carnet-face">
+          <div class="carnet-gold" style="margin-bottom:14px;"></div>
+          <div style="font-family:var(--serif);font-size:16px;font-weight:600;color:#fff;margin-bottom:2px;">Club Carrasco</div>
+          <div style="font-size:7px;letter-spacing:3px;text-transform:uppercase;color:rgba(184,151,90,0.55);margin-bottom:14px;">Montevideo &middot; Uruguay</div>
+          <div style="background:#fff;border-radius:10px;padding:10px;margin-bottom:14px;">
+            <canvas id="carnet-qr" width="118" height="118" style="display:block;"></canvas>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;width:100%;display:flex;justify-content:space-between;align-items:flex-end;">
+            <div>
+              <div style="font-size:7px;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-bottom:2px;text-transform:uppercase;">Socio</div>
+              <div style="font-family:var(--serif);font-size:15px;font-weight:600;color:#fff;">Francisco Mattos</div>
+              <div style="font-size:8px;color:var(--gold);margin-top:2px;letter-spacing:1px;">N&ordm;&nbsp;00247</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:7px;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-bottom:2px;text-transform:uppercase;">Categor&iacute;a</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.85);font-weight:500;">Socio Activo</div>
+            </div>
+          </div>
+          <div class="carnet-gold" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Reverso: datos + código de barras -->
+        <div class="carnet-face carnet-back">
+          <div class="carnet-gold" style="margin-bottom:14px;"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <div style="width:34px;height:34px;background:rgba(184,151,90,0.1);border-radius:9px;border:1px solid rgba(184,151,90,0.2);display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l8 3.5v5.5c0 4-3.3 7.7-8 9.5C7.3 18.7 4 15 4 11V5.5L12 2z"/></svg>
+            </div>
+            <div>
+              <div style="font-family:var(--serif);font-size:14px;font-weight:600;color:#fff;">Club Carrasco</div>
+              <div style="font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.22);">Carnet de Socio</div>
+            </div>
+            <div style="margin-left:auto;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.25);border-radius:20px;padding:4px 10px;">
+              <span style="font-size:9px;color:var(--green);font-weight:700;">Al d&iacute;a</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:9px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;">Nombre</span><span style="font-size:11px;color:#fff;font-weight:500;">Francisco Mattos</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:9px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;">N&ordm; Socio</span><span style="font-size:11px;color:var(--gold);font-weight:600;letter-spacing:1px;">00247</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:9px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;">Categor&iacute;a</span><span style="font-size:11px;color:#fff;font-weight:500;">Activo</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:9px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;">Vencimiento</span><span style="font-size:11px;color:#fff;font-weight:500;">Dic 2026</span></div>
+          </div>
+          <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px;">
+            <canvas id="carnet-barcode" width="310" height="38" style="width:100%;display:block;border-radius:3px;"></canvas>
+            <div style="text-align:center;font-size:8px;color:rgba(255,255,255,0.25);margin-top:5px;letter-spacing:4px;">0002476382910</div>
+          </div>
+          <div class="carnet-gold" style="margin-top:12px;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="carnet-hint" id="carnet-hint">Toc&aacute; la tarjeta para ver el reverso</p>
+    <button class="btn-bright" id="btn-bright" onclick="toggleBrightCarnet()">&#9728;&nbsp; Aumentar brillo para escanear</button>
+    <div class="carnet-status">
+      <div style="width:6px;height:6px;background:var(--green);border-radius:50%;"></div>
+      <span style="font-size:11px;color:var(--mid);">Cuota al d&iacute;a &middot; Carnet v&aacute;lido</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
      PRODUCT BOTTOM SHEET
 ═══════════════════════════════════ -->
 <div class="bs-overlay" id="bs-overlay" onclick="closeSheet(event)">
@@ -2496,6 +2642,63 @@
       const res = document.getElementById('busq-results');
       if (res) res.innerHTML = '<div class="busq-placeholder"><p>Buscá reservas, productos, eventos y más…</p></div>';
     }, 80);
+  }
+
+  // ── Carnet Digital ──
+  (function initCarnet() {
+    // QR pattern (seeded pseudo-random, consistent every load)
+    const qrCanvas = document.getElementById('carnet-qr');
+    const qctx = qrCanvas.getContext('2d');
+    const N = qrCanvas.width, cells = 25, cell = N / cells;
+    qctx.fillStyle = '#fff'; qctx.fillRect(0, 0, N, N);
+    qctx.fillStyle = '#0D0D0D';
+    let seed = 24700247;
+    function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    for (let r = 0; r < cells; r++) {
+      for (let c = 0; c < cells; c++) {
+        const inTL = r < 7 && c < 7, inTR = r < 7 && c >= cells - 7, inBL = r >= cells - 7 && c < 7;
+        if (inTL || inTR || inBL) {
+          const pr = inBL ? r - (cells - 7) : r;
+          const pc = inTR ? c - (cells - 7) : c;
+          const outer = pr === 0 || pr === 6 || pc === 0 || pc === 6;
+          const inner = pr >= 2 && pr <= 4 && pc >= 2 && pc <= 4;
+          if (outer || inner) qctx.fillRect(c * cell, r * cell, cell, cell);
+          continue;
+        }
+        if (r === 6 || c === 6) { if ((r + c) % 2 === 0) qctx.fillRect(c * cell, r * cell, cell, cell); continue; }
+        if (rnd() > 0.48) qctx.fillRect(c * cell, r * cell, cell, cell);
+      }
+    }
+    // Barcode
+    const bc = document.getElementById('carnet-barcode');
+    const bctx = bc.getContext('2d');
+    const bars = [3,1,2,1,2,2,1,3,1,2,2,1,1,3,2,1,2,1,3,2,1,1,2,2,1,3,2,1,1,2,3,1,2,1,2,3,1,1,2,1,3,2];
+    let x = 0;
+    bars.forEach((w, i) => { if (i % 2 === 0) { bctx.fillStyle = 'rgba(255,255,255,0.85)'; bctx.fillRect(x, 0, w * 4.2, bc.height); } x += w * 4.2; });
+  })();
+
+  let carnetFlipped = false;
+  function flipCarnet() {
+    carnetFlipped = !carnetFlipped;
+    document.getElementById('carnet-inner').style.transform = carnetFlipped ? 'rotateY(180deg)' : '';
+    document.getElementById('carnet-hint').textContent = carnetFlipped ? '← Tocá para ver el código QR' : 'Tocá la tarjeta para ver el reverso';
+    if (navigator.vibrate) navigator.vibrate(6);
+  }
+
+  let carnetBright = false;
+  function toggleBrightCarnet() {
+    carnetBright = !carnetBright;
+    const phone = document.querySelector('.phone');
+    phone.classList.toggle('phone-bright', carnetBright);
+    const btn = document.getElementById('btn-bright');
+    btn.textContent = carnetBright ? '✕  Restaurar brillo' : '☀  Aumentar brillo para escanear';
+    if (!document.getElementById('carnet-bright-style')) {
+      const s = document.createElement('style');
+      s.id = 'carnet-bright-style';
+      s.textContent = '.phone-bright { filter: brightness(1.35); }';
+      document.head.appendChild(s);
+    }
+    if (navigator.vibrate) navigator.vibrate(8);
   }
 
   // ── Dark mode ──
