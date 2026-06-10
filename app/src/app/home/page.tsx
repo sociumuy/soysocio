@@ -23,7 +23,7 @@ type Socio = {
   cuota_al_dia: boolean
 }
 
-const ease = [0.22, 1, 0.36, 1]
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 const stagger = {
   container: { animate: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } },
