@@ -100,12 +100,21 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-[#aaa] mt-5">
-          ¿Problemas para ingresar?{' '}
-          <span className="text-[#B8975A] cursor-pointer hover:underline">
-            Contactá al club
-          </span>
-        </p>
+        <div className="flex flex-col items-center gap-2 mt-5">
+          <button
+            type="button"
+            onClick={() => router.push('/login/recuperar')}
+            className="text-xs text-[#B8975A] hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+          <p className="text-center text-xs text-[#aaa]">
+            ¿Problemas para ingresar?{' '}
+            <span className="text-[#B8975A] cursor-pointer hover:underline">
+              Contactá al club
+            </span>
+          </p>
+        </div>
       </div>
 
       <p className="text-[#333] text-xs mt-8 tracking-wider">
