@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import NavBar from '@/components/NavBar'
 
 type Socio = {
   nombre: string
@@ -178,7 +179,10 @@ export default function PerfilPage() {
           Cerrar sesión
         </button>
 
+        <div className="h-20" />
       </div>
+
+      <NavBar />
     </main>
   )
 }
