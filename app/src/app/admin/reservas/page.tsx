@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useAdmin, tieneAcceso } from '@/lib/admin-context'
 import AccesoDenegado from '@/components/AccesoDenegado'
 

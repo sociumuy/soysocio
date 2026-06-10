@@ -327,17 +327,32 @@
     .f-chip.active { background:var(--dark); color:#fff; border-color:var(--dark); }
 
     .prod-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
-    .prod-card { background:var(--white); border-radius:var(--r); overflow:hidden; box-shadow:var(--sh); cursor:pointer; transition:transform 0.15s; }
+    .prod-card { background:var(--white); border-radius:var(--r); overflow:hidden; box-shadow:var(--sh); cursor:pointer; transition:transform 0.18s cubic-bezier(0.22,1,0.36,1),box-shadow 0.18s; border:1px solid rgba(184,151,90,0.1); }
+    .prod-card:hover { transform:translateY(-3px); box-shadow:0 10px 32px rgba(0,0,0,0.13); }
     .prod-card:active { transform:scale(0.97); }
-    .prod-img { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; background:var(--bg); }
+    .prod-img { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; background:linear-gradient(145deg,#141410 0%,#1e1a14 60%,#121008 100%); position:relative; overflow:hidden; }
+    .prod-img::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 30%,rgba(184,151,90,0.08) 0%,transparent 70%); }
     .prod-info { padding:12px 12px 14px; }
-    .prod-name { font-size:12px; font-weight:700; color:var(--dark); margin-bottom:3px; line-height:1.3; }
+    .prod-name { font-family:var(--serif); font-size:14px; font-weight:600; color:var(--dark); margin-bottom:2px; line-height:1.3; }
     .prod-var { font-size:10px; color:var(--light); margin-bottom:10px; }
     .prod-foot { display:flex; justify-content:space-between; align-items:center; }
-    .prod-price { font-family:var(--serif); font-size:17px; font-weight:600; color:var(--dark); }
-    .add-btn { width:28px; height:28px; background:var(--dark); color:#fff; border:none; border-radius:7px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:300; line-height:1; transition:transform 0.1s; }
+    .prod-price { font-family:var(--serif); font-size:17px; font-weight:600; color:var(--gold); }
+    .add-btn { width:28px; height:28px; background:var(--gold); color:#fff; border:none; border-radius:7px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:300; line-height:1; transition:transform 0.1s,opacity 0.15s; }
+    .add-btn:hover { opacity:0.88; }
     .add-btn:active { transform:scale(0.88); }
-    .prod-illus { width:60px; height:60px; display:flex; align-items:center; justify-content:center; }
+    .prod-illus { width:64px; height:64px; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; }
+
+    /* Tienda collection banner */
+    .tienda-banner { margin:0 0 16px; background:linear-gradient(135deg,#0D0D0B 0%,#1a1812 60%,#0D0D0B 100%); border-radius:var(--r); border:1px solid rgba(184,151,90,0.18); padding:14px 16px; display:flex; align-items:center; gap:12px; }
+    .tb-badge { width:38px; height:38px; background:rgba(184,151,90,0.1); border:1px solid rgba(184,151,90,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .tb-label { font-size:8px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(184,151,90,0.65); margin-bottom:3px; }
+    .tb-title { font-family:var(--serif); font-size:15px; font-weight:600; color:#fff; line-height:1.2; }
+
+    /* Tienda dark header */
+    #screen-tienda .screen-header { background:var(--dark); border-bottom:1px solid rgba(255,255,255,0.07); }
+    #screen-tienda .screen-header h2 { color:#fff; }
+    #screen-tienda .screen-header .back-btn { background:rgba(255,255,255,0.08); }
+    #screen-tienda .status-bar { background:var(--dark); color:rgba(255,255,255,0.55); }
 
     /* ══════════════════════════════
        SCREEN 5 — PERFIL
@@ -902,7 +917,7 @@
     ══════════════════════════════ */
     .cart-item { background:var(--white); border-radius:var(--rs); padding:14px 16px; margin-bottom:10px; display:flex; gap:14px; align-items:center; box-shadow:var(--sh); transition:transform 0.15s; }
     .cart-item:hover { transform:translateX(2px); }
-    .cart-item-thumb { width:52px; height:52px; background:var(--bg); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .cart-item-thumb { width:52px; height:52px; background:linear-gradient(145deg,#141410 0%,#1e1a14 100%); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:1px solid rgba(184,151,90,0.1); }
     .cart-item-info { flex:1; }
     .cart-item-name { font-size:13px; font-weight:700; color:var(--dark); margin-bottom:3px; }
     .cart-item-var { font-size:11px; color:var(--light); }
@@ -927,7 +942,7 @@
     .bs-panel { position:absolute; bottom:0; left:0; right:0; background:var(--white); border-radius:24px 24px 0 0; padding:12px 24px 48px; transform:translateY(100%); transition:transform 0.38s cubic-bezier(0.22,1,0.36,1); z-index:51; }
     .bs-overlay.open .bs-panel { transform:translateY(0); }
     .bs-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
-    .bs-img { width:100%; height:140px; background:var(--bg); border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
+    .bs-img { width:100%; height:140px; background:linear-gradient(145deg,#141410 0%,#1e1a14 60%,#121008 100%); border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:18px; border:1px solid rgba(184,151,90,0.12); }
     .bs-name { font-family:var(--serif); font-size:24px; font-weight:600; color:var(--dark); margin-bottom:4px; }
     .bs-price-row { display:flex; align-items:baseline; gap:6px; margin-bottom:18px; }
     .bs-price { font-family:var(--serif); font-size:22px; font-weight:600; color:var(--dark); }
@@ -1319,16 +1334,25 @@
      SCREEN 4 — TIENDA
 ═══════════════════════════════════ -->
 <div id="screen-tienda" class="screen">
-  <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+  <div class="status-bar on-dark"><span>9:41</span><span>●●●</span></div>
   <div class="screen-header">
-    <div class="back-btn" onclick="goTo('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+    <div class="back-btn" onclick="goTo('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
     <h2>Tienda</h2>
     <div style="margin-left:auto;position:relative;cursor:pointer;" onclick="goTo('carrito')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       <span class="cart-badge" id="badge-tienda">0</span>
     </div>
   </div>
   <div class="screen-body">
+    <div class="tienda-banner">
+      <div class="tb-badge">
+        <svg width="20" height="20" viewBox="0 0 76 88" fill="none"><path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z" fill="rgba(184,151,90,0.2)" stroke="rgba(184,151,90,0.5)" stroke-width="1.5"/><text x="38" y="52" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="22" font-weight="600" fill="#B8975A" letter-spacing="1">CC</text></svg>
+      </div>
+      <div>
+        <div class="tb-label">Colección oficial</div>
+        <div class="tb-title">Temporada 2026</div>
+      </div>
+    </div>
     <div class="tienda-search-wrap">
       <svg class="ts-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--light)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="search" placeholder="Buscar productos…" oninput="tiendaSearch(this.value)"/>
@@ -1341,12 +1365,12 @@
       <div class="f-chip" onclick="setFilter(this)">Niños</div>
     </div>
     <div class="prod-grid">
-      <div class="prod-card" onclick="openSheet('Camiseta Oficial 2025','$2.200','talla')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M15 12 L10 20 L20 22 L20 48 L40 48 L40 22 L50 20 L45 12 L38 16 C36 10 24 10 22 16 Z" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div class="prod-info"><div class="prod-name">Camiseta Oficial 2025</div><div class="prod-var">S · M · L · XL</div><div class="prod-foot"><span class="prod-price">$2.200</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
-      <div class="prod-card" onclick="openSheet('Gorra Club Carrasco','$950','unico')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><ellipse cx="30" cy="28" rx="18" ry="10" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2"/><rect x="22" y="22" width="16" height="12" rx="1" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2"/><rect x="18" y="34" width="24" height="4" rx="2" fill="#AEADA7"/></svg></div><div class="prod-info"><div class="prod-name">Gorra Club Carrasco</div><div class="prod-var">Talle único</div><div class="prod-foot"><span class="prod-price">$950</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
-      <div class="prod-card" onclick="openSheet('Short Deportivo','$1.400','talla')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M18 18 L16 42 L44 42 L42 18 Z" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2" stroke-linejoin="round"/><line x1="18" y1="26" x2="42" y2="26" stroke="#AEADA7" stroke-width="1"/></svg></div><div class="prod-info"><div class="prod-name">Short Deportivo</div><div class="prod-var">S · M · L</div><div class="prod-foot"><span class="prod-price">$1.400</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
-      <div class="prod-card" onclick="openSheet('Musculosa Entreno','$1.100','talla')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M22 12 L14 22 L22 24 L22 48 L38 48 L38 24 L46 22 L38 12 Z" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div class="prod-info"><div class="prod-name">Musculosa Entreno</div><div class="prod-var">S · M · L · XL</div><div class="prod-foot"><span class="prod-price">$1.100</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
-      <div class="prod-card" onclick="openSheet('Bufanda Oficial','$780','unico')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M16 24 Q14 36 20 42 Q30 48 40 42 Q46 36 44 24 Q38 20 30 20 Q22 20 16 24Z" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2"/><path d="M20 22 Q30 16 40 22" stroke="#AEADA7" stroke-width="1" fill="none"/></svg></div><div class="prod-info"><div class="prod-name">Bufanda Oficial</div><div class="prod-var">Talle único</div><div class="prod-foot"><span class="prod-price">$780</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
-      <div class="prod-card" onclick="openSheet('Mochila Club','$3.500','unico')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><rect x="14" y="20" width="32" height="26" rx="3" fill="#E2E1DB" stroke="#AEADA7" stroke-width="1.2"/><path d="M22 20 L22 16 Q30 12 38 16 L38 20" fill="none" stroke="#AEADA7" stroke-width="1.2"/><line x1="14" y1="30" x2="46" y2="30" stroke="#AEADA7" stroke-width="1"/></svg></div><div class="prod-info"><div class="prod-name">Mochila Club</div><div class="prod-var">25 litros</div><div class="prod-foot"><span class="prod-price">$3.500</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
+      <div class="prod-card" onclick="openSheet('Camiseta Oficial 2026','$2.200','talla')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M15 12 L10 20 L20 22 L20 48 L40 48 L40 22 L50 20 L45 12 L38 16 C36 10 24 10 22 16 Z" fill="rgba(184,151,90,0.13)" stroke="rgba(184,151,90,0.75)" stroke-width="1.3" stroke-linejoin="round"/></svg></div><div class="prod-info"><div class="prod-name">Camiseta Oficial 2026</div><div class="prod-var">S · M · L · XL</div><div class="prod-foot"><span class="prod-price">$2.200</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
+      <div class="prod-card" onclick="openSheet('Gorra Club Carrasco','$950','unico')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><ellipse cx="30" cy="28" rx="18" ry="10" fill="rgba(184,151,90,0.13)" stroke="rgba(184,151,90,0.75)" stroke-width="1.3"/><rect x="22" y="22" width="16" height="12" rx="1" fill="rgba(184,151,90,0.1)" stroke="rgba(184,151,90,0.6)" stroke-width="1.3"/><rect x="18" y="34" width="24" height="4" rx="2" fill="rgba(184,151,90,0.4)"/></svg></div><div class="prod-info"><div class="prod-name">Gorra Club Carrasco</div><div class="prod-var">Talle único</div><div class="prod-foot"><span class="prod-price">$950</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
+      <div class="prod-card" onclick="openSheet('Short Deportivo','$1.400','talla')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M18 18 L16 42 L44 42 L42 18 Z" fill="rgba(184,151,90,0.13)" stroke="rgba(184,151,90,0.75)" stroke-width="1.3" stroke-linejoin="round"/><line x1="18" y1="26" x2="42" y2="26" stroke="rgba(184,151,90,0.5)" stroke-width="1.2"/></svg></div><div class="prod-info"><div class="prod-name">Short Deportivo</div><div class="prod-var">S · M · L</div><div class="prod-foot"><span class="prod-price">$1.400</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
+      <div class="prod-card" onclick="openSheet('Musculosa Entreno','$1.100','talla')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M22 12 L14 22 L22 24 L22 48 L38 48 L38 24 L46 22 L38 12 Z" fill="rgba(184,151,90,0.13)" stroke="rgba(184,151,90,0.75)" stroke-width="1.3" stroke-linejoin="round"/></svg></div><div class="prod-info"><div class="prod-name">Musculosa Entreno</div><div class="prod-var">S · M · L · XL</div><div class="prod-foot"><span class="prod-price">$1.100</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
+      <div class="prod-card" onclick="openSheet('Bufanda Oficial','$780','unico')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><path d="M16 24 Q14 36 20 42 Q30 48 40 42 Q46 36 44 24 Q38 20 30 20 Q22 20 16 24Z" fill="rgba(184,151,90,0.13)" stroke="rgba(184,151,90,0.75)" stroke-width="1.3"/><path d="M20 22 Q30 16 40 22" stroke="rgba(184,151,90,0.5)" stroke-width="1.2" fill="none"/></svg></div><div class="prod-info"><div class="prod-name">Bufanda Oficial</div><div class="prod-var">Talle único</div><div class="prod-foot"><span class="prod-price">$780</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
+      <div class="prod-card" onclick="openSheet('Mochila Club','$3.500','unico')"><div class="prod-img"><svg class="prod-illus" viewBox="0 0 60 60" fill="none"><rect x="14" y="20" width="32" height="26" rx="3" fill="rgba(184,151,90,0.13)" stroke="rgba(184,151,90,0.75)" stroke-width="1.3"/><path d="M22 20 L22 16 Q30 12 38 16 L38 20" fill="none" stroke="rgba(184,151,90,0.75)" stroke-width="1.3"/><line x1="14" y1="30" x2="46" y2="30" stroke="rgba(184,151,90,0.4)" stroke-width="1.2"/></svg></div><div class="prod-info"><div class="prod-name">Mochila Club</div><div class="prod-var">25 litros</div><div class="prod-foot"><span class="prod-price">$3.500</span><button class="add-btn" onclick="event.stopPropagation();addCart(this)">+</button></div></div></div>
     </div>
   </div>
   <div class="bnav">
