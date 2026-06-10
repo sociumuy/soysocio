@@ -28,6 +28,11 @@ export default function HomePage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
+      // Bloquear acceso a admins
+      const { data: adminCheck } = await supabase
+        .from('admins').select('id').eq('id', user.id).single()
+      if (adminCheck) { window.location.href = '/admin'; return }
+
       const { data } = await supabase
         .from('socios')
         .select('id, nombre, apellido, numero_socio, categoria, cuota_al_dia')

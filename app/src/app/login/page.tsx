@@ -2,11 +2,15 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams()
+  const rol = searchParams.get('rol') ?? 'socio'
+  const esAdmin = rol === 'admin'
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -19,27 +23,39 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
 
-    const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
+    if (authError) {
       setError('Email o contraseña incorrectos')
       setLoading(false)
       return
     }
 
-    // Detectar rol: admin o socio
     const userId = authData.user?.id
-    const { data: adminData, error: adminError } = await supabase
+    const { data: adminData } = await supabase
       .from('admins')
       .select('id')
       .eq('id', userId)
       .single()
 
-    if (adminData) {
-      window.location.href = '/admin'
-    } else {
-      window.location.href = '/home'
+    const esAdminReal = !!adminData
+
+    // Validar que el rol seleccionado coincide con la cuenta
+    if (esAdmin && !esAdminReal) {
+      await supabase.auth.signOut()
+      setError('Esta cuenta no tiene acceso de administrador. Ingresá como socio.')
+      setLoading(false)
+      return
     }
+
+    if (!esAdmin && esAdminReal) {
+      await supabase.auth.signOut()
+      setError('Los administradores deben ingresar por el acceso de administrador.')
+      setLoading(false)
+      return
+    }
+
+    window.location.href = esAdminReal ? '/admin' : '/home'
   }
 
   return (
@@ -52,9 +68,14 @@ export default function LoginPage() {
             fill="url(#shield-grad)" stroke="rgba(184,151,90,0.3)" strokeWidth="1" />
           <path d="M38 10L64 20V48C64 63 38 78 38 78C38 78 12 63 12 48V20L38 10Z"
             fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-          <text x="38" y="52" textAnchor="middle"
-            fontFamily="Georgia, serif" fontSize="18" fontWeight="600"
-            fill="white" letterSpacing="1">CC</text>
+          {esAdmin ? (
+            <polyline points="30 44 35 49 46 38" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
+          ) : (
+            <>
+              <circle cx="38" cy="36" r="5" fill="white" opacity="0.9" />
+              <path d="M27 52c0-6.075 4.925-11 11-11s11 4.925 11 11" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.9" />
+            </>
+          )}
           <defs>
             <linearGradient id="shield-grad" x1="4" y1="2" x2="72" y2="86" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#C9A86C" />
@@ -63,14 +84,24 @@ export default function LoginPage() {
           </defs>
         </svg>
         <h1 className="font-serif text-white text-2xl font-semibold tracking-wide">Club Carrasco</h1>
-        <p className="text-[#B8975A] text-xs tracking-[3px] uppercase mt-1">Montevideo · Uruguay</p>
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#B8975A]/40 to-transparent mt-6" />
+        <div className="flex items-center gap-2 mt-2">
+          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest ${
+            esAdmin ? 'bg-[#B8975A]/20 text-[#B8975A]' : 'bg-white/10 text-white/50'
+          }`}>
+            {esAdmin ? 'Administrador' : 'Socio'}
+          </span>
+        </div>
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#B8975A]/40 to-transparent mt-5" />
       </div>
 
       {/* Card de login */}
       <div className="w-full max-w-sm bg-white rounded-2xl p-7 shadow-xl">
-        <h2 className="text-[#0D0D0D] text-xl font-bold mb-1">Bienvenido</h2>
-        <p className="text-[#888] text-sm mb-6">Ingresá a tu espacio de socio</p>
+        <h2 className="text-[#0D0D0D] text-xl font-bold mb-1">
+          {esAdmin ? 'Acceso administrativo' : 'Bienvenido'}
+        </h2>
+        <p className="text-[#888] text-sm mb-6">
+          {esAdmin ? 'Ingresá con tu cuenta del staff' : 'Ingresá a tu espacio de socio'}
+        </p>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
@@ -117,17 +148,14 @@ export default function LoginPage() {
         <div className="flex flex-col items-center gap-2 mt-5">
           <button
             type="button"
-            onClick={() => router.push('/login/recuperar')}
-            className="text-xs text-[#B8975A] hover:underline"
+            onClick={() => router.push('/')}
+            className="text-xs text-[#aaa] hover:text-[#0D0D0D] transition-colors flex items-center gap-1"
           >
-            ¿Olvidaste tu contraseña?
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Volver al inicio
           </button>
-          <p className="text-center text-xs text-[#aaa]">
-            ¿Problemas para ingresar?{' '}
-            <span className="text-[#B8975A] cursor-pointer hover:underline">
-              Contactá al club
-            </span>
-          </p>
         </div>
       </div>
 
@@ -135,5 +163,13 @@ export default function LoginPage() {
         Powered by <span className="text-[#B8975A]">SoySocio</span>
       </p>
     </main>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
