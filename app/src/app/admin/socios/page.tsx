@@ -66,7 +66,7 @@ export default function AdminSociosPage() {
     const res = await fetch('/api/invitar-socio', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, club_id: admin.club_id }),
+      body: JSON.stringify({ ...form, club_id: admin!.club_id }),
     })
 
     const json = await res.json()
