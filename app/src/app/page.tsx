@@ -37,7 +37,13 @@ export default function LandingPage() {
       const lista: Club[] = data ?? []
       setClubs(lista)
 
-      // If only one club, pre-select it and skip selector
+      // No clubs or single club → skip selector
+      if (lista.length === 0) {
+        // No clubs in DB yet — go straight to role selector with no club context
+        setStep('roles')
+        return
+      }
+
       if (lista.length === 1) {
         const c = lista[0]
         const club: ClubStored = {
