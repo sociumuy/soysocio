@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import NavBar from '@/components/NavBar'
 
 type Socio = {
+  id: string
   nombre: string
   apellido: string
   numero_socio: string
@@ -16,31 +17,29 @@ type Socio = {
 }
 
 export default function HomePage() {
-  const [socio, setSocio] = useState<Socio | null>(null)
+  const [socios, setSocios] = useState<Socio[]>([])
+  const [socioActivo, setSocioActivo] = useState<Socio | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
-    async function cargarSocio() {
+    async function cargarSocios() {
       const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
-        router.push('/login')
-        return
-      }
+      if (!user) { router.push('/login'); return }
 
       const { data } = await supabase
         .from('socios')
-        .select('*')
-        .eq('id', user.id)
-        .single()
+        .select('id, nombre, apellido, numero_socio, categoria, cuota_al_dia')
+        .eq('user_id', user.id)
+        .order('nombre')
 
-      setSocio(data)
+      const lista = data ?? []
+      setSocios(lista)
+      setSocioActivo(lista[0] ?? null)
       setLoading(false)
     }
-
-    cargarSocio()
+    cargarSocios()
   }, [])
 
   if (loading) {
@@ -50,6 +49,8 @@ export default function HomePage() {
       </main>
     )
   }
+
+  const socio = socioActivo
 
   return (
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col">
@@ -90,6 +91,28 @@ export default function HomePage() {
         <h1 className="text-white text-4xl font-serif font-semibold leading-tight">
           Hola, <em>{socio?.nombre ?? 'Socio'}</em>
         </h1>
+
+        {/* Selector de familia si hay más de un socio */}
+        {socios.length > 1 && (
+          <div className="flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
+            {socios.map(s => (
+              <button
+                key={s.id}
+                onClick={() => setSocioActivo(s)}
+                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  socioActivo?.id === s.id
+                    ? 'bg-[#B8975A] text-white'
+                    : 'bg-white/10 text-[#888] hover:bg-white/15'
+                }`}
+              >
+                <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">
+                  {s.nombre[0]}
+                </span>
+                {s.nombre}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Contenido */}
@@ -99,7 +122,7 @@ export default function HomePage() {
         <div className={`rounded-2xl p-5 ${socio?.cuota_al_dia ? 'bg-[#0D0D0D]' : 'bg-[#7D1A1A]'}`}>
           <div className="flex items-center justify-between mb-3">
             <div className="text-[rgba(255,255,255,0.5)] text-xs uppercase tracking-widest">
-              Mi Cuota
+              {socios.length > 1 ? `Cuota — ${socio?.nombre}` : 'Mi Cuota'}
             </div>
             <div className={`flex items-center gap-1.5 text-xs font-semibold ${socio?.cuota_al_dia ? 'text-[#B8975A]' : 'text-red-300'}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-[#B8975A]' : 'bg-red-400'}`} />
