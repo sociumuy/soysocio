@@ -17,7 +17,7 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       setError('Email o contraseña incorrectos')
@@ -25,7 +25,19 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/home')
+    // Detectar rol: admin o socio
+    const userId = authData.user?.id
+    const { data: adminData } = await supabase
+      .from('admins')
+      .select('id')
+      .eq('id', userId)
+      .single()
+
+    if (adminData) {
+      router.push('/admin')
+    } else {
+      router.push('/home')
+    }
   }
 
   return (

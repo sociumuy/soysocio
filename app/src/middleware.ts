@@ -32,10 +32,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Si ya está logueado y va al login → a la home
-  if (user && request.nextUrl.pathname === '/login') {
-    return NextResponse.redirect(new URL('/home', request.url))
-  }
+  // Si ya está logueado y va al login → dejar que el login detecte el rol y redirija
+  // (el login page maneja la detección admin/socio)
 
   return supabaseResponse
 }
