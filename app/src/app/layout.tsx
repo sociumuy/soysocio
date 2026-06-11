@@ -39,12 +39,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#0D0D0D" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full font-sans" style={{ background: '#E8E8E8' }}>
+        <div style={{ maxWidth: 430, margin: '0 auto', minHeight: '100dvh', position: 'relative', background: '#0D0D0D', boxShadow: '0 0 60px rgba(0,0,0,0.4)' }}>
         <ClubTheme />
         {children}
         <script dangerouslySetInnerHTML={{
           __html: `if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js') }`
         }} />
+        </div>
       </body>
     </html>
   );
