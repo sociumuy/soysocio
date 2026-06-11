@@ -35,9 +35,9 @@ const NAV = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router   = useRouter()
   const pathname = usePathname()
-  const [admin, setAdmin]             = useState<AdminData | null>(null)
-  const [cargando, setCargando]       = useState(true)
-  const [drawerAbierto, setDrawer]    = useState(false)
+  const [admin, setAdmin]          = useState<AdminData | null>(null)
+  const [cargando, setCargando]    = useState(true)
+  const [drawerAbierto, setDrawer] = useState(false)
   const supabase = createClient()
   const club     = getStoredClub()
 
@@ -58,7 +58,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     verificar()
   }, [])
 
-  // Cierra drawer en cada cambio de ruta
   useEffect(() => { setDrawer(false) }, [pathname])
 
   async function salir() {
@@ -77,24 +76,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!admin) return null
 
-  const navVisible  = NAV.filter(item => ROL_ACCESO[admin.rol]?.includes(item.seccion))
+  const navVisible   = NAV.filter(item => ROL_ACCESO[admin.rol]?.includes(item.seccion))
   const paginaActual = NAV.find(n => n.href === pathname)?.label ?? 'Admin'
 
   return (
     <AdminContext.Provider value={admin}>
       {/*
-        Layout: siempre drawer (no sidebar persistente).
-        El phone-frame es 393px — las media queries del browser no reflejan eso,
-        por lo que un sidebar persistente siempre comprimiría el contenido.
+        Contenedor raíz: ocupa toda la altura disponible, sin overflow propio.
+        El drawer usa `absolute` (no `fixed`) para quedar DENTRO del phone frame.
+        Solo el <main> hace scroll.
       */}
-      <div className="min-h-screen flex flex-col w-full overflow-x-hidden" style={{ background: '#F4F3EF' }}>
-
-        {/* ── Top bar (siempre visible) ── */}
+      <div
+        className="relative flex flex-col w-full overflow-hidden"
+        style={{ background: '#F4F3EF', minHeight: '100dvh' }}
+      >
+        {/* ── Top bar ── */}
         <header
-          className="w-full sticky top-0 z-30 flex items-center justify-between px-4 py-3 flex-shrink-0"
+          className="w-full flex-shrink-0 flex items-center justify-between px-4 py-3 z-10 relative"
           style={{ background: '#08101f', borderBottom: `1px solid rgba(${rgb},0.18)` }}
         >
-          {/* Izquierda: hamburger + club */}
           <div className="flex items-center gap-2.5">
             <button
               onClick={() => setDrawer(true)}
@@ -121,35 +121,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="text-white text-sm font-semibold">{paginaActual}</span>
           </div>
 
-          {/* Derecha: indicador del club */}
           <div className="w-2 h-2 rounded-full" style={{ background: primary }} />
         </header>
 
-        {/* ── Drawer overlay ── */}
+        {/* ── Drawer — absolute, dentro del phone frame ── */}
         <AnimatePresence>
           {drawerAbierto && (
             <>
-              {/* Backdrop */}
+              {/* Backdrop: cubre todo el contenedor raíz */}
               <motion.div
                 key="bd"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }}
-                className="fixed inset-0 z-40"
-                style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)' }}
+                className="absolute inset-0 z-40"
+                style={{ background: 'rgba(0,0,0,0.62)', backdropFilter: 'blur(2px)' }}
                 onClick={() => setDrawer(false)}
               />
 
-              {/* Panel */}
+              {/* Panel del drawer */}
               <motion.aside
                 key="panel"
                 initial={{ x: '-100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-                className="fixed top-0 left-0 h-full z-50 flex flex-col"
-                style={{ width: 260, background: '#08101f' }}
+                className="absolute top-0 left-0 z-50 flex flex-col"
+                style={{ width: 260, height: '100%', background: '#08101f' }}
               >
                 {/* Club header */}
                 <div className="px-5 pt-8 pb-5 flex items-center gap-3"
@@ -159,24 +158,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     style={{ background: `rgba(${rgb},0.15)`, border: `1.5px solid rgba(${rgb},0.25)` }}
                   >
                     {club?.logo_url
-                      ? <img src={club.logo_url} alt={club.nombre} className="w-full h-full object-contain p-1" />
+                      ? <img src={club.logo_url} alt={club?.nombre} className="w-full h-full object-contain p-1" />
                       : <span className="text-white text-sm font-black">{club?.iniciales ?? 'DC'}</span>
                     }
                   </div>
-                  <div>
-                    <div className="text-white text-sm font-bold leading-tight">{club?.nombre ?? 'DelClub'}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white text-sm font-bold leading-tight truncate">{club?.nombre ?? 'DelClub'}</div>
                     <div className="text-[10px] mt-0.5" style={{ color: primary }}>Panel admin</div>
                   </div>
-
-                  {/* Botón cerrar */}
                   <button
                     onClick={() => setDrawer(false)}
-                    className="ml-auto p-1.5 rounded-lg"
+                    className="p-1.5 rounded-lg flex-shrink-0"
                     style={{ color: 'rgba(255,255,255,0.35)' }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6"  y1="6" x2="18" y2="18" />
+                      <line x1="18" y1="6" x2="6" y2="18"/>
+                      <line x1="6"  y1="6" x2="18" y2="18"/>
                     </svg>
                   </button>
                 </div>
@@ -203,7 +200,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   })}
                 </nav>
 
-                {/* User footer */}
+                {/* Footer usuario */}
                 <div className="px-4 py-5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2.5 mb-4">
                     <div
@@ -237,8 +234,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
         </AnimatePresence>
 
-        {/* ── Contenido principal: siempre 100% ancho ── */}
-        <main className="flex-1 w-full overflow-x-hidden p-4">
+        {/* ── Contenido principal: único area con scroll ── */}
+        <main className="flex-1 overflow-y-auto p-4">
           {children}
         </main>
       </div>
