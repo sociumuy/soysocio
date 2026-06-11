@@ -13,7 +13,7 @@ const NAVY = '#1B2D6E'
 const GOLD = '#C8940A'
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
-const BG = 'linear-gradient(180deg, #0f1d4e 0%, #1B2D6E 40%, #162358 100%)'
+const BG = '#08101f'
 
 export default function LandingPage() {
   const router = useRouter()
