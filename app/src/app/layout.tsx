@@ -39,8 +39,8 @@ export default function RootLayout({
         <meta name="theme-color" content="#0D0D0D" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body className="min-h-full font-sans" style={{ background: '#E8E8E8' }}>
-        <div style={{ maxWidth: 430, margin: '0 auto', minHeight: '100dvh', position: 'relative', background: '#0D0D0D', boxShadow: '0 0 60px rgba(0,0,0,0.4)' }}>
+      <body className="min-h-full font-sans" style={{ background: '#1a1a1a', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', minHeight: '100dvh', padding: '24px 0' }}>
+        <div style={{ width: '100%', maxWidth: 430, minHeight: 'calc(100dvh - 48px)', position: 'relative', background: '#0D0D0D', borderRadius: 44, overflow: 'hidden', boxShadow: '0 0 0 8px #2a2a2a, 0 0 0 10px #111, 0 30px 80px rgba(0,0,0,0.6)' }}>
         <ClubTheme />
         {children}
         <script dangerouslySetInnerHTML={{
