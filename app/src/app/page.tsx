@@ -255,10 +255,10 @@ export default function LandingPage() {
                 {selectedClub?.nombre ?? 'Volver'}
               </button>
 
-              <div className="mb-8">
+              <div className="mb-8 text-center">
                 <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: GOLD }}>Paso 2 de 2</p>
-                <h2 className="font-serif text-3xl font-bold leading-tight text-white">
-                  ¿Cómo querés<br />ingresar?
+                <h2 className="font-sans text-3xl font-bold leading-tight text-white whitespace-nowrap">
+                  ¿Cómo querés ingresar?
                 </h2>
               </div>
 
