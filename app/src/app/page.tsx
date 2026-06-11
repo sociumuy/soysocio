@@ -15,6 +15,14 @@ const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 const BG = '#08101f'
 
+// Clubes demo para presentación — se muestran además de los de Supabase
+const DEMO_CLUBS: Club[] = [
+  { id: 'demo-polo',      nombre: 'Carrasco Polo Club', color_primario: '#1565C0', color_rgb: '21, 101, 192', logo_url: null },
+  { id: 'demo-ceibos',    nombre: 'Ceibos Club',        color_primario: '#2E7D32', color_rgb: '46, 125, 50',  logo_url: null },
+  { id: 'demo-oldboys',   nombre: 'Old Boys',           color_primario: '#C62828', color_rgb: '198, 40, 40',  logo_url: null },
+  { id: 'demo-seminario', nombre: 'Club Seminario',     color_primario: '#7B1828', color_rgb: '123, 24, 40',  logo_url: null },
+]
+
 export default function LandingPage() {
   const router = useRouter()
   const supabase = createClient()
@@ -33,8 +41,11 @@ export default function LandingPage() {
       }
       const { data } = await supabase.from('clubes').select('id, nombre, color_primario, color_rgb, logo_url').order('nombre')
       const lista: Club[] = data ?? []
-      setClubs(lista)
-      setStep(lista.length === 0 ? 'roles' : 'clubs')
+      // Agrega demos que no estén ya en Supabase (por nombre)
+      const extras = DEMO_CLUBS.filter(d => !lista.some(l => l.nombre === d.nombre))
+      const todos = [...lista, ...extras].sort((a, b) => a.nombre.localeCompare(b.nombre))
+      setClubs(todos)
+      setStep(todos.length === 0 ? 'roles' : 'clubs')
     }
     init()
   }, [])
