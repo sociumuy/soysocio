@@ -17,10 +17,10 @@ const BG = '#08101f'
 
 // Clubes demo para presentación — se muestran además de los de Supabase
 const DEMO_CLUBS: Club[] = [
-  { id: 'demo-polo',      nombre: 'Carrasco Polo Club', color_primario: '#1565C0', color_rgb: '21, 101, 192', logo_url: null },
-  { id: 'demo-ceibos',    nombre: 'Ceibos Club',        color_primario: '#2E7D32', color_rgb: '46, 125, 50',  logo_url: null },
-  { id: 'demo-oldboys',   nombre: 'Old Boys',           color_primario: '#C62828', color_rgb: '198, 40, 40',  logo_url: null },
-  { id: 'demo-seminario', nombre: 'Club Seminario',     color_primario: '#7B1828', color_rgb: '123, 24, 40',  logo_url: null },
+  { id: 'demo-polo',      nombre: 'Carrasco Polo Club', color_primario: '#1565C0', color_rgb: '21, 101, 192', logo_url: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Carrasco_Polo_Club_Crest.svg/250px-Carrasco_Polo_Club_Crest.svg.png' },
+  { id: 'demo-ceibos',    nombre: 'Ceibos Club',        color_primario: '#2E7D32', color_rgb: '46, 125, 50',  logo_url: 'https://upload.wikimedia.org/wikipedia/fr/thumb/d/da/Logo_Ceibos_Rugby.svg/250px-Logo_Ceibos_Rugby.svg.png' },
+  { id: 'demo-oldboys',   nombre: 'Old Boys',           color_primario: '#C62828', color_rgb: '198, 40, 40',  logo_url: 'https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/Old_Boys_Club_Crest.svg/250px-Old_Boys_Club_Crest.svg.png' },
+  { id: 'demo-seminario', nombre: 'Club Seminario',     color_primario: '#7B1828', color_rgb: '123, 24, 40',  logo_url: 'https://clubseminario.com.uy/images/escudo/logo-cs.png' },
 ]
 
 export default function LandingPage() {
@@ -43,7 +43,8 @@ export default function LandingPage() {
       const lista: Club[] = data ?? []
       // Agrega demos que no estén ya en Supabase (por nombre)
       const extras = DEMO_CLUBS.filter(d => !lista.some(l => l.nombre === d.nombre))
-      const todos = [...lista, ...extras].sort((a, b) => a.nombre.localeCompare(b.nombre))
+      // Clubs reales primero, demos ordenados alfabéticamente después
+      const todos = [...lista, ...extras.sort((a, b) => a.nombre.localeCompare(b.nombre))]
       setClubs(todos)
       setStep(todos.length === 0 ? 'roles' : 'clubs')
     }
