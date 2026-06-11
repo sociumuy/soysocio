@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,7 +25,7 @@ const ESPACIOS: Espacio[] = [
     descripcion: 'Musculación y cardio',
     capacidad: 'Máx. 20 personas',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
         <path d="M6 4v16M18 4v16M2 9h4M18 9h4M2 15h4M18 15h4" />
       </svg>
     ),
@@ -36,7 +36,7 @@ const ESPACIOS: Espacio[] = [
     descripcion: 'Canchas 1, 2 y 3',
     capacidad: '2–4 personas',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M6.5 6.5c3 3 3 9 0 11M17.5 6.5c-3 3-3 9 0 11" />
       </svg>
@@ -48,7 +48,7 @@ const ESPACIOS: Espacio[] = [
     descripcion: 'Natación libre',
     capacidad: 'Máx. 15 personas',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
         <path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0" />
         <path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0" />
         <path d="M12 2a3 3 0 0 0-3 3v5" />
@@ -62,7 +62,7 @@ const ESPACIOS: Espacio[] = [
     descripcion: 'Sauna finlandesa',
     capacidad: 'Máx. 6 personas',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
         <path d="M8 2c0 4-4 4-4 8a6 6 0 0 0 12 0c0-4-4-4-4-8" />
         <path d="M12 2c0 4-4 4-4 8" />
       </svg>
@@ -74,7 +74,7 @@ const ESPACIOS: Espacio[] = [
     descripcion: 'Cancha cubierta',
     capacidad: '2 personas',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <circle cx="15" cy="15" r="2" />
         <line x1="7" y1="7" x2="11" y2="11" />
@@ -192,9 +192,9 @@ export default function ReservasPage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          className="w-20 h-20 bg-[#B8975A]/10 border border-[#B8975A]/30 rounded-full flex items-center justify-center mb-6"
+          className="w-20 h-20 bg-[var(--club-primary)]/10 border border-[var(--club-primary)]/30 rounded-full flex items-center justify-center mb-6"
         >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="2" strokeLinecap="round">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="2" strokeLinecap="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </motion.div>
@@ -205,7 +205,7 @@ export default function ReservasPage() {
         >
           <h1 className="text-white font-serif text-3xl font-semibold mb-2">Reserva confirmada</h1>
           <p className="text-[#555] text-sm mb-1">{espacioSel?.nombre}</p>
-          <p className="text-[#B8975A] text-sm font-semibold font-mono mb-8">
+          <p className="text-[var(--club-primary)] text-sm font-semibold font-mono mb-8">
             {diaDisplay?.dia} {diaDisplay?.num} de {diaDisplay?.mes} · {horaSel} hs
           </p>
           <p className="text-[#444] text-xs mb-8 max-w-xs leading-relaxed">
@@ -300,7 +300,7 @@ export default function ReservasPage() {
                       diaSel === d.key ? 'bg-[#0D0D0D] text-white' : 'bg-white text-[#0D0D0D] shadow-sm'
                     }`}
                   >
-                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${diaSel === d.key ? 'text-[#B8975A]' : 'text-[#aaa]'}`}>
+                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${diaSel === d.key ? 'text-[var(--club-primary)]' : 'text-[#aaa]'}`}>
                       {d.esHoy ? 'Hoy' : d.dia}
                     </span>
                     <span className={`text-xl font-serif font-semibold mt-0.5 ${diaSel === d.key ? 'text-white' : 'text-[#0D0D0D]'}`}>
@@ -371,7 +371,7 @@ export default function ReservasPage() {
                     </div>
                     <div>
                       <div className="text-white text-sm font-bold">{espacioSel?.nombre}</div>
-                      <div className="text-[#B8975A] text-xs font-mono mt-0.5">
+                      <div className="text-[var(--club-primary)] text-xs font-mono mt-0.5">
                         {diaDisplay?.dia} {diaDisplay?.num} de {diaDisplay?.mes} · {horaSel} hs
                       </div>
                     </div>

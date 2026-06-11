@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,9 +44,9 @@ export default function AdminDashboard() {
       label: 'Socios totales',
       valor: stats?.totalSocios ?? '—',
       sub: 'registrados',
-      color: '#B8975A',
+      color: 'var(--club-primary)',
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                 }`}
               >
                 <div className={`text-sm font-bold mb-1 ${a.gold ? 'text-white' : 'text-[#0D0D0D]'}`}>{a.label}</div>
-                <div className={`text-xs ${a.gold ? 'text-[#B8975A]' : 'text-[#aaa]'}`}>{a.desc}</div>
+                <div className={`text-xs ${a.gold ? 'text-[var(--club-primary)]' : 'text-[#aaa]'}`}>{a.desc}</div>
               </button>
             ))}
           </div>

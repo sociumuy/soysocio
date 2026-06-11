@@ -3,6 +3,9 @@ export type ClubStored = {
   nombre: string
   iniciales: string
   gradiente: string[]
+  color_primario: string
+  color_rgb: string
+  logo_url?: string | null
 }
 
 const KEY = 'soysocio_club'

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -56,7 +56,7 @@ export default function NuevaContrasenaPage() {
               onChange={e => setPassword(e.target.value)}
               required
               placeholder="Mínimo 8 caracteres"
-              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#B8975A] transition-colors placeholder:text-[#444]"
+              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[var(--club-primary)] transition-colors placeholder:text-[#444]"
             />
           </div>
 
@@ -70,7 +70,7 @@ export default function NuevaContrasenaPage() {
               onChange={e => setConfirmar(e.target.value)}
               required
               placeholder="Repetí la contraseña"
-              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#B8975A] transition-colors placeholder:text-[#444]"
+              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[var(--club-primary)] transition-colors placeholder:text-[#444]"
             />
           </div>
 
@@ -79,7 +79,7 @@ export default function NuevaContrasenaPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 bg-[#B8975A] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="mt-2 bg-[var(--club-primary)] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {loading ? 'Guardando...' : 'Guardar contraseña'}
           </button>

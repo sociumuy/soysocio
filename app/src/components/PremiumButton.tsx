@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useRef, useState } from 'react'
@@ -16,9 +16,9 @@ interface Props {
 }
 
 const V = {
-  gold:    { bg: 'linear-gradient(160deg,#D4A854 0%,#B8975A 45%,#8B6A32 100%)', shadow: '#6B4E1E', shimmer: 'rgba(255,255,255,0.38)', border: 'rgba(255,220,140,0.25)', text: '#fff' },
-  dark:    { bg: 'linear-gradient(160deg,#222 0%,#111 100%)',                   shadow: '#000',    shimmer: 'rgba(184,151,90,0.45)', border: 'rgba(255,255,255,0.08)', text: '#fff' },
-  ghost:   { bg: 'transparent',                                                  shadow: 'none',    shimmer: 'rgba(184,151,90,0.2)',  border: 'rgba(184,151,90,0.28)', text: '#B8975A' },
+  gold:    { bg: 'linear-gradient(160deg,#D4A854 0%,var(--club-primary) 45%,#8B6A32 100%)', shadow: '#6B4E1E', shimmer: 'rgba(255,255,255,0.38)', border: 'rgba(255,220,140,0.25)', text: '#fff' },
+  dark:    { bg: 'linear-gradient(160deg,#222 0%,#111 100%)',                   shadow: '#000',    shimmer: 'rgba(var(--club-primary-rgb),0.45)', border: 'rgba(255,255,255,0.08)', text: '#fff' },
+  ghost:   { bg: 'transparent',                                                  shadow: 'none',    shimmer: 'rgba(var(--club-primary-rgb),0.2)',  border: 'rgba(var(--club-primary-rgb),0.28)', text: 'var(--club-primary)' },
   danger:  { bg: 'linear-gradient(160deg,#9B1C1C 0%,#6B1010 100%)',             shadow: '#3D0606', shimmer: 'rgba(255,120,120,0.3)', border: 'rgba(255,100,100,0.2)', text: '#fff' },
   outline: { bg: 'transparent',                                                  shadow: 'none',    shimmer: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.15)', text: '#fff' },
 }

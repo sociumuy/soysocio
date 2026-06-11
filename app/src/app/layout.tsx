@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from "next";
+import ClubTheme from "@/components/ClubTheme";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Cormorant_Garamond } from "next/font/google";
@@ -39,6 +40,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body className="min-h-full flex flex-col font-sans">
+        <ClubTheme />
         {children}
         <script dangerouslySetInnerHTML={{
           __html: `if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js') }`

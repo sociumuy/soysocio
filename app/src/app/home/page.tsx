@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,7 +65,7 @@ export default function HomePage() {
     return (
       <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="w-7 h-7 rounded-full border-2 border-[#B8975A] border-t-transparent" />
+          className="w-7 h-7 rounded-full border-2 border-[var(--club-primary)] border-t-transparent" />
       </main>
     )
   }
@@ -87,7 +87,7 @@ export default function HomePage() {
       <div className="relative bg-[#0D0D0D] px-5 pt-16 pb-8 overflow-hidden">
         <GrainOverlay opacity={0.05} />
         <div className="pointer-events-none absolute top-0 right-0 w-56 h-56 rounded-full opacity-[0.18]"
-          style={{ background: 'radial-gradient(circle, rgba(184,151,90,0.5) 0%, transparent 70%)', transform: 'translate(35%,-35%)' }} />
+          style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.5) 0%, transparent 70%)', transform: 'translate(35%,-35%)' }} />
 
         {/* top bar */}
         <div className="relative z-10 flex items-center justify-between mb-8">
@@ -122,7 +122,7 @@ export default function HomePage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease }}
             className="font-serif text-5xl font-semibold leading-none"
-            style={{ background: 'linear-gradient(135deg, #ffffff 30%, rgba(184,151,90,0.75) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            style={{ background: 'linear-gradient(135deg, #ffffff 30%, rgba(var(--club-primary-rgb),0.75) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
           >
             {socio?.nombre ?? 'Socio'}
           </motion.h1>
@@ -130,8 +130,8 @@ export default function HomePage() {
           <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
             className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full"
-            style={{ background: 'rgba(184,151,90,0.08)', border: '1px solid rgba(184,151,90,0.18)' }}>
-            <span className="text-[#B8975A] text-[10px] font-bold tracking-widest uppercase">{socio?.categoria ?? 'Socio'}</span>
+            style={{ background: 'rgba(var(--club-primary-rgb),0.08)', border: '1px solid rgba(var(--club-primary-rgb),0.18)' }}>
+            <span className="text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">{socio?.categoria ?? 'Socio'}</span>
             <span className="text-[#333]">·</span>
             <span className="text-[#555] text-[10px]">N° {socio?.numero_socio ?? '—'}</span>
           </motion.div>
@@ -142,8 +142,8 @@ export default function HomePage() {
           <div className="relative z-10 flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
             {socios.map(s => (
               <button key={s.id} onClick={() => setSocioActivo(s)}
-                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${socioActivo?.id === s.id ? 'bg-[#B8975A] text-white' : 'bg-white/8 text-[#666]'}`}>
-                <span className="w-5 h-5 rounded-full bg-[#B8975A]/30 flex items-center justify-center text-[10px] font-bold text-[#B8975A]">{s.nombre[0]}</span>
+                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${socioActivo?.id === s.id ? 'bg-[var(--club-primary)] text-white' : 'bg-white/8 text-[#666]'}`}>
+                <span className="w-5 h-5 rounded-full bg-[var(--club-primary)]/30 flex items-center justify-center text-[10px] font-bold text-[var(--club-primary)]">{s.nombre[0]}</span>
                 {s.nombre}
               </button>
             ))}
@@ -172,7 +172,7 @@ export default function HomePage() {
                 <GrainOverlay opacity={0.07} />
                 <div className="pointer-events-none absolute top-0 right-0 w-44 h-44 rounded-full opacity-25"
                   style={{
-                    background: `radial-gradient(circle, ${socio?.cuota_al_dia ? 'rgba(184,151,90,0.6)' : 'rgba(255,80,80,0.4)'} 0%, transparent 70%)`,
+                    background: `radial-gradient(circle, ${socio?.cuota_al_dia ? 'rgba(var(--club-primary-rgb),0.6)' : 'rgba(255,80,80,0.4)'} 0%, transparent 70%)`,
                     transform: 'translate(30%,-30%)',
                   }} />
 
@@ -183,9 +183,9 @@ export default function HomePage() {
                       {socios.length > 1 ? `Cuota — ${socio?.nombre}` : 'Mi Cuota'}
                     </span>
                     <div className="flex items-center gap-2">
-                      <div className={`flex items-center gap-1.5 text-xs font-semibold ${socio?.cuota_al_dia ? 'text-[#B8975A]' : 'text-red-300'}`}>
+                      <div className={`flex items-center gap-1.5 text-xs font-semibold ${socio?.cuota_al_dia ? 'text-[var(--club-primary)]' : 'text-red-300'}`}>
                         <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }}
-                          className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-[#B8975A]' : 'bg-red-400'}`} />
+                          className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-[var(--club-primary)]' : 'bg-red-400'}`} />
                         {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
                       </div>
                       <motion.div animate={{ rotate: cuotaExpanded ? 180 : 0 }} transition={{ duration: 0.3 }}>
@@ -246,7 +246,7 @@ export default function HomePage() {
           <motion.div variants={stagger.item} className="grid grid-cols-2 gap-3">
             {[
               { label: 'Reservas activas', value: '1', sub: 'esta semana', color: '#1A5C9E' },
-              { label: 'Novedades', value: '3', sub: 'sin leer', color: '#B8975A' },
+              { label: 'Novedades', value: '3', sub: 'sin leer', color: 'var(--club-primary)' },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="bg-white rounded-2xl p-4 shadow-sm overflow-hidden relative">
                 <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(to right, transparent, ${color}, transparent)` }} />
@@ -262,8 +262,8 @@ export default function HomePage() {
             <motion.div whileTap={{ scale: 0.98 }} onClick={() => router.push('/reservas')}
               className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-4 cursor-pointer">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, rgba(184,151,90,0.12), rgba(184,151,90,0.04))', border: '1px solid rgba(184,151,90,0.18)' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+                style={{ background: 'linear-gradient(135deg, rgba(var(--club-primary-rgb),0.12), rgba(var(--club-primary-rgb),0.04))', border: '1px solid rgba(var(--club-primary-rgb),0.18)' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                   <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
@@ -283,7 +283,7 @@ export default function HomePage() {
           <motion.div variants={stagger.item}>
             <div className="flex items-center justify-between mb-3">
               <p className="text-[#888] text-[10px] uppercase tracking-widest">Novedades</p>
-              <button onClick={() => router.push('/novedades')} className="text-[#B8975A] text-xs font-semibold flex items-center gap-1">
+              <button onClick={() => router.push('/novedades')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1">
                 Ver todas
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
               </button>

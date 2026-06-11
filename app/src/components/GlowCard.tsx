@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useRef } from 'react'
@@ -10,7 +10,7 @@ interface Props {
 }
 
 // Card with a radial glow that follows the pointer
-export default function GlowCard({ children, className = '', glowColor = 'rgba(184,151,90,0.15)' }: Props) {
+export default function GlowCard({ children, className = '', glowColor = 'rgba(var(--club-primary-rgb),0.15)' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)

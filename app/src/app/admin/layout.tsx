@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -107,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (cargando) {
     return (
       <div className="min-h-screen bg-[#F4F3EF] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </svg>
               <div>
                 <div className="text-white text-xs font-bold">Club Carrasco</div>
-                <div className="text-[#B8975A] text-[10px]">Panel admin</div>
+                <div className="text-[var(--club-primary)] text-[10px]">Panel admin</div>
               </div>
             </div>
           </div>
@@ -151,10 +151,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   key={item.href}
                   onClick={() => router.push(item.href)}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all w-full text-left ${
-                    active ? 'bg-[#B8975A]/15 text-[#B8975A]' : 'text-[#666] hover:text-white hover:bg-white/5'
+                    active ? 'bg-[var(--club-primary)]/15 text-[var(--club-primary)]' : 'text-[#666] hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <span className={active ? 'text-[#B8975A]' : 'text-[#555]'}>{item.icon}</span>
+                  <span className={active ? 'text-[var(--club-primary)]' : 'text-[#555]'}>{item.icon}</span>
                   {item.label}
                 </button>
               )
@@ -164,8 +164,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {admin && (
             <div className="px-4 py-5 border-t border-white/5">
               <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 bg-[#B8975A]/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-[#B8975A] text-xs font-bold">
+                <div className="w-8 h-8 bg-[var(--club-primary)]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-[var(--club-primary)] text-xs font-bold">
                     {admin.nombre[0]}{admin.apellido[0]}
                   </span>
                 </div>
@@ -225,10 +225,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     key={item.href}
                     onClick={() => { router.push(item.href); setMenuAbierto(false) }}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full text-left ${
-                      active ? 'bg-[#B8975A]/15 text-[#B8975A]' : 'text-[#666] hover:text-white'
+                      active ? 'bg-[var(--club-primary)]/15 text-[var(--club-primary)]' : 'text-[#666] hover:text-white'
                     }`}
                   >
-                    <span className={active ? 'text-[#B8975A]' : 'text-[#555]'}>{item.icon}</span>
+                    <span className={active ? 'text-[var(--club-primary)]' : 'text-[#555]'}>{item.icon}</span>
                     {item.label}
                   </button>
                 )

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 
@@ -17,13 +17,13 @@ export default function AnimatedMesh({ className = '' }: { className?: string })
         <defs>
           {/* Sweeping beam gradient */}
           <radialGradient id="beam-glow" cx="50%" cy="30%" r="40%">
-            <stop offset="0%" stopColor="rgba(184,151,90,0.18)" />
-            <stop offset="100%" stopColor="rgba(184,151,90,0)" />
+            <stop offset="0%" stopColor="rgba(var(--club-primary-rgb),0.18)" />
+            <stop offset="100%" stopColor="rgba(var(--club-primary-rgb),0)" />
           </radialGradient>
           {/* Individual dot glow */}
           <radialGradient id="dot-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(184,151,90,0.9)" />
-            <stop offset="100%" stopColor="rgba(184,151,90,0)" />
+            <stop offset="0%" stopColor="rgba(var(--club-primary-rgb),0.9)" />
+            <stop offset="100%" stopColor="rgba(var(--club-primary-rgb),0)" />
           </radialGradient>
         </defs>
 
@@ -46,7 +46,7 @@ export default function AnimatedMesh({ className = '' }: { className?: string })
       <motion.div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, transparent 0%, rgba(184,151,90,0.06) 40%, transparent 60%)',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(var(--club-primary-rgb),0.06) 40%, transparent 60%)',
         }}
         animate={{ y: ['-60%', '120%'] }}
         transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 2 }}
@@ -56,7 +56,7 @@ export default function AnimatedMesh({ className = '' }: { className?: string })
       <motion.div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(184,151,90,0.04) 50%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(var(--club-primary-rgb),0.04) 50%, transparent 100%)',
         }}
         animate={{ x: ['-100%', '200%'] }}
         transition={{ duration: 9, repeat: Infinity, ease: 'linear', repeatDelay: 3, delay: 4 }}

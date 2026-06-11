@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -83,7 +83,7 @@ export default function PerfilPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
@@ -102,7 +102,7 @@ export default function PerfilPage() {
         <div className="relative mb-4">
           <div
             onClick={() => fileRef.current?.click()}
-            className="w-24 h-24 rounded-full bg-[#1a1a1a] border-2 border-[#B8975A]/40 flex items-center justify-center cursor-pointer overflow-hidden"
+            className="w-24 h-24 rounded-full bg-[#1a1a1a] border-2 border-[var(--club-primary)]/40 flex items-center justify-center cursor-pointer overflow-hidden"
           >
             {fotoUrl ? (
               <img src={fotoUrl} alt="foto" className="w-full h-full object-cover" />
@@ -110,7 +110,7 @@ export default function PerfilPage() {
               <span className="text-white font-serif text-3xl font-semibold">{iniciales}</span>
             )}
           </div>
-          <div className="absolute bottom-0 right-0 w-7 h-7 bg-[#B8975A] rounded-full flex items-center justify-center border-2 border-[#0D0D0D]">
+          <div className="absolute bottom-0 right-0 w-7 h-7 bg-[var(--club-primary)] rounded-full flex items-center justify-center border-2 border-[#0D0D0D]">
             {subiendo ? (
               <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
             ) : (
@@ -127,7 +127,7 @@ export default function PerfilPage() {
           {socio ? `${socio.nombre} ${socio.apellido}` : 'Mi Perfil'}
         </h1>
         {socio?.numero_socio && (
-          <p className="text-[#B8975A] text-xs tracking-widest mt-1">Socio N° {socio.numero_socio}</p>
+          <p className="text-[var(--club-primary)] text-xs tracking-widest mt-1">Socio N° {socio.numero_socio}</p>
         )}
         <div className="mt-3 px-4 py-1.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-full">
           <span className="text-[#888] text-xs uppercase tracking-wider">

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,7 +28,7 @@ const CAT_ACCENT: Record<string, string> = {
   Institucional: '#52C97A',
   Indumentaria: '#E07070',
   Salud: '#B07AE0',
-  Todos: '#B8975A',
+  Todos: 'var(--club-primary)',
 }
 
 const CAT_BADGE: Record<string, { bg: string; text: string }> = {
@@ -49,7 +49,7 @@ function formatFecha(iso: string) {
 
 // ── Detail view ──────────────────────────────────────
 function NovedadDetalle({ n, onBack }: { n: Novedad; onBack: () => void }) {
-  const accent = CAT_ACCENT[n.categoria] ?? '#B8975A'
+  const accent = CAT_ACCENT[n.categoria] ?? 'var(--club-primary)'
   return (
     <motion.main
       initial={{ opacity: 0, y: 30 }}
@@ -136,7 +136,7 @@ export default function NovedadesPage() {
       <div className="relative px-5 pt-12 pb-6 overflow-hidden">
         <GrainOverlay opacity={0.05} />
         <div className="pointer-events-none absolute top-0 left-0 w-64 h-64 rounded-full opacity-15"
-          style={{ background: 'radial-gradient(circle, rgba(184,151,90,0.5) 0%, transparent 70%)', transform: 'translate(-40%, -40%)' }} />
+          style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.5) 0%, transparent 70%)', transform: 'translate(-40%, -40%)' }} />
         <motion.div
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
@@ -144,7 +144,7 @@ export default function NovedadesPage() {
           className="relative z-10"
         >
           <h1 className="text-white font-serif text-4xl font-semibold"
-            style={{ background: 'linear-gradient(135deg, #fff 40%, rgba(184,151,90,0.7) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            style={{ background: 'linear-gradient(135deg, #fff 40%, rgba(var(--club-primary-rgb),0.7) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Novedades
           </h1>
           <p className="text-[#444] text-xs mt-1 tracking-wider">Club Carrasco</p>
@@ -177,7 +177,7 @@ export default function NovedadesPage() {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtradas.length === 0 ? (
           <div className="text-center py-16 text-[#aaa] text-sm">No hay novedades publicadas</div>
@@ -207,7 +207,7 @@ export default function NovedadesPage() {
                     </>
                   ) : (
                     <div className="absolute inset-0"
-                      style={{ background: `linear-gradient(135deg, #111 0%, ${CAT_ACCENT[hero.categoria] ?? '#B8975A'}25 100%)` }}>
+                      style={{ background: `linear-gradient(135deg, #111 0%, ${CAT_ACCENT[hero.categoria] ?? 'var(--club-primary)'}25 100%)` }}>
                       <GrainOverlay opacity={0.07} />
                     </div>
                   )}
@@ -215,12 +215,12 @@ export default function NovedadesPage() {
                   {/* badges */}
                   <div className="absolute top-4 left-4 flex gap-2 z-10">
                     <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      style={{ background: `${CAT_ACCENT[hero.categoria] ?? '#B8975A'}30`, color: CAT_ACCENT[hero.categoria] ?? '#B8975A', border: `1px solid ${CAT_ACCENT[hero.categoria] ?? '#B8975A'}40`, backdropFilter: 'blur(4px)' }}>
+                      style={{ background: `${CAT_ACCENT[hero.categoria] ?? 'var(--club-primary)'}30`, color: CAT_ACCENT[hero.categoria] ?? 'var(--club-primary)', border: `1px solid ${CAT_ACCENT[hero.categoria] ?? 'var(--club-primary)'}40`, backdropFilter: 'blur(4px)' }}>
                       {hero.categoria}
                     </span>
                     {hero.destacada && (
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#B8975A]"
-                        style={{ background: 'rgba(184,151,90,0.2)', border: '1px solid rgba(184,151,90,0.3)', backdropFilter: 'blur(4px)' }}>
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[var(--club-primary)]"
+                        style={{ background: 'rgba(var(--club-primary-rgb),0.2)', border: '1px solid rgba(var(--club-primary-rgb),0.3)', backdropFilter: 'blur(4px)' }}>
                         ★ Destacado
                       </span>
                     )}
@@ -232,7 +232,7 @@ export default function NovedadesPage() {
                     <p className="text-white/60 text-xs line-clamp-2 mb-3">{hero.resumen}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-white/40 text-[10px]">{formatFecha(hero.created_at)}</span>
-                      <span className="text-[#B8975A] text-[10px] font-semibold flex items-center gap-1">
+                      <span className="text-[var(--club-primary)] text-[10px] font-semibold flex items-center gap-1">
                         Leer más
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                       </span>
@@ -244,7 +244,7 @@ export default function NovedadesPage() {
               {/* ── Rest of cards ── */}
               {rest.map((n, i) => {
                 const badge = CAT_BADGE[n.categoria] ?? CAT_BADGE['Todos']
-                const accent = CAT_ACCENT[n.categoria] ?? '#B8975A'
+                const accent = CAT_ACCENT[n.categoria] ?? 'var(--club-primary)'
                 return (
                   <motion.button
                     key={n.id}
@@ -271,7 +271,7 @@ export default function NovedadesPage() {
                         <h3 className="text-[#0D0D0D] text-sm font-bold leading-snug mb-1">{n.titulo}</h3>
                         <p className="text-[#888] text-xs leading-relaxed line-clamp-2">{n.resumen}</p>
                         <div className="flex items-center justify-end mt-3">
-                          <span className="text-[#B8975A] text-[10px] font-semibold flex items-center gap-1">
+                          <span className="text-[var(--club-primary)] text-[10px] font-semibold flex items-center gap-1">
                             Leer más
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                           </span>

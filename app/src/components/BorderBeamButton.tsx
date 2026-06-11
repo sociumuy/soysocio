@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 
@@ -16,7 +16,7 @@ export default function BorderBeamButton({ children, onClick, className = '', di
       disabled={disabled}
       whileTap={{ scale: 0.97 }}
       className={`relative overflow-hidden rounded-xl py-3 text-xs font-bold tracking-widest uppercase text-white transition-opacity disabled:opacity-50 ${className}`}
-      style={{ background: '#B8975A' }}
+      style={{ background: 'var(--club-primary)' }}
     >
       {/* rotating beam */}
       <span
@@ -31,7 +31,7 @@ export default function BorderBeamButton({ children, onClick, className = '', di
       <span
         aria-hidden
         className="pointer-events-none absolute inset-[2px] rounded-[10px]"
-        style={{ background: '#B8975A' }}
+        style={{ background: 'var(--club-primary)' }}
       />
       <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -51,9 +51,9 @@ export default function RecuperarPage() {
         </p>
 
         {enviado ? (
-          <div className="bg-[#1a1a1a] border border-[#B8975A]/30 rounded-2xl p-6 text-center">
-            <div className="w-12 h-12 bg-[#B8975A]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="2" strokeLinecap="round">
+          <div className="bg-[#1a1a1a] border border-[var(--club-primary)]/30 rounded-2xl p-6 text-center">
+            <div className="w-12 h-12 bg-[var(--club-primary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="2" strokeLinecap="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
@@ -72,7 +72,7 @@ export default function RecuperarPage() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 placeholder="tu@email.com"
-                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#B8975A] transition-colors placeholder:text-[#444]"
+                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[var(--club-primary)] transition-colors placeholder:text-[#444]"
               />
             </div>
 
@@ -81,7 +81,7 @@ export default function RecuperarPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 bg-[#B8975A] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="mt-2 bg-[var(--club-primary)] text-white rounded-xl py-3.5 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               {loading ? 'Enviando...' : 'Enviar link'}
             </button>

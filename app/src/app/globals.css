@@ -3,6 +3,9 @@
 :root {
   --gold: #B8975A;
   --dark: #0D0D0D;
+  --club-primary: #B8975A;
+  --club-primary-rgb: 184, 151, 90;
+  --club-secondary: #8B6A32;
 }
 
 @theme inline {

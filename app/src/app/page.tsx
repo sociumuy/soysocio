@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -10,7 +10,7 @@ import ShiftCard from '@/components/ShiftCard'
 import PremiumButton from '@/components/PremiumButton'
 import { setStoredClub, getIniciales, getClubGradient, type ClubStored } from '@/lib/club-storage'
 
-type Club = { id: string; nombre: string }
+type Club = { id: string; nombre: string; color_primario?: string; color_rgb?: string; logo_url?: string | null }
 type Step = 'loading' | 'clubs' | 'roles'
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
@@ -34,7 +34,7 @@ export default function LandingPage() {
       }
 
       // Load clubs
-      const { data } = await supabase.from('clubes').select('id, nombre').order('nombre')
+      const { data } = await supabase.from('clubes').select('id, nombre, color_primario, color_rgb, logo_url').order('nombre')
       const lista: Club[] = data ?? []
       setClubs(lista)
 
@@ -54,9 +54,15 @@ export default function LandingPage() {
       id: c.id, nombre: c.nombre,
       iniciales: getIniciales(c.nombre),
       gradiente: getClubGradient(i),
+      color_primario: c.color_primario ?? '#B8975A',
+      color_rgb: c.color_rgb ?? '184, 151, 90',
+      logo_url: c.logo_url,
     }
     setSelectedClub(club)
     setStoredClub(club)
+    // Apply immediately so the rest of the landing reflects the club color
+    document.documentElement.style.setProperty('--club-primary', club.color_primario)
+    document.documentElement.style.setProperty('--club-primary-rgb', club.color_rgb)
   }
 
   function handleContinue() {
@@ -75,7 +81,7 @@ export default function LandingPage() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="w-7 h-7 rounded-full border-2 border-[#B8975A] border-t-transparent"
+          className="w-7 h-7 rounded-full border-2 border-[var(--club-primary)] border-t-transparent"
         />
       </main>
     )
@@ -91,7 +97,7 @@ export default function LandingPage() {
         animate={{ scale: [1, 1.2, 1], opacity: [0.35, 0.55, 0.35] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         className="pointer-events-none absolute top-[-15%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(184,151,90,0.22) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.22) 0%, transparent 65%)' }}
       />
 
       {/* ── Logo header (always visible) ── */}
@@ -106,11 +112,11 @@ export default function LandingPage() {
             animate={{ rotate: 360 }}
             transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
             className="absolute inset-[-16px] rounded-full border border-dashed opacity-[0.18]"
-            style={{ borderColor: '#B8975A' }}
+            style={{ borderColor: 'var(--club-primary)' }}
           />
           <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3.5, repeat: Infinity }}>
             <svg width="52" height="60" viewBox="0 0 76 88" fill="none">
-              <path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z" fill="url(#lsg)" stroke="rgba(184,151,90,0.3)" strokeWidth="1" />
+              <path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z" fill="url(#lsg)" stroke="rgba(var(--club-primary-rgb),0.3)" strokeWidth="1" />
               <path d="M38 10L64 20V48C64 63 38 78 38 78C38 78 12 63 12 48V20L38 10Z" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
               <defs>
                 <linearGradient id="lsg" x1="4" y1="2" x2="72" y2="86" gradientUnits="userSpaceOnUse">
@@ -185,7 +191,7 @@ export default function LandingPage() {
                             style={{
                               background: isSelected
                                 ? `${grad[2]}30`
-                                : 'rgba(184,151,90,0.08)',
+                                : 'rgba(var(--club-primary-rgb),0.08)',
                               color: isSelected ? '#fff' : '#555',
                               border: `1px solid ${isSelected ? grad[2] + '50' : 'rgba(255,255,255,0.08)'}`,
                             }}
@@ -292,7 +298,7 @@ export default function LandingPage() {
                     label: 'Socio',
                     desc: 'Reservas, cuotas\ny novedades',
                     icon: (
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.5" strokeLinecap="round">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.5" strokeLinecap="round">
                         <circle cx="12" cy="8" r="4" />
                         <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                       </svg>
@@ -304,7 +310,7 @@ export default function LandingPage() {
                     label: 'Admin',
                     desc: 'Gestión del club\ny sus miembros',
                     icon: (
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.5" strokeLinecap="round">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.5" strokeLinecap="round">
                         <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7l-9-5z" />
                         <polyline points="9 12 11 14 15 10" />
                       </svg>
@@ -323,7 +329,7 @@ export default function LandingPage() {
                         className="relative overflow-hidden rounded-2xl flex flex-col items-center gap-4 px-4 py-8"
                         style={{
                           background: 'linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
-                          border: '1px solid rgba(184,151,90,0.18)',
+                          border: '1px solid rgba(var(--club-primary-rgb),0.18)',
                         }}
                       >
                         <GrainOverlay opacity={0.065} />
@@ -331,11 +337,11 @@ export default function LandingPage() {
                           animate={{ opacity: [0.4, 0.7, 0.4] }}
                           transition={{ duration: 3, repeat: Infinity }}
                           className="absolute inset-0 rounded-2xl"
-                          style={{ background: 'radial-gradient(circle at 50% 20%, rgba(184,151,90,0.08), transparent 60%)' }}
+                          style={{ background: 'radial-gradient(circle at 50% 20%, rgba(var(--club-primary-rgb),0.08), transparent 60%)' }}
                         />
                         <div
                           className="w-16 h-16 rounded-2xl flex items-center justify-center relative z-10"
-                          style={{ background: 'radial-gradient(circle at 35% 35%, rgba(184,151,90,0.18), rgba(184,151,90,0.05))', border: '1px solid rgba(184,151,90,0.22)' }}
+                          style={{ background: 'radial-gradient(circle at 35% 35%, rgba(var(--club-primary-rgb),0.18), rgba(var(--club-primary-rgb),0.05))', border: '1px solid rgba(var(--club-primary-rgb),0.22)' }}
                         >
                           {icon}
                         </div>
@@ -361,7 +367,7 @@ export default function LandingPage() {
         transition={{ delay: 1.4 }}
         className="relative z-10 text-center text-[#1e1e1e] text-[9px] tracking-widest pb-6"
       >
-        Powered by <span style={{ color: 'rgba(184,151,90,0.45)' }}>SoySocio</span>
+        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.45)' }}>SoySocio</span>
       </motion.p>
     </main>
   )

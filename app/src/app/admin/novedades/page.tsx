@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -129,27 +129,27 @@ export default function AdminNovedadesPage() {
               <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Título</label>
               <input required value={form.titulo} onChange={e => setForm(f => ({ ...f, titulo: e.target.value }))}
                 placeholder="Ej: Torneo de verano — Inscripciones abiertas"
-                className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors" />
+                className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors" />
             </div>
             <div>
               <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Resumen corto</label>
               <input required value={form.resumen} onChange={e => setForm(f => ({ ...f, resumen: e.target.value }))}
                 placeholder="Una línea que aparece en la lista"
-                className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors" />
+                className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Categoría</label>
                 <select value={form.categoria} onChange={e => setForm(f => ({ ...f, categoria: e.target.value }))}
-                  className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white">
+                  className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-white">
                   {CATEGORIAS.map(c => <option key={c}>{c}</option>)}
                 </select>
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Destacada</label>
                 <button type="button" onClick={() => setForm(f => ({ ...f, destacada: !f.destacada }))}
-                  className={`flex items-center gap-2 border rounded-xl px-4 py-3 text-sm font-semibold transition-all ${form.destacada ? 'border-[#B8975A] bg-[#B8975A]/10 text-[#B8975A]' : 'border-[#E0DED9] text-[#aaa]'}`}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill={form.destacada ? '#B8975A' : 'none'} stroke="#B8975A" strokeWidth="2" strokeLinecap="round">
+                  className={`flex items-center gap-2 border rounded-xl px-4 py-3 text-sm font-semibold transition-all ${form.destacada ? 'border-[var(--club-primary)] bg-[var(--club-primary)]/10 text-[var(--club-primary)]' : 'border-[#E0DED9] text-[#aaa]'}`}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill={form.destacada ? 'var(--club-primary)' : 'none'} stroke="var(--club-primary)" strokeWidth="2" strokeLinecap="round">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                   {form.destacada ? 'Sí' : 'No'}
@@ -160,17 +160,17 @@ export default function AdminNovedadesPage() {
               <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Contenido completo</label>
               <textarea required value={form.cuerpo} onChange={e => setForm(f => ({ ...f, cuerpo: e.target.value }))}
                 rows={6} placeholder="Escribí el cuerpo de la noticia..."
-                className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors resize-none" />
+                className="w-full border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors resize-none" />
             </div>
             <div>
               <label className="text-xs font-semibold text-[#555] uppercase tracking-wider block mb-1">Imagen (opcional)</label>
-              <label className="flex items-center gap-3 cursor-pointer border border-dashed border-[#E0DED9] rounded-xl px-4 py-3 hover:border-[#B8975A] transition-colors group">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round">
+              <label className="flex items-center gap-3 cursor-pointer border border-dashed border-[#E0DED9] rounded-xl px-4 py-3 hover:border-[var(--club-primary)] transition-colors group">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
                   <polyline points="21 15 16 10 5 21" />
                 </svg>
-                <span className="text-sm text-[#888] group-hover:text-[#B8975A] transition-colors">
+                <span className="text-sm text-[#888] group-hover:text-[var(--club-primary)] transition-colors">
                   {imagenFile ? imagenFile.name : 'Seleccionar imagen'}
                 </span>
                 <input type="file" accept="image/*" onChange={handleImagenChange} className="hidden" />
@@ -208,7 +208,7 @@ export default function AdminNovedadesPage() {
 
       {/* Lista */}
       {loading ? (
-        <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" /></div>
+        <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" /></div>
       ) : novedades.length === 0 ? (
         <div className="bg-white rounded-2xl shadow-sm p-10 text-center text-[#aaa] text-sm">
           No hay novedades publicadas todavía
@@ -229,7 +229,7 @@ export default function AdminNovedadesPage() {
                       {n.categoria}
                     </span>
                     {n.destacada && (
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#B8975A" stroke="#B8975A" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--club-primary)" stroke="var(--club-primary)" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
                     )}
                   </div>
                   <div className="text-[#0D0D0D] text-sm font-semibold leading-snug">{n.titulo}</div>

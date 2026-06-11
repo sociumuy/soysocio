@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -87,7 +87,7 @@ export default function AdminReservasPage() {
           <h1 className="text-[#0D0D0D] text-2xl font-serif font-semibold">Reservas</h1>
           <p className="text-[#888] text-sm mt-1">{fechaLabel}</p>
         </div>
-        <span className="text-[#B8975A] font-mono font-bold text-lg">{reservas.length}</span>
+        <span className="text-[var(--club-primary)] font-mono font-bold text-lg">{reservas.length}</span>
       </div>
 
       {/* Selector de días */}

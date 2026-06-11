@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,7 +68,7 @@ function LoginForm() {
           animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,151,90,0.2) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.2) 0%, transparent 70%)' }}
         />
       </div>
 
@@ -84,11 +84,11 @@ function LoginForm() {
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
             className="absolute inset-[-12px] rounded-full border border-dashed opacity-15"
-            style={{ borderColor: '#B8975A' }}
+            style={{ borderColor: 'var(--club-primary)' }}
           />
           <svg width="60" height="70" viewBox="0 0 76 88" fill="none">
             <path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z"
-              fill="url(#sg)" stroke="rgba(184,151,90,0.35)" strokeWidth="1" />
+              fill="url(#sg)" stroke="rgba(var(--club-primary-rgb),0.35)" strokeWidth="1" />
             <path d="M38 10L64 20V48C64 63 38 78 38 78C38 78 12 63 12 48V20L38 10Z"
               fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
             {esAdmin ? (
@@ -109,7 +109,7 @@ function LoginForm() {
         </div>
 
         <h1 className="font-serif text-2xl font-semibold"
-          style={{ background: storedClub ? `linear-gradient(135deg, ${storedClub.gradiente[2]} 0%, #fff 50%, ${storedClub.gradiente[2]} 100%)` : 'linear-gradient(135deg, #fff 40%, rgba(184,151,90,0.8) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          style={{ background: storedClub ? `linear-gradient(135deg, ${storedClub.gradiente[2]} 0%, #fff 50%, ${storedClub.gradiente[2]} 100%)` : 'linear-gradient(135deg, #fff 40%, rgba(var(--club-primary-rgb),0.8) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           {storedClub?.nombre ?? 'SoySocio'}
         </h1>
 
@@ -119,9 +119,9 @@ function LoginForm() {
           transition={{ delay: 0.3 }}
           className="mt-2 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest"
           style={{
-            background: esAdmin ? 'rgba(184,151,90,0.15)' : 'rgba(255,255,255,0.07)',
-            color: esAdmin ? '#B8975A' : 'rgba(255,255,255,0.4)',
-            border: `1px solid ${esAdmin ? 'rgba(184,151,90,0.3)' : 'rgba(255,255,255,0.1)'}`,
+            background: esAdmin ? 'rgba(var(--club-primary-rgb),0.15)' : 'rgba(255,255,255,0.07)',
+            color: esAdmin ? 'var(--club-primary)' : 'rgba(255,255,255,0.4)',
+            border: `1px solid ${esAdmin ? 'rgba(var(--club-primary-rgb),0.3)' : 'rgba(255,255,255,0.1)'}`,
           }}
         >
           {esAdmin ? '⚙ Administrador' : '◎ Socio'}
@@ -132,7 +132,7 @@ function LoginForm() {
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="w-48 h-px mt-5"
-          style={{ background: 'linear-gradient(to right, transparent, rgba(184,151,90,0.4), transparent)' }}
+          style={{ background: 'linear-gradient(to right, transparent, rgba(var(--club-primary-rgb),0.4), transparent)' }}
         />
       </motion.div>
 
@@ -145,7 +145,7 @@ function LoginForm() {
         style={{ background: 'rgba(255,255,255,0.97)' }}
       >
         {/* top accent bar */}
-        <div className="h-0.5 w-full" style={{ background: 'linear-gradient(to right, transparent, #B8975A, transparent)' }} />
+        <div className="h-0.5 w-full" style={{ background: 'linear-gradient(to right, transparent, var(--club-primary), transparent)' }} />
 
         <div className="p-7">
           <h2 className="text-[#0D0D0D] text-xl font-bold mb-1">
@@ -161,7 +161,7 @@ function LoginForm() {
               <input
                 type="email" value={email} onChange={e => setEmail(e.target.value)}
                 required placeholder="tu@email.com"
-                className="border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-[#FAFAF8]"
+                className="border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-[#FAFAF8]"
               />
             </div>
 
@@ -170,7 +170,7 @@ function LoginForm() {
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)}
                 required placeholder="••••••••"
-                className="border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-[#FAFAF8]"
+                className="border border-[#E0DED9] rounded-xl px-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-[#FAFAF8]"
               />
             </div>
 
@@ -211,7 +211,7 @@ function LoginForm() {
         transition={{ delay: 0.8 }}
         className="relative z-10 text-[#222] text-[10px] mt-8 tracking-widest"
       >
-        Powered by <span style={{ color: 'rgba(184,151,90,0.5)' }}>SoySocio</span>
+        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.5)' }}>SoySocio</span>
       </motion.p>
 
     </main>

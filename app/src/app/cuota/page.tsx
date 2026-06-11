@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -131,7 +131,7 @@ export default function CuotaPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
@@ -156,8 +156,8 @@ export default function CuotaPage() {
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
             {socios.map(s => (
               <button key={s.id} onClick={() => setSocioActivo(s)}
-                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${socioActivo?.id === s.id ? 'bg-[#B8975A] text-white' : 'bg-white/10 text-[#888] hover:bg-white/15'}`}>
-                <span className="w-5 h-5 rounded-full bg-[#B8975A]/30 flex items-center justify-center text-[10px] font-bold text-[#B8975A]">{s.nombre[0]}</span>
+                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${socioActivo?.id === s.id ? 'bg-[var(--club-primary)] text-white' : 'bg-white/10 text-[#888] hover:bg-white/15'}`}>
+                <span className="w-5 h-5 rounded-full bg-[var(--club-primary)]/30 flex items-center justify-center text-[10px] font-bold text-[var(--club-primary)]">{s.nombre[0]}</span>
                 {s.nombre}
                 {!s.cuota_al_dia && <span className="w-1.5 h-1.5 rounded-full bg-red-400" />}
               </button>
@@ -195,8 +195,8 @@ export default function CuotaPage() {
                 <div className="text-white font-mono text-4xl font-semibold">${MONTO.toLocaleString('es-UY')}</div>
                 <div className="text-[rgba(255,255,255,0.3)] text-xs mt-1">UYU · mensual · {socio.categoria}</div>
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${socio.cuota_al_dia ? 'bg-[#B8975A]/20 text-[#B8975A]' : 'bg-red-900/50 text-red-300'}`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${socio.cuota_al_dia ? 'bg-[#B8975A]' : 'bg-red-400'}`} />
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${socio.cuota_al_dia ? 'bg-[var(--club-primary)]/20 text-[var(--club-primary)]' : 'bg-red-900/50 text-red-300'}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${socio.cuota_al_dia ? 'bg-[var(--club-primary)]' : 'bg-red-400'}`} />
                 {socio.cuota_al_dia ? 'Al día' : 'Pendiente'}
               </div>
             </div>
@@ -223,7 +223,7 @@ export default function CuotaPage() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <div className="text-[#888] text-xs uppercase tracking-widest">Métodos de pago</div>
-            <button onClick={() => setPaso('agregar')} className="text-[#B8975A] text-xs font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity">
+            <button onClick={() => setPaso('agregar')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
               Agregar
             </button>
@@ -239,7 +239,7 @@ export default function CuotaPage() {
                 <div key={m.id} className="bg-white rounded-2xl px-5 py-4 shadow-sm flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-7 bg-[#0D0D0D] rounded-md flex items-center justify-center flex-shrink-0">
-                      <span className="text-[#B8975A] text-[9px] font-black tracking-wider">{CARD_ICONS[m.tipo] ?? m.tipo.toUpperCase()}</span>
+                      <span className="text-[var(--club-primary)] text-[9px] font-black tracking-wider">{CARD_ICONS[m.tipo] ?? m.tipo.toUpperCase()}</span>
                     </div>
                     <div>
                       <div className="text-[#0D0D0D] text-sm font-semibold">•••• {m.ultimos4}</div>
@@ -261,7 +261,7 @@ export default function CuotaPage() {
               <div className="text-[#aaa] text-xs mt-0.5">{socio.categoria}</div>
             </div>
             <div className="w-12 h-12 bg-[#F4F3EF] rounded-2xl flex items-center justify-center">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
             </div>
           </div>
         )}
@@ -334,14 +334,14 @@ export default function CuotaPage() {
                     <button onClick={() => setPaso('metodo')} className="w-full bg-[#F4F3EF] rounded-2xl px-4 py-3.5 flex items-center justify-between hover:bg-[#ECEAE4] transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-7 bg-[#0D0D0D] rounded-md flex items-center justify-center">
-                          <span className="text-[#B8975A] text-[9px] font-black tracking-wider">{CARD_ICONS[metodoSel.tipo] ?? metodoSel.tipo.toUpperCase()}</span>
+                          <span className="text-[var(--club-primary)] text-[9px] font-black tracking-wider">{CARD_ICONS[metodoSel.tipo] ?? metodoSel.tipo.toUpperCase()}</span>
                         </div>
                         <span className="text-[#0D0D0D] text-sm font-semibold">•••• {metodoSel.ultimos4}</span>
                       </div>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                     </button>
                   ) : (
-                    <button onClick={() => setPaso('agregar')} className="w-full bg-[#F4F3EF] rounded-2xl px-4 py-3.5 flex items-center justify-center gap-2 text-[#B8975A] text-sm font-semibold hover:bg-[#ECEAE4] transition-colors">
+                    <button onClick={() => setPaso('agregar')} className="w-full bg-[#F4F3EF] rounded-2xl px-4 py-3.5 flex items-center justify-center gap-2 text-[var(--club-primary)] text-sm font-semibold hover:bg-[#ECEAE4] transition-colors">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                       Agregar método de pago
                     </button>
@@ -373,10 +373,10 @@ export default function CuotaPage() {
                 <div className="flex flex-col gap-2">
                   {metodos.map(m => (
                     <button key={m.id} onClick={() => { setMetodoSel(m); setPaso('resumen') }}
-                      className={`flex items-center justify-between px-4 py-3.5 rounded-2xl border-2 transition-all ${metodoSel?.id === m.id ? 'border-[#B8975A] bg-[#B8975A]/5' : 'border-[#E0DED9] bg-white'}`}>
+                      className={`flex items-center justify-between px-4 py-3.5 rounded-2xl border-2 transition-all ${metodoSel?.id === m.id ? 'border-[var(--club-primary)] bg-[var(--club-primary)]/5' : 'border-[#E0DED9] bg-white'}`}>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-7 bg-[#0D0D0D] rounded-md flex items-center justify-center">
-                          <span className="text-[#B8975A] text-[9px] font-black tracking-wider">{CARD_ICONS[m.tipo] ?? m.tipo.toUpperCase()}</span>
+                          <span className="text-[var(--club-primary)] text-[9px] font-black tracking-wider">{CARD_ICONS[m.tipo] ?? m.tipo.toUpperCase()}</span>
                         </div>
                         <div className="text-left">
                           <div className="text-[#0D0D0D] text-sm font-semibold">•••• {m.ultimos4}</div>
@@ -384,12 +384,12 @@ export default function CuotaPage() {
                         </div>
                       </div>
                       {metodoSel?.id === m.id && (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B8975A" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
                       )}
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setPaso('agregar')} className="flex items-center justify-center gap-2 text-[#B8975A] text-sm font-semibold py-2 hover:opacity-70 transition-opacity">
+                <button onClick={() => setPaso('agregar')} className="flex items-center justify-center gap-2 text-[var(--club-primary)] text-sm font-semibold py-2 hover:opacity-70 transition-opacity">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                   Agregar nueva tarjeta
                 </button>
@@ -412,7 +412,7 @@ export default function CuotaPage() {
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Tipo</label>
                     <select value={nuevaTarjeta.tipo} onChange={e => setNuevaTarjeta(f => ({ ...f, tipo: e.target.value }))}
-                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] bg-white outline-none focus:border-[#B8975A]">
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] bg-white outline-none focus:border-[var(--club-primary)]">
                       <option value="visa">Visa</option>
                       <option value="mastercard">Mastercard</option>
                       <option value="oca">OCA</option>
@@ -428,14 +428,14 @@ export default function CuotaPage() {
                         const fmt = v.replace(/(.{4})/g, '$1 ').trim()
                         setNuevaTarjeta(f => ({ ...f, numero: fmt }))
                       }}
-                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] tracking-widest" />
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] tracking-widest" />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Titular</label>
                     <input type="text" placeholder="Como figura en la tarjeta"
                       value={nuevaTarjeta.titular}
                       onChange={e => setNuevaTarjeta(f => ({ ...f, titular: e.target.value }))}
-                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A]" />
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)]" />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-[#555] uppercase tracking-wider">Vencimiento</label>
@@ -446,7 +446,7 @@ export default function CuotaPage() {
                         const fmt = v.length > 2 ? `${v.slice(0, 2)}/${v.slice(2)}` : v
                         setNuevaTarjeta(f => ({ ...f, vencimiento: fmt }))
                       }}
-                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A]" />
+                      className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)]" />
                   </div>
                 </div>
 
@@ -472,7 +472,7 @@ export default function CuotaPage() {
       {/* ── PROCESANDO ── */}
       {paso === 'procesando' && (
         <div className="fixed inset-0 bg-black/70 flex flex-col items-center justify-center z-50 gap-5">
-          <div className="w-16 h-16 border-3 border-[#B8975A] border-t-transparent rounded-full animate-spin" style={{ borderWidth: 3 }} />
+          <div className="w-16 h-16 border-3 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" style={{ borderWidth: 3 }} />
           <div className="text-white font-serif text-xl">Procesando pago...</div>
           <div className="text-[#555] text-xs">No cerrés esta pantalla</div>
         </div>

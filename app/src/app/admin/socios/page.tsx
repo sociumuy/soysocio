@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -140,7 +140,7 @@ export default function AdminSociosPage() {
             placeholder="Buscar por nombre o N° de socio..."
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
-            className="w-full bg-white border border-[#E0DED9] rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors"
+            className="w-full bg-white border border-[#E0DED9] rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors"
           />
         </div>
         <div className="flex gap-2">
@@ -161,7 +161,7 @@ export default function AdminSociosPage() {
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[#B8975A] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtrados.length === 0 ? (
           <div className="text-center py-16 text-[#aaa] text-sm">
@@ -236,7 +236,7 @@ export default function AdminSociosPage() {
                     required
                     value={form.nombre}
                     onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-white"
                     placeholder="Juan"
                   />
                 </div>
@@ -246,7 +246,7 @@ export default function AdminSociosPage() {
                     required
                     value={form.apellido}
                     onChange={e => setForm(f => ({ ...f, apellido: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-white"
                     placeholder="García"
                   />
                 </div>
@@ -259,7 +259,7 @@ export default function AdminSociosPage() {
                   type="email"
                   value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
+                  className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-white"
                   placeholder="juan@email.com"
                 />
               </div>
@@ -271,7 +271,7 @@ export default function AdminSociosPage() {
                     required
                     value={form.numero_socio}
                     onChange={e => setForm(f => ({ ...f, numero_socio: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[#B8975A] transition-colors bg-white"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm text-[#0D0D0D] outline-none focus:border-[var(--club-primary)] transition-colors bg-white"
                     placeholder="1234"
                   />
                 </div>
@@ -280,7 +280,7 @@ export default function AdminSociosPage() {
                   <select
                     value={form.categoria}
                     onChange={e => setForm(f => ({ ...f, categoria: e.target.value }))}
-                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B8975A] transition-colors bg-white"
+                    className="border border-[#E0DED9] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[var(--club-primary)] transition-colors bg-white"
                   >
                     {CATEGORIAS.map(c => <option key={c}>{c}</option>)}
                   </select>
