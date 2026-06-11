@@ -72,31 +72,53 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-white flex flex-col">
 
-      {/* ── Navy header ── */}
-      <div className="relative overflow-hidden px-6 pt-14 pb-12 flex flex-col items-center"
-        style={{ background: NAVY }}>
-        {/* Diagonal stripes */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: 'repeating-linear-gradient(135deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '18px 18px' }} />
-        {/* Bottom glow */}
-        <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-80 h-32 opacity-20"
-          style={{ background: 'radial-gradient(ellipse, rgba(200,148,10,0.8) 0%, transparent 70%)' }} />
+      {/* ── Header — Concepto A: Institución histórica ── */}
+      <div className="relative overflow-hidden px-6 pt-12 pb-10 flex flex-col items-center"
+        style={{ background: `linear-gradient(160deg, #0f1d4e 0%, ${NAVY} 45%, #162358 100%)` }}>
 
-        {/* Logo placeholder */}
+        {/* Patrón rombos tipo camiseta de rugby */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E")`,
+            backgroundSize: '40px 40px',
+          }} />
+
+        {/* Luz central suave */}
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-72 h-40 opacity-25"
+          style={{ background: 'radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%)' }} />
+
+        {/* Acento dorado inferior */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px opacity-40"
+          style={{ background: 'linear-gradient(90deg, transparent, #C8940A, transparent)' }} />
+
         <motion.div
-          initial={{ opacity: 0, y: -12 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease }}
+          transition={{ duration: 0.7, ease }}
           className="relative z-10 flex flex-col items-center"
         >
-          {/* Logo placeholder — reemplazar con logo real */}
-          <div className="w-20 h-20 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mb-4">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(200,148,10,0.9)" strokeWidth="1.5" strokeLinecap="round">
-              <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7l-9-5z" />
+          {/* Logo sin container — protagonista */}
+          <div className="w-20 h-20 mb-5 drop-shadow-lg">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+              {/* Escudo base dorado */}
+              <path d="M40 4L8 18v22c0 19.5 13.5 37.5 32 43 18.5-5.5 32-23.5 32-43V18L40 4z"
+                fill={`${NAVY}`} stroke="#C8940A" strokeWidth="2.5" />
+              {/* Inicial D estilizada */}
+              <text x="40" y="52" textAnchor="middle" fill="#C8940A"
+                fontFamily="Georgia, serif" fontSize="32" fontWeight="bold">D</text>
             </svg>
           </div>
-          <h1 className="text-white font-serif text-4xl font-bold tracking-tight">DelClub</h1>
-          <p className="text-white/40 text-[10px] tracking-[5px] uppercase mt-1.5">Tu club, en tu bolsillo</p>
+
+          <h1 className="text-white font-serif text-5xl font-bold tracking-tight leading-none">DelClub</h1>
+
+          {/* Línea dorada decorativa */}
+          <div className="flex items-center gap-3 my-3">
+            <div className="h-px w-8 opacity-50" style={{ background: '#C8940A' }} />
+            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#C8940A" opacity="0.6" /></svg>
+            <div className="h-px w-8 opacity-50" style={{ background: '#C8940A' }} />
+          </div>
+
+          <p className="text-white/50 text-[9px] tracking-[6px] uppercase font-medium">Tu club, en tu bolsillo</p>
         </motion.div>
       </div>
 
@@ -234,20 +256,16 @@ export default function LandingPage() {
               transition={{ duration: 0.4, ease }}
               className="flex-1 flex flex-col px-6 pt-8 pb-10"
             >
-              {selectedClub && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onClick={() => setStep('clubs')}
-                  className="inline-flex items-center gap-2 mb-6 self-start px-3 py-1.5 rounded-full text-xs font-semibold"
-                  style={{ background: '#F0F2F8', color: NAVY }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    <polyline points="15 18 9 12 15 6" />
-                  </svg>
-                  {selectedClub.nombre}
-                </motion.button>
-              )}
+              <button
+                onClick={() => setStep('clubs')}
+                className="inline-flex items-center gap-2 mb-6 self-start px-3 py-1.5 rounded-full text-xs font-semibold"
+                style={{ background: '#F0F2F8', color: NAVY }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                {selectedClub?.nombre ?? 'Volver'}
+              </button>
 
               <div className="mb-8">
                 <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: NAVY }}>Paso 2 de 2</p>
