@@ -121,7 +121,7 @@ export default function LandingPage() {
                 </h2>
               </div>
 
-              <div className="flex flex-col gap-4 flex-1">
+              <div className="flex flex-col gap-4">
                 {clubs.map((c, i) => {
                   const iniciales = getIniciales(c.nombre)
                   const isSelected = selectedClub?.id === c.id
@@ -148,7 +148,7 @@ export default function LandingPage() {
                       <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[20px]"
                         style={{ background: isSelected ? NAVY : '#E4E8F0', transition: 'background 0.2s ease' }} />
 
-                      <div className="flex items-center gap-4 px-5 py-4 pl-6">
+                      <div className="flex items-center gap-3 px-4 py-3.5 pl-5">
                         {/* Logo circular premium */}
                         <div className="relative flex-shrink-0">
                           <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
