@@ -130,7 +130,7 @@ export default function AdminSociosPage() {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-5">
+      <div className="flex flex-col gap-3 mb-5">
         <div className="flex-1 relative">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-[#aaa]" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -172,8 +172,8 @@ export default function AdminSociosPage() {
             <thead>
               <tr className="border-b border-[#F4F3EF]">
                 <th className="text-left px-5 py-3 text-[#aaa] text-xs uppercase tracking-widest font-semibold">Socio</th>
-                <th className="text-left px-5 py-3 text-[#aaa] text-xs uppercase tracking-widest font-semibold hidden sm:table-cell">N°</th>
-                <th className="text-left px-5 py-3 text-[#aaa] text-xs uppercase tracking-widest font-semibold hidden sm:table-cell">Categoría</th>
+                <th className="text-left px-5 py-3 text-[#aaa] text-xs uppercase tracking-widest font-semibold hidden">N°</th>
+                <th className="text-left px-5 py-3 text-[#aaa] text-xs uppercase tracking-widest font-semibold hidden">Categoría</th>
                 <th className="text-center px-5 py-3 text-[#aaa] text-xs uppercase tracking-widest font-semibold">Cuota</th>
               </tr>
             </thead>
@@ -191,8 +191,8 @@ export default function AdminSociosPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-[#888] text-sm hidden sm:table-cell">{s.numero_socio}</td>
-                  <td className="px-5 py-3.5 text-[#888] text-sm hidden sm:table-cell">{s.categoria}</td>
+                  <td className="px-5 py-3.5 text-[#888] text-sm hidden">{s.numero_socio}</td>
+                  <td className="px-5 py-3.5 text-[#888] text-sm hidden">{s.categoria}</td>
                   <td className="px-5 py-3.5 text-center">
                     <button
                       onClick={() => toggleCuota(s.id, s.cuota_al_dia)}
