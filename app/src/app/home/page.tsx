@@ -71,7 +71,7 @@ export default function HomePage() {
   }
 
   const socio = socioActivo
-  const clubNombre = storedClub?.nombre ?? 'Club Carrasco'
+  const clubNombre = storedClub?.nombre ?? 'Lobos Rugby Club'
 
   return (
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col">
@@ -92,9 +92,12 @@ export default function HomePage() {
         {/* top bar */}
         <div className="relative z-10 flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-serif font-bold text-sm"
-              style={{ background: storedClub ? `linear-gradient(135deg, ${storedClub.gradiente[0]}, ${storedClub.gradiente[1]})` : 'linear-gradient(135deg,#C9A86C,#8B6A32)', color: '#fff', border: '1px solid rgba(255,255,255,0.12)' }}>
-              {storedClub?.iniciales ?? 'CC'}
+            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              {storedClub?.logo_url
+                ? <img src={storedClub.logo_url} alt={clubNombre} className="w-full h-full object-contain p-1" />
+                : <img src="/lobos-logo.png" alt="Lobos Rugby Club" className="w-full h-full object-contain p-1" />
+              }
             </div>
             <div>
               <div className="text-white text-sm font-semibold">{clubNombre}</div>
@@ -261,21 +264,47 @@ export default function HomePage() {
             ))}
           </motion.div>
 
-          {/* ── Próxima reserva ── */}
+          {/* ── Deportes ── */}
+          <motion.div variants={stagger.item}>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[#888] text-[10px] uppercase tracking-widest">Deportes</p>
+              <button onClick={() => router.push('/deportes')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1">
+                Ver todo
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { nombre: 'Rugby', emoji: '🏉', cats: 'M6–M19 · Adultos · Veteranos', color: '#1B2D6E' },
+                { nombre: 'Hockey', emoji: '🏑', cats: 'Infantil · Juvenil · Adultos', color: '#1A6B3A' },
+                { nombre: 'Fútbol', emoji: '⚽', cats: 'Infantil · Juvenil', color: '#7D1A1A' },
+              ].map((d) => (
+                <motion.button key={d.nombre} whileTap={{ scale: 0.96 }}
+                  onClick={() => router.push('/deportes')}
+                  className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-start gap-2 text-left overflow-hidden relative">
+                  <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(to right, ${d.color}, transparent)` }} />
+                  <span className="text-2xl">{d.emoji}</span>
+                  <div>
+                    <div className="text-[#0D0D0D] text-xs font-bold">{d.nombre}</div>
+                    <div className="text-[#bbb] text-[9px] leading-tight mt-0.5">{d.cats}</div>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* ── Parrilleros ── */}
           <motion.div variants={stagger.item}>
             <motion.div whileTap={{ scale: 0.98 }} onClick={() => router.push('/reservas')}
               className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-4 cursor-pointer">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, rgba(var(--club-primary-rgb),0.12), rgba(var(--club-primary-rgb),0.04))', border: '1px solid rgba(var(--club-primary-rgb),0.18)' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="1.8" strokeLinecap="round">
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
+                style={{ background: 'linear-gradient(135deg, rgba(var(--club-primary-rgb),0.1), rgba(var(--club-primary-rgb),0.04))', border: '1px solid rgba(var(--club-primary-rgb),0.15)' }}>
+                <span className="text-2xl">🔥</span>
               </div>
               <div className="flex-1">
-                <p className="text-[#aaa] text-[10px] uppercase tracking-wider mb-0.5">Próxima reserva</p>
-                <p className="text-[#0D0D0D] text-sm font-bold">Gimnasio</p>
-                <p className="text-[#aaa] text-xs">Jueves · 09:00 hs</p>
+                <p className="text-[#aaa] text-[10px] uppercase tracking-wider mb-0.5">Instalaciones</p>
+                <p className="text-[#0D0D0D] text-sm font-bold">Reservar Parrillero</p>
+                <p className="text-[#aaa] text-xs">3 parrilleros disponibles</p>
               </div>
               <div className="w-8 h-8 rounded-full bg-[#F4F3EF] flex items-center justify-center">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
@@ -294,9 +323,9 @@ export default function HomePage() {
             </div>
             <div className="flex flex-col gap-2">
               {[
-                { titulo: 'Torneo de verano — Inscripciones abiertas', fecha: 'Hoy', color: '#1A5C9E', tag: 'Torneos' },
-                { titulo: 'Nueva colección de indumentaria disponible', fecha: 'Ayer', color: '#A03030', tag: 'Indumentaria' },
-                { titulo: 'Asamblea ordinaria — 15 de junio', fecha: 'Jun 5', color: '#1A6B3A', tag: 'Institucional' },
+                { titulo: 'Pre-temporada Rugby M19 — Inscripciones abiertas', fecha: 'Hoy', color: '#1B2D6E', tag: 'Rugby' },
+                { titulo: 'Hockey femenino: torneo triangular este sábado', fecha: 'Ayer', color: '#1A6B3A', tag: 'Hockey' },
+                { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', color: '#555', tag: 'Institucional' },
               ].map((n, i) => (
                 <motion.div key={i} onClick={() => router.push('/novedades')} whileTap={{ scale: 0.98 }}
                   className="bg-white rounded-xl overflow-hidden shadow-sm flex cursor-pointer">

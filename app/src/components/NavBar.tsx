@@ -16,15 +16,13 @@ const items = [
     ),
   },
   {
-    label: 'Reservas',
-    href: '/reservas',
+    label: 'Deportes',
+    href: '/deportes',
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
         stroke={active ? 'var(--club-primary)' : '#666'} strokeWidth="1.6" strokeLinecap="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
+        <circle cx="12" cy="12" r="10" />
+        <path d="M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M14.83 9.17l4.24-4.24M14.83 9.17l3.53 3.53M4.93 19.07l4.24-4.24" />
       </svg>
     ),
   },
