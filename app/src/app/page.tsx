@@ -121,45 +121,83 @@ export default function LandingPage() {
                 </h2>
               </div>
 
-              <div className="flex flex-col gap-3 flex-1">
+              <div className="flex flex-col gap-4 flex-1">
                 {clubs.map((c, i) => {
                   const iniciales = getIniciales(c.nombre)
                   const isSelected = selectedClub?.id === c.id
                   return (
                     <motion.button
                       key={c.id}
-                      initial={{ opacity: 0, y: 16 }}
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, delay: i * 0.08, ease }}
+                      transition={{ duration: 0.4, delay: i * 0.08, ease }}
+                      whileTap={{ scale: 0.985 }}
                       onClick={() => handleSelectClub(c, i)}
-                      className="w-full rounded-2xl p-4 flex items-center gap-4 text-left transition-all"
+                      className="w-full text-left relative overflow-hidden"
                       style={{
-                        background: isSelected ? NAVY : '#F7F8FC',
-                        border: `2px solid ${isSelected ? NAVY : '#E8EAF0'}`,
+                        background: '#fff',
+                        borderRadius: 20,
+                        border: `1.5px solid ${isSelected ? NAVY : '#E4E8F0'}`,
+                        boxShadow: isSelected
+                          ? `0 0 0 3px ${NAVY}22, 0 8px 24px rgba(27,45,110,0.13)`
+                          : '0 2px 12px rgba(0,0,0,0.06)',
+                        transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
                       }}
                     >
-                      <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-                        style={{ background: isSelected ? 'rgba(255,255,255,0.12)' : '#fff', border: `1px solid ${isSelected ? 'rgba(255,255,255,0.2)' : '#E8EAF0'}` }}>
-                        {c.logo_url
-                          ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-1.5" />
-                          : <span className="font-serif text-lg font-bold" style={{ color: isSelected ? '#fff' : NAVY }}>{iniciales}</span>
-                        }
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className={`text-base font-bold truncate ${isSelected ? 'text-white' : ''}`} style={{ color: isSelected ? '#fff' : NAVY }}>
-                          {c.nombre}
+                      {/* Banda lateral izquierda */}
+                      <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[20px]"
+                        style={{ background: isSelected ? NAVY : '#E4E8F0', transition: 'background 0.2s ease' }} />
+
+                      <div className="flex items-center gap-4 px-5 py-4 pl-6">
+                        {/* Logo circular premium */}
+                        <div className="relative flex-shrink-0">
+                          <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
+                            style={{
+                              background: '#F0F3FA',
+                              border: `2px solid ${isSelected ? NAVY : '#E4E8F0'}`,
+                              boxShadow: isSelected ? `0 0 0 3px ${NAVY}18` : 'none',
+                              transition: 'all 0.2s ease',
+                            }}>
+                            {c.logo_url
+                              ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-2" />
+                              : <span className="font-sans text-lg font-black" style={{ color: NAVY }}>{iniciales}</span>
+                            }
+                          </div>
+                          {/* Indicador seleccionado sobre el logo */}
+                          {isSelected && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center"
+                              style={{ background: NAVY, border: '2px solid #fff' }}
+                            >
+                              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            </motion.div>
+                          )}
                         </div>
-                        <div className="text-xs mt-0.5" style={{ color: isSelected ? 'rgba(255,255,255,0.5)' : '#9CA3AF' }}>
-                          {isSelected ? '✓ Seleccionado' : 'Toca para seleccionar'}
+
+                        {/* Texto */}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-base leading-tight" style={{ color: NAVY }}>
+                            {c.nombre}
+                          </div>
+                          <div className="text-xs mt-1 font-medium" style={{ color: isSelected ? NAVY : '#9CA3AF', opacity: isSelected ? 0.6 : 1 }}>
+                            {isSelected ? 'Club seleccionado' : 'Toca para seleccionar'}
+                          </div>
                         </div>
-                      </div>
-                      {isSelected && (
-                        <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
-                            <polyline points="20 6 9 17 4 12" />
+
+                        {/* Chevron */}
+                        <motion.div
+                          animate={{ x: isSelected ? 2 : 0, opacity: isSelected ? 0 : 1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8D0E0" strokeWidth="2.5" strokeLinecap="round">
+                            <polyline points="9 18 15 12 9 6" />
                           </svg>
-                        </div>
-                      )}
+                        </motion.div>
+                      </div>
                     </motion.button>
                   )
                 })}
