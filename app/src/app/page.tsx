@@ -76,47 +76,27 @@ export default function LandingPage() {
     <main className="min-h-screen flex flex-col" style={{ background: BG }}>
 
       {/* ── Header ── */}
-      <div className="relative overflow-hidden px-6 pt-12 pb-10 flex flex-col items-center">
-
-        {/* Patrón rombos */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E")`,
-            backgroundSize: '40px 40px',
-          }} />
-
-        {/* Luz central suave */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-72 h-40 opacity-25"
-          style={{ background: 'radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%)' }} />
+      <div className="relative px-6 pt-14 pb-10 flex flex-col items-center">
 
         {/* Separador dorado inferior */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px opacity-30"
-          style={{ background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)` }} />
+        <div className="pointer-events-none absolute bottom-0 left-8 right-8 h-px"
+          style={{ background: `linear-gradient(90deg, transparent, ${GOLD}60, transparent)` }} />
 
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease }}
-          className="relative z-10 flex flex-col items-center"
+          transition={{ duration: 0.6, ease }}
+          className="flex flex-col items-center gap-3"
         >
-          <div className="w-20 h-20 mb-5 drop-shadow-lg">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-              <path d="M40 4L8 18v22c0 19.5 13.5 37.5 32 43 18.5-5.5 32-23.5 32-43V18L40 4z"
-                fill={NAVY} stroke={GOLD} strokeWidth="2.5" />
-              <text x="40" y="52" textAnchor="middle" fill={GOLD}
-                fontFamily="Georgia, serif" fontSize="32" fontWeight="bold">D</text>
-            </svg>
+          <h1 className="text-white font-serif text-6xl font-bold tracking-tight leading-none">DelClub</h1>
+
+          <div className="flex items-center gap-2.5">
+            <div className="h-px w-10" style={{ background: `linear-gradient(90deg, transparent, ${GOLD}80)` }} />
+            <p className="text-[9px] tracking-[5px] uppercase font-semibold" style={{ color: `${GOLD}99` }}>
+              Tu club, en tu bolsillo
+            </p>
+            <div className="h-px w-10" style={{ background: `linear-gradient(270deg, transparent, ${GOLD}80)` }} />
           </div>
-
-          <h1 className="text-white font-serif text-5xl font-bold tracking-tight leading-none">DelClub</h1>
-
-          <div className="flex items-center gap-3 my-3">
-            <div className="h-px w-8 opacity-50" style={{ background: GOLD }} />
-            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill={GOLD} opacity="0.6" /></svg>
-            <div className="h-px w-8 opacity-50" style={{ background: GOLD }} />
-          </div>
-
-          <p className="text-white/40 text-[9px] tracking-[6px] uppercase font-medium">Tu club, en tu bolsillo</p>
         </motion.div>
       </div>
 
