@@ -20,3 +20,43 @@ body {
   color: #fff;
   font-family: var(--font-sans);
 }
+
+/* En mobile: sin frame, full screen */
+.phone-frame {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+/* En desktop: marco tipo iPhone 14 Pro (393×852) */
+@media (min-width: 600px) {
+  body {
+    background: #111;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 0 48px;
+    min-height: 100dvh;
+  }
+
+  .phone-frame {
+    width: 393px;
+    min-width: 393px;
+    max-width: 393px;
+    height: 852px;
+    min-height: unset;
+    border-radius: 50px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    box-shadow:
+      0 0 0 10px #1c1c1e,
+      0 0 0 12px #3a3a3c,
+      0 0 0 13px #1c1c1e,
+      0 40px 100px rgba(0,0,0,0.7);
+    position: relative;
+  }
+
+  .phone-frame::-webkit-scrollbar {
+    display: none;
+  }
+}
