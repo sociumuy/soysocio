@@ -114,6 +114,14 @@ export default function HomePage() {
           </button>
         </div>
 
+        {/* Club identity strip */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
+          className="relative z-10 flex items-center gap-3 mb-6 overflow-hidden">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <span className="text-white/20 text-[9px] font-bold tracking-[4px] uppercase">Somos Familia · Punta del Este · Est. 1989</span>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        </motion.div>
+
         {/* Greeting */}
         <div className="relative z-10">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
@@ -133,10 +141,10 @@ export default function HomePage() {
           <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
             className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full"
-            style={{ background: 'rgba(var(--club-primary-rgb),0.08)', border: '1px solid rgba(var(--club-primary-rgb),0.18)' }}>
+            style={{ background: 'rgba(var(--club-primary-rgb),0.12)', border: '1px solid rgba(var(--club-primary-rgb),0.25)' }}>
             <span className="text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">{socio?.categoria ?? 'Socio'}</span>
             <span className="text-[#333]">·</span>
-            <span className="text-[#555] text-[10px]">N° {socio?.numero_socio ?? '—'}</span>
+            <span className="text-[#555] text-[10px] font-mono">N° {socio?.numero_socio ?? '—'}</span>
           </motion.div>
         </div>
 
@@ -249,17 +257,53 @@ export default function HomePage() {
             </ShiftCard>
           </motion.div>
 
+          {/* ── Próximo partido ── */}
+          <motion.div variants={stagger.item}>
+            <motion.div
+              whileTap={{ scale: 0.98 }}
+              className="rounded-2xl overflow-hidden relative cursor-pointer"
+              style={{ background: 'linear-gradient(135deg, #1B2D6E 0%, #0f1d4a 100%)' }}
+              onClick={() => router.push('/deportes')}
+            >
+              <div className="absolute inset-0 opacity-5"
+                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }} />
+              <div className="relative z-10 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">🏉 Próximo Partido · Rugby Primera</span>
+                  <span className="text-[var(--club-primary)] text-[9px] font-bold uppercase tracking-wider">SAB 14 JUN</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col items-center gap-1">
+                    <img src="/lobos-logo.png" alt="Lobos" className="w-10 h-10 object-contain" />
+                    <span className="text-white text-xs font-bold">Lobos RC</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-white/20 text-[10px] tracking-widest uppercase">vs</span>
+                    <span className="text-white font-mono text-2xl font-bold tracking-widest mt-1">16:00</span>
+                    <span className="text-white/30 text-[9px] mt-1">Cancha Principal</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">OB</span>
+                    </div>
+                    <span className="text-white text-xs font-bold">Old Boys</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
           {/* ── Quick stats ── */}
-          <motion.div variants={stagger.item} className="grid grid-cols-2 gap-3">
+          <motion.div variants={stagger.item} className="grid grid-cols-3 gap-2">
             {[
-              { label: 'Reservas activas', value: '1', sub: 'esta semana', color: '#1A5C9E' },
-              { label: 'Novedades', value: '3', sub: 'sin leer', color: 'var(--club-primary)' },
-            ].map(({ label, value, sub, color }) => (
+              { label: 'Socios', value: '800+', color: '#1B2D6E' },
+              { label: 'Novedades', value: '3', color: 'var(--club-primary)' },
+              { label: 'Años', value: '35+', color: '#1A6B3A' },
+            ].map(({ label, value, color }) => (
               <div key={label} className="bg-white rounded-2xl p-4 shadow-sm overflow-hidden relative">
-                <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(to right, transparent, ${color}, transparent)` }} />
-                <div className="font-serif text-3xl font-semibold mb-1" style={{ color }}>{value}</div>
-                <div className="text-[#0D0D0D] text-xs font-bold leading-tight">{label}</div>
-                <div className="text-[#bbb] text-[10px] mt-0.5">{sub}</div>
+                <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: color }} />
+                <div className="font-serif text-2xl font-bold mb-1" style={{ color }}>{value}</div>
+                <div className="text-[#aaa] text-[10px] font-semibold uppercase tracking-wider">{label}</div>
               </div>
             ))}
           </motion.div>
@@ -275,18 +319,18 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { nombre: 'Rugby', emoji: '🏉', cats: 'M6–M19 · Adultos · Veteranos', color: '#1B2D6E' },
-                { nombre: 'Hockey', emoji: '🏑', cats: 'Infantil · Juvenil · Adultos', color: '#1A6B3A' },
-                { nombre: 'Fútbol', emoji: '⚽', cats: 'Infantil · Juvenil', color: '#7D1A1A' },
+                { nombre: 'Rugby', emoji: '🏉', cats: 'M6–M19\nAdultos · Veteranos', color: '#1B2D6E', cant: '6 cat.' },
+                { nombre: 'Hockey', emoji: '🏑', cats: 'Infantil\nJuvenil · Adultas', color: '#1A6B3A', cant: '4 cat.' },
+                { nombre: 'Fútbol', emoji: '⚽', cats: 'Infantil\nJuvenil', color: '#7D1A1A', cant: '4 cat.' },
               ].map((d) => (
                 <motion.button key={d.nombre} whileTap={{ scale: 0.96 }}
                   onClick={() => router.push('/deportes')}
-                  className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-start gap-2 text-left overflow-hidden relative">
-                  <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(to right, ${d.color}, transparent)` }} />
+                  className="rounded-2xl p-4 shadow-sm flex flex-col items-start gap-3 text-left overflow-hidden relative"
+                  style={{ background: `linear-gradient(160deg, ${d.color} 0%, ${d.color}cc 100%)` }}>
                   <span className="text-2xl">{d.emoji}</span>
-                  <div>
-                    <div className="text-[#0D0D0D] text-xs font-bold">{d.nombre}</div>
-                    <div className="text-[#bbb] text-[9px] leading-tight mt-0.5">{d.cats}</div>
+                  <div className="w-full">
+                    <div className="text-white text-xs font-bold">{d.nombre}</div>
+                    <div className="text-white/50 text-[9px] mt-0.5">{d.cant}</div>
                   </div>
                 </motion.button>
               ))}

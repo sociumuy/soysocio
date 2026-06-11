@@ -8,7 +8,7 @@ import NavBar from '@/components/NavBar'
 import GrainOverlay from '@/components/GrainOverlay'
 import { motion, AnimatePresence } from 'framer-motion'
 
-type Categoria = 'Todos' | 'Torneos' | 'Institucional' | 'Indumentaria' | 'Salud'
+type Categoria = 'Todos' | 'Rugby' | 'Hockey' | 'Fútbol' | 'Institucional' | 'Indumentaria'
 
 type Novedad = {
   id: string
@@ -21,21 +21,23 @@ type Novedad = {
   created_at: string
 }
 
-const CATEGORIAS: Categoria[] = ['Todos', 'Torneos', 'Institucional', 'Indumentaria', 'Salud']
+const CATEGORIAS: Categoria[] = ['Todos', 'Rugby', 'Hockey', 'Fútbol', 'Institucional', 'Indumentaria']
 
 const CAT_ACCENT: Record<string, string> = {
-  Torneos: '#6BAED6',
-  Institucional: '#52C97A',
-  Indumentaria: '#E07070',
-  Salud: '#B07AE0',
+  Rugby: '#1B2D6E',
+  Hockey: '#1A6B3A',
+  Fútbol: '#7D1A1A',
+  Institucional: '#555',
+  Indumentaria: '#C8940A',
   Todos: 'var(--club-primary)',
 }
 
 const CAT_BADGE: Record<string, { bg: string; text: string }> = {
-  Torneos: { bg: '#EBF4FF', text: '#1A5C9E' },
-  Institucional: { bg: '#EAFAF0', text: '#1A6B3A' },
-  Indumentaria: { bg: '#FAEAEA', text: '#A03030' },
-  Salud: { bg: '#F4EAFA', text: '#7030A0' },
+  Rugby: { bg: '#EBF0FF', text: '#1B2D6E' },
+  Hockey: { bg: '#EAFAF0', text: '#1A6B3A' },
+  Fútbol: { bg: '#FAEAEA', text: '#7D1A1A' },
+  Institucional: { bg: '#F0F0F0', text: '#555' },
+  Indumentaria: { bg: '#FFF8E6', text: '#C8940A' },
   Todos: { bg: '#F4F3EF', text: '#888' },
 }
 
@@ -147,7 +149,7 @@ export default function NovedadesPage() {
             style={{ background: 'linear-gradient(135deg, #fff 40%, rgba(var(--club-primary-rgb),0.7) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Novedades
           </h1>
-          <p className="text-[#444] text-xs mt-1 tracking-wider">Club Carrasco</p>
+          <p className="text-[#444] text-xs mt-1 tracking-wider">Lobos Rugby Club</p>
         </motion.div>
       </div>
 

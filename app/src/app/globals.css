@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --gold: #B8975A;
+  --gold: #C8940A;
   --dark: #0D0D0D;
-  --club-primary: #B8975A;
-  --club-primary-rgb: 184, 151, 90;
-  --club-secondary: #8B6A32;
+  --club-primary: #C8940A;
+  --club-primary-rgb: 200, 148, 10;
+  --club-secondary: #1B2D6E;
+  --club-navy: #1B2D6E;
 }
 
 @theme inline {
