@@ -15,12 +15,12 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "SoySocio",
+  title: "DelClub",
   description: "Tu club, en tu bolsillo",
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'SoySocio',
+    title: 'DelClub',
   },
   formatDetection: { telephone: false },
   other: {

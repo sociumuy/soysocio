@@ -204,9 +204,13 @@ export default function HomePage() {
                   </div>
                   <p className="text-white/20 text-xs tracking-wider mb-4">UYU · mensual</p>
 
-                  <PremiumButton onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }} fullWidth size="lg">
+                  <button
+                    onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
+                    className="w-full py-4 rounded-xl text-sm font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
+                    style={{ background: 'var(--club-primary)' }}
+                  >
                     {socio?.cuota_al_dia ? 'Ver historial de pagos' : 'Pagar cuota ahora'}
-                  </PremiumButton>
+                  </button>
                 </div>
 
                 {/* ── Expanded: historial mini ── */}

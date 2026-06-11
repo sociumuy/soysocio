@@ -8,7 +8,7 @@ export type ClubStored = {
   logo_url?: string | null
 }
 
-const KEY = 'soysocio_club'
+const KEY = 'delclub_club'
 
 export function getStoredClub(): ClubStored | null {
   if (typeof window === 'undefined') return null

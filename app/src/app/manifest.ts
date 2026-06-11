@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'SoySocio',
-    short_name: 'SoySocio',
+    name: 'DelClub',
+    short_name: 'DelClub',
     description: 'Tu club, en tu bolsillo',
     start_url: '/',
     display: 'standalone',

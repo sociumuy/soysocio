@@ -128,7 +128,7 @@ export default function LandingPage() {
         </div>
         <h1 className="font-serif text-2xl font-semibold"
           style={{ background: 'linear-gradient(135deg, #C9A86C 0%, #fff 50%, #C9A86C 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          SoySocio
+          DelClub
         </h1>
         <p className="text-[#383838] text-[9px] tracking-[4px] uppercase mt-1">Tu club, en tu bolsillo</p>
       </motion.div>
@@ -367,7 +367,7 @@ export default function LandingPage() {
         transition={{ delay: 1.4 }}
         className="relative z-10 text-center text-[#1e1e1e] text-[9px] tracking-widest pb-6"
       >
-        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.45)' }}>SoySocio</span>
+        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.45)' }}>DelClub</span>
       </motion.p>
     </main>
   )

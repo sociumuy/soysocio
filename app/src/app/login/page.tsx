@@ -110,7 +110,7 @@ function LoginForm() {
 
         <h1 className="font-serif text-2xl font-semibold"
           style={{ background: storedClub ? `linear-gradient(135deg, ${storedClub.gradiente[2]} 0%, #fff 50%, ${storedClub.gradiente[2]} 100%)` : 'linear-gradient(135deg, #fff 40%, rgba(var(--club-primary-rgb),0.8) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          {storedClub?.nombre ?? 'SoySocio'}
+          {storedClub?.nombre ?? 'DelClub'}
         </h1>
 
         <motion.span
@@ -211,7 +211,7 @@ function LoginForm() {
         transition={{ delay: 0.8 }}
         className="relative z-10 text-[#222] text-[10px] mt-8 tracking-widest"
       >
-        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.5)' }}>SoySocio</span>
+        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.5)' }}>DelClub</span>
       </motion.p>
 
     </main>
