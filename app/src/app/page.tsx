@@ -87,50 +87,46 @@ export default function LandingPage() {
     )
   }
 
-  return (
-    <main className="relative min-h-screen bg-[#0A0A0A] flex flex-col overflow-hidden">
-      <GrainOverlay opacity={0.055} />
-      <AnimatedMesh />
+  const bgColor = selectedClub?.color_primario === '#C8940A' || !selectedClub
+    ? '#0B1628'
+    : '#0A0A0A'
 
-      {/* Radial ambient */}
+  return (
+    <main className="relative min-h-screen flex flex-col overflow-hidden" style={{ background: bgColor }}>
+      <GrainOverlay opacity={0.04} />
+
+      {/* Diagonal stripe texture */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        style={{ backgroundImage: 'repeating-linear-gradient(135deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '20px 20px' }} />
+
+      {/* Navy glow top */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-96 opacity-40"
+        style={{ background: 'radial-gradient(ellipse at 50% -20%, #1B2D6E 0%, transparent 70%)' }} />
+
+      {/* Gold glow bottom */}
       <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.35, 0.55, 0.35] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="pointer-events-none absolute top-[-15%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.22) 0%, transparent 65%)' }}
+        animate={{ opacity: [0.15, 0.3, 0.15] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-64 opacity-20"
+        style={{ background: 'radial-gradient(ellipse at 50% 120%, rgba(var(--club-primary-rgb),0.6) 0%, transparent 70%)' }}
       />
 
-      {/* ── Logo header (always visible) ── */}
+      {/* ── Logo header ── */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease }}
-        className="relative z-10 flex flex-col items-center pt-14 pb-4"
+        transition={{ duration: 0.6, ease }}
+        className="relative z-10 flex flex-col items-center pt-16 pb-2"
       >
-        <div className="relative mb-3">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-            className="absolute inset-[-16px] rounded-full border border-dashed opacity-[0.18]"
-            style={{ borderColor: 'var(--club-primary)' }}
-          />
-          <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3.5, repeat: Infinity }}>
-            <svg width="52" height="60" viewBox="0 0 76 88" fill="none">
-              <path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z" fill="url(#lsg)" stroke="rgba(var(--club-primary-rgb),0.3)" strokeWidth="1" />
-              <path d="M38 10L64 20V48C64 63 38 78 38 78C38 78 12 63 12 48V20L38 10Z" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-              <defs>
-                <linearGradient id="lsg" x1="4" y1="2" x2="72" y2="86" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#C9A86C" /><stop offset="100%" stopColor="#8B6A32" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </motion.div>
-        </div>
-        <h1 className="font-serif text-2xl font-semibold"
-          style={{ background: 'linear-gradient(135deg, #C9A86C 0%, #fff 50%, #C9A86C 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          DelClub
-        </h1>
-        <p className="text-[#383838] text-[9px] tracking-[4px] uppercase mt-1">Tu club, en tu bolsillo</p>
+        <motion.img
+          src="/lobos-logo.png"
+          alt="Lobos Rugby Club"
+          className="w-24 h-24 object-contain mb-4"
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <h1 className="font-serif text-3xl font-bold text-white tracking-tight">Lobos Rugby Club</h1>
+        <p className="text-white/30 text-[10px] tracking-[4px] uppercase mt-1">Punta del Este · Uruguay</p>
       </motion.div>
 
       {/* ── Step content ── */}
@@ -187,22 +183,22 @@ export default function LandingPage() {
 
                           {/* Club emblem */}
                           <div
-                            className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 font-serif text-xl font-bold relative z-10"
+                            className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 relative z-10 overflow-hidden"
                             style={{
-                              background: isSelected
-                                ? `${grad[2]}30`
-                                : 'rgba(var(--club-primary-rgb),0.08)',
-                              color: isSelected ? '#fff' : '#555',
-                              border: `1px solid ${isSelected ? grad[2] + '50' : 'rgba(255,255,255,0.08)'}`,
+                              background: isSelected ? `${grad[0]}80` : 'rgba(255,255,255,0.06)',
+                              border: `1px solid ${isSelected ? grad[2] + '50' : 'rgba(255,255,255,0.1)'}`,
                             }}
                           >
-                            {iniciales}
+                            {c.logo_url
+                              ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-1.5" />
+                              : <span className="font-serif text-xl font-bold" style={{ color: isSelected ? '#fff' : '#555' }}>{iniciales}</span>
+                            }
                           </div>
 
                           {/* Club info */}
                           <div className="flex-1 relative z-10 min-w-0">
-                            <div className="text-white text-sm font-bold truncate">{c.nombre}</div>
-                            <div className="text-[10px] mt-0.5" style={{ color: isSelected ? `${grad[2]}cc` : '#444' }}>
+                            <div className="text-white text-base font-bold truncate">{c.nombre}</div>
+                            <div className="text-[11px] mt-0.5" style={{ color: isSelected ? `${grad[2]}cc` : '#444' }}>
                               {isSelected ? '✓ Seleccionado' : 'Toca para seleccionar'}
                             </div>
                           </div>
@@ -236,9 +232,13 @@ export default function LandingPage() {
                     exit={{ opacity: 0, y: 20 }}
                     className="mt-5"
                   >
-                    <PremiumButton onClick={handleContinue} fullWidth size="lg">
-                      Continuar con {selectedClub.nombre}
-                    </PremiumButton>
+                    <button
+                      onClick={handleContinue}
+                      className="w-full py-4 rounded-2xl text-sm font-bold tracking-widest uppercase transition-opacity active:opacity-80"
+                      style={{ background: 'var(--club-primary)', color: '#0D0D0D' }}
+                    >
+                      Ingresar a {selectedClub.nombre} →
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -365,9 +365,9 @@ export default function LandingPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
-        className="relative z-10 text-center text-[#1e1e1e] text-[9px] tracking-widest pb-6"
+        className="relative z-10 text-center text-white/10 text-[9px] tracking-widest pb-6"
       >
-        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.45)' }}>DelClub</span>
+        Powered by <span style={{ color: 'rgba(var(--club-primary-rgb),0.5)' }}>DelClub</span>
       </motion.p>
     </main>
   )
