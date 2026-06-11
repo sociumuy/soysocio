@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 export const dynamic = 'force-dynamic'
 
@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { AdminContext, AdminData, ROL_ACCESO, ROL_LABEL, RolAdmin } from '@/lib/admin-context'
+import { getStoredClub } from '@/lib/club-storage'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const NAV = [
   {
@@ -73,13 +75,111 @@ const NAV = [
   },
 ]
 
+function SidebarContent({
+  admin, navVisible, pathname, club, onNavigate, onSalir,
+}: {
+  admin: AdminData
+  navVisible: typeof NAV
+  pathname: string
+  club: ReturnType<typeof getStoredClub>
+  onNavigate: (href: string) => void
+  onSalir: () => void
+}) {
+  const primary = club?.color_primario ?? 'var(--club-primary)'
+  const rgb     = club?.color_rgb      ?? 'var(--club-primary-rgb)'
+
+  return (
+    <div className="flex flex-col h-full" style={{ background: '#08101f' }}>
+      {/* Logo / club header */}
+      <div className="px-5 pt-8 pb-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex items-center gap-3">
+          {/* Club logo or initials */}
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0"
+            style={{ background: `rgba(${rgb}, 0.15)`, border: `1px solid rgba(${rgb}, 0.25)` }}
+          >
+            {club?.logo_url
+              ? <img src={club.logo_url} alt={club.nombre} className="w-full h-full object-contain p-1" />
+              : <span className="text-white text-xs font-black">{club?.iniciales ?? 'DC'}</span>
+            }
+          </div>
+          <div>
+            <div className="text-white text-xs font-bold leading-tight">{club?.nombre ?? 'DelClub'}</div>
+            <div className="text-[10px] mt-0.5" style={{ color: primary }}>Panel admin</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Nav items */}
+      <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
+        {navVisible.map(item => {
+          const active = pathname === item.href
+          return (
+            <button
+              key={item.href}
+              onClick={() => onNavigate(item.href)}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full text-left transition-colors"
+              style={{
+                background: active ? `rgba(${rgb}, 0.14)` : 'transparent',
+                color: active ? primary : 'rgba(255,255,255,0.45)',
+              }}
+            >
+              <span style={{ color: active ? primary : 'rgba(255,255,255,0.3)' }}>{item.icon}</span>
+              {item.label}
+              {active && (
+                <span className="ml-auto w-1 h-4 rounded-full" style={{ background: primary }} />
+              )}
+            </button>
+          )
+        })}
+      </nav>
+
+      {/* User footer */}
+      <div className="px-4 py-5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex items-center gap-2.5 mb-3">
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: `rgba(${rgb}, 0.18)` }}
+          >
+            <span className="text-xs font-bold" style={{ color: primary }}>
+              {admin.nombre[0]}{admin.apellido[0]}
+            </span>
+          </div>
+          <div className="min-w-0">
+            <div className="text-white text-xs font-semibold truncate">{admin.nombre} {admin.apellido}</div>
+            <div className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{ROL_LABEL[admin.rol]}</div>
+          </div>
+        </div>
+        <button
+          onClick={onSalir}
+          className="flex items-center gap-1.5 text-xs transition-colors"
+          style={{ color: 'rgba(255,255,255,0.25)' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#f87171')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.25)')}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
+  const router   = useRouter()
   const pathname = usePathname()
-  const [admin, setAdmin] = useState<AdminData | null>(null)
-  const [cargando, setCargando] = useState(true)
+  const [admin, setAdmin]           = useState<AdminData | null>(null)
+  const [cargando, setCargando]     = useState(true)
   const [menuAbierto, setMenuAbierto] = useState(false)
   const supabase = createClient()
+  const club     = getStoredClub()
+
+  const primary = club?.color_primario ?? '#C8940A'
+  const rgb     = club?.color_rgb      ?? '200, 148, 10'
 
   useEffect(() => {
     async function verificar() {
@@ -99,147 +199,126 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     verificar()
   }, [])
 
+  // Close drawer on route change
+  useEffect(() => { setMenuAbierto(false) }, [pathname])
+
   async function salir() {
     await supabase.auth.signOut()
     router.push('/login')
   }
 
+  function navegar(href: string) {
+    router.push(href)
+    setMenuAbierto(false)
+  }
+
   if (cargando) {
     return (
-      <div className="min-h-screen bg-[#F4F3EF] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F4F3EF' }}>
+        <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin"
+          style={{ borderColor: `${primary}60`, borderTopColor: primary }} />
       </div>
     )
   }
 
-  const navVisible = admin
-    ? NAV.filter(item => ROL_ACCESO[admin.rol]?.includes(item.seccion))
-    : []
+  if (!admin) return null
 
+  const navVisible = NAV.filter(item => ROL_ACCESO[admin.rol]?.includes(item.seccion))
   const paginaActual = NAV.find(n => n.href === pathname)?.label ?? 'Admin'
 
   return (
     <AdminContext.Provider value={admin}>
-      <div className="min-h-screen bg-[#F4F3EF] flex">
+      <div className="min-h-screen flex overflow-hidden" style={{ background: '#F4F3EF' }}>
 
-        {/* Sidebar desktop */}
-        <aside className="hidden md:flex w-56 bg-[#0D0D0D] flex-col flex-shrink-0 fixed h-full">
-          <div className="px-5 pt-8 pb-6 border-b border-white/5">
-            <div className="flex items-center gap-2.5">
-              <svg width="22" height="26" viewBox="0 0 76 88" fill="none">
-                <path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z" fill="url(#asg)" />
-                <text x="38" y="52" textAnchor="middle" fontFamily="Georgia,serif" fontSize="18" fontWeight="600" fill="white">CC</text>
-                <defs>
-                  <linearGradient id="asg" x1="4" y1="2" x2="72" y2="86" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#C9A86C" />
-                    <stop offset="100%" stopColor="#8B6A32" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div>
-                <div className="text-white text-xs font-bold">Club Carrasco</div>
-                <div className="text-[var(--club-primary)] text-[10px]">Panel admin</div>
-              </div>
-            </div>
+        {/* ── Desktop sidebar (persistent) ── */}
+        <aside className="hidden md:flex w-56 flex-shrink-0 fixed h-full z-30">
+          <div className="w-full">
+            <SidebarContent
+              admin={admin} navVisible={navVisible} pathname={pathname}
+              club={club} onNavigate={navegar} onSalir={salir}
+            />
           </div>
-
-          <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
-            {navVisible.map(item => {
-              const active = pathname === item.href
-              return (
-                <button
-                  key={item.href}
-                  onClick={() => router.push(item.href)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all w-full text-left ${
-                    active ? 'bg-[var(--club-primary)]/15 text-[var(--club-primary)]' : 'text-[#666] hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <span className={active ? 'text-[var(--club-primary)]' : 'text-[#555]'}>{item.icon}</span>
-                  {item.label}
-                </button>
-              )
-            })}
-          </nav>
-
-          {admin && (
-            <div className="px-4 py-5 border-t border-white/5">
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 bg-[var(--club-primary)]/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-[var(--club-primary)] text-xs font-bold">
-                    {admin.nombre[0]}{admin.apellido[0]}
-                  </span>
-                </div>
-                <div className="min-w-0">
-                  <div className="text-white text-xs font-semibold truncate">{admin.nombre} {admin.apellido}</div>
-                  <div className="text-[#555] text-[10px]">{ROL_LABEL[admin.rol]}</div>
-                </div>
-              </div>
-              <button
-                onClick={salir}
-                className="text-[#444] text-xs hover:text-[#C0392B] transition-colors flex items-center gap-1.5"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Cerrar sesión
-              </button>
-            </div>
-          )}
         </aside>
 
-        {/* Contenido principal */}
-        <div className="flex-1 md:ml-56 flex flex-col min-h-screen">
+        {/* ── Mobile drawer (overlay) ── */}
+        <AnimatePresence>
+          {menuAbierto && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                key="backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => setMenuAbierto(false)}
+                className="fixed inset-0 z-40 md:hidden"
+                style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(2px)' }}
+              />
 
-          {/* Top bar mobile */}
-          <header className="md:hidden bg-white border-b border-[#E0DED9] px-4 py-3 flex items-center justify-between sticky top-0 z-10">
-            <div className="flex items-center gap-2">
-              <svg width="18" height="22" viewBox="0 0 76 88" fill="none">
-                <path d="M38 2L72 14V48C72 66 38 86 38 86C38 86 4 66 4 48V14L38 2Z" fill="url(#msg)" />
-                <text x="38" y="52" textAnchor="middle" fontFamily="Georgia,serif" fontSize="18" fontWeight="600" fill="white">CC</text>
-                <defs>
-                  <linearGradient id="msg" x1="4" y1="2" x2="72" y2="86" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#C9A86C" />
-                    <stop offset="100%" stopColor="#8B6A32" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <span className="text-[#0D0D0D] text-sm font-bold">{paginaActual}</span>
+              {/* Drawer panel */}
+              <motion.aside
+                key="drawer"
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', damping: 28, stiffness: 240 }}
+                className="fixed top-0 left-0 h-full w-72 z-50 md:hidden"
+              >
+                <SidebarContent
+                  admin={admin} navVisible={navVisible} pathname={pathname}
+                  club={club} onNavigate={navegar} onSalir={salir}
+                />
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* ── Main content ── */}
+        <div className="flex-1 md:ml-56 flex flex-col min-h-screen min-w-0">
+
+          {/* Mobile header */}
+          <header
+            className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3"
+            style={{
+              background: '#08101f',
+              borderBottom: `1px solid rgba(${rgb}, 0.15)`,
+            }}
+          >
+            <div className="flex items-center gap-2.5">
+              {/* Hamburger */}
+              <button
+                onClick={() => setMenuAbierto(true)}
+                className="p-1.5 rounded-lg transition-colors"
+                style={{ color: 'rgba(255,255,255,0.6)' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              </button>
+
+              {/* Club logo mini */}
+              <div
+                className="w-6 h-6 rounded-lg flex items-center justify-center overflow-hidden"
+                style={{ background: `rgba(${rgb}, 0.15)` }}
+              >
+                {club?.logo_url
+                  ? <img src={club.logo_url} alt="" className="w-full h-full object-contain" />
+                  : <span className="text-white text-[8px] font-black">{club?.iniciales ?? 'DC'}</span>
+                }
+              </div>
+
+              <span className="text-white text-sm font-semibold">{paginaActual}</span>
             </div>
-            <button onClick={() => setMenuAbierto(!menuAbierto)} className="p-1">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2" strokeLinecap="round">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            </button>
+
+            {/* Club accent dot */}
+            <div className="w-2 h-2 rounded-full" style={{ background: primary }} />
           </header>
 
-          {menuAbierto && (
-            <div className="md:hidden bg-[#0D0D0D] px-3 py-3 flex flex-col gap-1">
-              {navVisible.map(item => {
-                const active = pathname === item.href
-                return (
-                  <button
-                    key={item.href}
-                    onClick={() => { router.push(item.href); setMenuAbierto(false) }}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full text-left ${
-                      active ? 'bg-[var(--club-primary)]/15 text-[var(--club-primary)]' : 'text-[#666] hover:text-white'
-                    }`}
-                  >
-                    <span className={active ? 'text-[var(--club-primary)]' : 'text-[#555]'}>{item.icon}</span>
-                    {item.label}
-                  </button>
-                )
-              })}
-              <button onClick={salir} className="flex items-center gap-2 px-3 py-2.5 text-[#C0392B] text-sm mt-1">
-                Cerrar sesión
-              </button>
-            </div>
-          )}
-
-          <main className="flex-1 p-5 md:p-8">
+          {/* Page content */}
+          <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
             {children}
           </main>
         </div>
