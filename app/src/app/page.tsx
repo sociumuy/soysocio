@@ -114,10 +114,10 @@ export default function LandingPage() {
               transition={{ duration: 0.4, ease }}
               className="flex-1 flex flex-col px-6 pt-8 pb-10"
             >
-              <div className="mb-6">
+              <div className="mb-6 text-center">
                 <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: NAVY }}>Paso 1 de 2</p>
-                <h2 className="font-serif text-3xl font-bold leading-tight" style={{ color: NAVY }}>
-                  ¿A qué club<br />pertenecés?
+                <h2 className="font-sans text-3xl font-bold leading-tight" style={{ color: NAVY }}>
+                  ¿A qué club pertenecés?
                 </h2>
               </div>
 
