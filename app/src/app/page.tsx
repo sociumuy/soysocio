@@ -10,7 +10,10 @@ type Club = { id: string; nombre: string; color_primario?: string; color_rgb?: s
 type Step = 'loading' | 'clubs' | 'roles'
 
 const NAVY = '#1B2D6E'
+const GOLD = '#C8940A'
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+const BG = 'linear-gradient(180deg, #0f1d4e 0%, #1B2D6E 40%, #162358 100%)'
 
 export default function LandingPage() {
   const router = useRouter()
@@ -41,7 +44,7 @@ export default function LandingPage() {
       id: c.id, nombre: c.nombre,
       iniciales: getIniciales(c.nombre),
       gradiente: getClubGradient(i),
-      color_primario: c.color_primario ?? '#C8940A',
+      color_primario: c.color_primario ?? GOLD,
       color_rgb: c.color_rgb ?? '200, 148, 10',
       logo_url: c.logo_url,
     }
@@ -62,21 +65,20 @@ export default function LandingPage() {
 
   if (step === 'loading') {
     return (
-      <main className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: NAVY, borderTopColor: 'transparent' }} />
+      <main className="min-h-screen flex items-center justify-center" style={{ background: BG }}>
+        <div className="w-7 h-7 rounded-full border-2 animate-spin"
+          style={{ borderColor: `${GOLD}60`, borderTopColor: GOLD }} />
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-white flex flex-col">
+    <main className="min-h-screen flex flex-col" style={{ background: BG }}>
 
-      {/* ── Header — Concepto A: Institución histórica ── */}
-      <div className="relative overflow-hidden px-6 pt-12 pb-10 flex flex-col items-center"
-        style={{ background: `linear-gradient(160deg, #0f1d4e 0%, ${NAVY} 45%, #162358 100%)` }}>
+      {/* ── Header ── */}
+      <div className="relative overflow-hidden px-6 pt-12 pb-10 flex flex-col items-center">
 
-        {/* Patrón rombos tipo camiseta de rugby */}
+        {/* Patrón rombos */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E")`,
@@ -87,9 +89,9 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-72 h-40 opacity-25"
           style={{ background: 'radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%)' }} />
 
-        {/* Acento dorado inferior */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px opacity-40"
-          style={{ background: 'linear-gradient(90deg, transparent, #C8940A, transparent)' }} />
+        {/* Separador dorado inferior */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px opacity-30"
+          style={{ background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)` }} />
 
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -97,32 +99,28 @@ export default function LandingPage() {
           transition={{ duration: 0.7, ease }}
           className="relative z-10 flex flex-col items-center"
         >
-          {/* Logo sin container — protagonista */}
           <div className="w-20 h-20 mb-5 drop-shadow-lg">
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-              {/* Escudo base dorado */}
               <path d="M40 4L8 18v22c0 19.5 13.5 37.5 32 43 18.5-5.5 32-23.5 32-43V18L40 4z"
-                fill={`${NAVY}`} stroke="#C8940A" strokeWidth="2.5" />
-              {/* Inicial D estilizada */}
-              <text x="40" y="52" textAnchor="middle" fill="#C8940A"
+                fill={NAVY} stroke={GOLD} strokeWidth="2.5" />
+              <text x="40" y="52" textAnchor="middle" fill={GOLD}
                 fontFamily="Georgia, serif" fontSize="32" fontWeight="bold">D</text>
             </svg>
           </div>
 
           <h1 className="text-white font-serif text-5xl font-bold tracking-tight leading-none">DelClub</h1>
 
-          {/* Línea dorada decorativa */}
           <div className="flex items-center gap-3 my-3">
-            <div className="h-px w-8 opacity-50" style={{ background: '#C8940A' }} />
-            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#C8940A" opacity="0.6" /></svg>
-            <div className="h-px w-8 opacity-50" style={{ background: '#C8940A' }} />
+            <div className="h-px w-8 opacity-50" style={{ background: GOLD }} />
+            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill={GOLD} opacity="0.6" /></svg>
+            <div className="h-px w-8 opacity-50" style={{ background: GOLD }} />
           </div>
 
-          <p className="text-white/50 text-[9px] tracking-[6px] uppercase font-medium">Tu club, en tu bolsillo</p>
+          <p className="text-white/40 text-[9px] tracking-[6px] uppercase font-medium">Tu club, en tu bolsillo</p>
         </motion.div>
       </div>
 
-      {/* ── Content (blanco) ── */}
+      {/* ── Content (azul, seamless) ── */}
       <div className="flex-1 flex flex-col">
         <AnimatePresence mode="wait">
 
@@ -137,8 +135,8 @@ export default function LandingPage() {
               className="flex-1 flex flex-col px-6 pt-8 pb-10"
             >
               <div className="mb-6 text-center">
-                <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: NAVY }}>Paso 1 de 2</p>
-                <h2 className="font-sans text-3xl font-bold leading-tight" style={{ color: NAVY }}>
+                <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: GOLD }}>Paso 1 de 2</p>
+                <h2 className="font-sans text-3xl font-bold leading-tight text-white">
                   ¿A qué club pertenecés?
                 </h2>
               </div>
@@ -157,41 +155,46 @@ export default function LandingPage() {
                       onClick={() => handleSelectClub(c, i)}
                       className="w-full text-left relative overflow-hidden"
                       style={{
-                        background: '#fff',
+                        background: isSelected
+                          ? 'rgba(200, 148, 10, 0.10)'
+                          : 'rgba(255, 255, 255, 0.07)',
                         borderRadius: 20,
-                        border: `1.5px solid ${isSelected ? NAVY : '#E4E8F0'}`,
+                        border: `1.5px solid ${isSelected ? GOLD : 'rgba(255,255,255,0.12)'}`,
                         boxShadow: isSelected
-                          ? `0 0 0 3px ${NAVY}22, 0 8px 24px rgba(27,45,110,0.13)`
-                          : '0 2px 12px rgba(0,0,0,0.06)',
-                        transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+                          ? `0 0 0 3px ${GOLD}22, 0 8px 24px rgba(0,0,0,0.25)`
+                          : '0 2px 12px rgba(0,0,0,0.2)',
+                        backdropFilter: 'blur(8px)',
+                        transition: 'box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease',
                       }}
                     >
                       {/* Banda lateral izquierda */}
                       <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[20px]"
-                        style={{ background: isSelected ? NAVY : '#E4E8F0', transition: 'background 0.2s ease' }} />
+                        style={{
+                          background: isSelected ? GOLD : 'rgba(255,255,255,0.08)',
+                          transition: 'background 0.2s ease'
+                        }} />
 
                       <div className="flex items-center gap-3 px-4 py-3.5 pl-5">
-                        {/* Logo circular premium */}
+                        {/* Logo circular */}
                         <div className="relative flex-shrink-0">
                           <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
                             style={{
-                              background: '#F0F3FA',
-                              border: `2px solid ${isSelected ? NAVY : '#E4E8F0'}`,
-                              boxShadow: isSelected ? `0 0 0 3px ${NAVY}18` : 'none',
+                              background: isSelected ? `${GOLD}22` : 'rgba(255,255,255,0.10)',
+                              border: `2px solid ${isSelected ? GOLD : 'rgba(255,255,255,0.15)'}`,
+                              boxShadow: isSelected ? `0 0 0 3px ${GOLD}18` : 'none',
                               transition: 'all 0.2s ease',
                             }}>
                             {c.logo_url
                               ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-2" />
-                              : <span className="font-sans text-lg font-black" style={{ color: NAVY }}>{iniciales}</span>
+                              : <span className="font-sans text-lg font-black text-white">{iniciales}</span>
                             }
                           </div>
-                          {/* Indicador seleccionado sobre el logo */}
                           {isSelected && (
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center"
-                              style={{ background: NAVY, border: '2px solid #fff' }}
+                              style={{ background: GOLD, border: '2px solid #0f1d4e' }}
                             >
                               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round">
                                 <polyline points="20 6 9 17 4 12" />
@@ -202,10 +205,11 @@ export default function LandingPage() {
 
                         {/* Texto */}
                         <div className="flex-1 min-w-0">
-                          <div className="font-bold text-base leading-tight" style={{ color: NAVY }}>
+                          <div className="font-bold text-base leading-tight text-white">
                             {c.nombre}
                           </div>
-                          <div className="text-xs mt-1 font-medium" style={{ color: isSelected ? NAVY : '#9CA3AF', opacity: isSelected ? 0.6 : 1 }}>
+                          <div className="text-xs mt-1 font-medium"
+                            style={{ color: isSelected ? GOLD : 'rgba(255,255,255,0.40)' }}>
                             {isSelected ? 'Club seleccionado' : 'Toca para seleccionar'}
                           </div>
                         </div>
@@ -215,7 +219,7 @@ export default function LandingPage() {
                           animate={{ x: isSelected ? 2 : 0, opacity: isSelected ? 0 : 1 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8D0E0" strokeWidth="2.5" strokeLinecap="round">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2.5" strokeLinecap="round">
                             <polyline points="9 18 15 12 9 6" />
                           </svg>
                         </motion.div>
@@ -235,8 +239,8 @@ export default function LandingPage() {
                   >
                     <button
                       onClick={handleContinue}
-                      className="w-full py-4 rounded-2xl text-sm font-bold tracking-widest uppercase text-white transition-opacity active:opacity-80"
-                      style={{ background: NAVY }}
+                      className="w-full py-4 rounded-2xl text-sm font-bold tracking-widest uppercase transition-opacity active:opacity-80"
+                      style={{ background: GOLD, color: '#0f1d4e' }}
                     >
                       Continuar →
                     </button>
@@ -259,7 +263,11 @@ export default function LandingPage() {
               <button
                 onClick={() => setStep('clubs')}
                 className="inline-flex items-center gap-2 mb-6 self-start px-3 py-1.5 rounded-full text-xs font-semibold"
-                style={{ background: '#F0F2F8', color: NAVY }}
+                style={{
+                  background: 'rgba(255,255,255,0.10)',
+                  color: 'rgba(255,255,255,0.75)',
+                  border: '1px solid rgba(255,255,255,0.12)'
+                }}
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <polyline points="15 18 9 12 15 6" />
@@ -268,8 +276,8 @@ export default function LandingPage() {
               </button>
 
               <div className="mb-8">
-                <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: NAVY }}>Paso 2 de 2</p>
-                <h2 className="font-serif text-3xl font-bold leading-tight" style={{ color: NAVY }}>
+                <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: GOLD }}>Paso 2 de 2</p>
+                <h2 className="font-serif text-3xl font-bold leading-tight text-white">
                   ¿Cómo querés<br />ingresar?
                 </h2>
               </div>
@@ -281,7 +289,7 @@ export default function LandingPage() {
                     label: 'Socio',
                     desc: 'Reservas, cuotas\ny novedades',
                     icon: (
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="1.8" strokeLinecap="round">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="1.8" strokeLinecap="round">
                         <circle cx="12" cy="8" r="4" />
                         <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                       </svg>
@@ -292,7 +300,7 @@ export default function LandingPage() {
                     label: 'Admin',
                     desc: 'Gestión del club\ny sus miembros',
                     icon: (
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="1.8" strokeLinecap="round">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="1.8" strokeLinecap="round">
                         <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7l-9-5z" />
                         <polyline points="9 12 11 14 15 10" />
                       </svg>
@@ -306,16 +314,20 @@ export default function LandingPage() {
                     transition={{ delay: i * 0.08, ease }}
                     onClick={() => handleRole(rol)}
                     whileTap={{ scale: 0.97 }}
-                    className="rounded-2xl p-6 flex flex-col items-center gap-4 text-center transition-all"
-                    style={{ background: '#F7F8FC', border: `2px solid #E8EAF0` }}
+                    className="rounded-2xl p-6 flex flex-col items-center gap-4 text-center"
+                    style={{
+                      background: 'rgba(255,255,255,0.07)',
+                      border: '1.5px solid rgba(255,255,255,0.12)',
+                    }}
                   >
                     <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                      style={{ background: '#EEF1FA' }}>
+                      style={{ background: `${GOLD}18` }}>
                       {icon}
                     </div>
                     <div>
-                      <div className="font-bold text-sm tracking-wider uppercase" style={{ color: NAVY }}>{label}</div>
-                      <div className="text-[11px] mt-1.5 leading-relaxed text-gray-400 whitespace-pre-line">{desc}</div>
+                      <div className="font-bold text-sm tracking-wider uppercase text-white">{label}</div>
+                      <div className="text-[11px] mt-1.5 leading-relaxed whitespace-pre-line"
+                        style={{ color: 'rgba(255,255,255,0.45)' }}>{desc}</div>
                     </div>
                   </motion.button>
                 ))}
@@ -326,8 +338,8 @@ export default function LandingPage() {
         </AnimatePresence>
       </div>
 
-      <p className="text-center text-gray-300 text-[9px] tracking-widest pb-6">
-        Powered by <span style={{ color: NAVY }}>DelClub</span>
+      <p className="text-center text-[9px] tracking-widest pb-6" style={{ color: 'rgba(255,255,255,0.20)' }}>
+        Powered by <span style={{ color: `${GOLD}80` }}>DelClub</span>
       </p>
     </main>
   )
