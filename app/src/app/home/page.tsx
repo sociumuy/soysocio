@@ -392,187 +392,155 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
 
-          {/* ── Quick stats — animated gradient text (MagicUI pattern) ── */}
+          {/* ── Stats — floating numbers ── */}
           <motion.div variants={stagger.item}>
-            <div className="flex items-center rounded-2xl overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="flex items-start justify-around px-2 py-2">
               {[
                 { label: 'Socios', value: '800+' },
-                { label: 'Novedades', value: '3' },
+                { label: 'Equipos', value: '3' },
                 { label: 'Años', value: '35+' },
-              ].map(({ label, value }, i) => (
-                <div key={label} className="flex-1 flex flex-col items-center py-4"
-                  style={{ borderRight: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-                  {/* AnimatedGradientText: sweep from club-primary → white → club-primary */}
-                  <span className="font-serif text-3xl font-bold leading-none"
-                    style={{
-                      background: 'linear-gradient(90deg, rgba(var(--club-primary-rgb),0.7) 0%, #ffffff 35%, rgba(var(--club-primary-rgb),1) 65%, #ffffff 100%)',
-                      backgroundSize: '300% auto',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      animation: 'shimmer-slide 4s linear infinite',
-                    }}>{value}</span>
-                  <span className="text-white/30 text-[9px] font-bold uppercase tracking-[2px] mt-1.5">{label}</span>
+              ].map(({ label, value }) => (
+                <div key={label} className="flex flex-col items-center gap-1.5">
+                  <span style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '2.5rem',
+                    fontWeight: 800,
+                    lineHeight: 1,
+                    color: '#ffffff',
+                    letterSpacing: '-0.03em',
+                  }}>
+                    {value}
+                  </span>
+                  <span style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '9px',
+                    letterSpacing: '0.14em',
+                    color: 'rgba(255,255,255,0.30)',
+                    textTransform: 'uppercase',
+                  }}>
+                    {label}
+                  </span>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          {/* ── Deportes — pills con shimmer ── */}
+          {/* ── Deportes ── */}
           <motion.div variants={stagger.item}>
             <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-[3px] h-3.5 rounded-full"
-                  style={{ background: 'var(--club-primary)', boxShadow: '0 0 8px 1px rgba(var(--club-primary-rgb),0.6)', animation: 'glow-pulse 2.5s ease-in-out infinite' }} />
-                <span className="text-white/65 text-[10px] font-bold uppercase tracking-[2.5px]">Deportes</span>
-              </div>
-              <button onClick={() => router.push('/deportes')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1 transition-opacity active:opacity-60">
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
+                Deportes
+              </span>
+              <button onClick={() => router.push('/deportes')}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
+                className="transition-opacity active:opacity-60">
                 Ver todo
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-              </button>
-            </div>
-            <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-              {[
-                {
-                  nombre: 'Rugby', cant: '6 cat.', color: '#4a6fa5', rgb: '74,111,165',
-                  icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
-                },
-                {
-                  nombre: 'Hockey', cant: '4 cat.', color: '#3a9a5c', rgb: '58,154,92',
-                  icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
-                },
-                {
-                  nombre: 'Fútbol', cant: '4 cat.', color: '#c0674a', rgb: '192,103,74',
-                  icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
-                },
-              ].map((d) => (
-                <motion.button key={d.nombre}
-                  whileTap={{ scale: 0.93 }}
-                  onClick={() => router.push('/deportes')}
-                  className="relative flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-2xl overflow-hidden cursor-pointer"
-                  style={{
-                    background: `rgba(${d.rgb},0.12)`,
-                    border: `1px solid rgba(${d.rgb},0.3)`,
-                    boxShadow: `0 0 22px rgba(${d.rgb},0.12)`,
-                  }}>
-                  {/* Shimmer sweep en el color del deporte */}
-                  <div className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: `linear-gradient(105deg, transparent 30%, rgba(${d.rgb},0.12) 50%, transparent 70%)`,
-                      backgroundSize: '250% 100%',
-                      animation: 'shimmer-slide 2.8s ease-in-out infinite',
-                    }} />
-                  {/* Ícono en cuadrado coloreado */}
-                  <div className="relative z-10 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: `rgba(${d.rgb},0.22)`, color: d.color }}>
-                    {d.icon}
-                  </div>
-                  <div className="relative z-10 text-left">
-                    <div className="text-white text-[13px] font-bold leading-tight">{d.nombre}</div>
-                    <div className="text-white/35 text-[10px] mt-0.5">{d.cant}</div>
-                  </div>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* ── Parrilleros — border beam card ── */}
-          <motion.div variants={stagger.item}>
-            {/* MagicUI AnimatedBorder: CSS mask shows gradient ONLY in 1px border zone */}
-            <motion.div whileTap={{ scale: 0.98 }} onClick={() => router.push('/reservas')}
-              className="relative rounded-2xl overflow-hidden cursor-pointer"
-              style={{ background: '#0c1626' }}>
-              {/* Sliding gradient visible only on the 1px border */}
-              <div className="absolute inset-0 rounded-[inherit] pointer-events-none"
-                style={{
-                  padding: '1px',
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(var(--club-primary-rgb),0.7) 40%, rgba(var(--club-primary-rgb),0.9) 50%, rgba(var(--club-primary-rgb),0.7) 60%, transparent 100%)',
-                  backgroundSize: '300% 100%',
-                  animation: 'shimmer-slide 2.5s ease-in-out infinite',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  maskComposite: 'exclude',
-                }} />
-              <div className="relative z-10 p-4 flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{
-                    background: 'rgba(var(--club-primary-rgb),0.12)',
-                    color: 'var(--club-primary)',
-                    boxShadow: '0 0 14px rgba(var(--club-primary-rgb),0.2)',
-                  }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 2h6l1 4H8z" /><path d="M8 6c0 5 8 5 8 0" />
-                    <rect x="5" y="10" width="14" height="11" rx="2" />
-                    <line x1="9" y1="14" x2="9" y2="18" /><line x1="12" y1="13" x2="12" y2="18" /><line x1="15" y1="14" x2="15" y2="18" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-white/30 text-[9px] uppercase tracking-[3px] mb-0.5">Instalaciones</p>
-                  <p className="text-white text-sm font-bold">Reservar Parrillero</p>
-                  <p className="text-white/35 text-xs">3 parrilleros disponibles</p>
-                </div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* ── Novedades ── */}
-          <motion.div variants={stagger.item}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-[3px] h-3.5 rounded-full"
-                  style={{ background: 'var(--club-primary)', boxShadow: '0 0 8px 1px rgba(var(--club-primary-rgb),0.6)', animation: 'glow-pulse 2.5s ease-in-out infinite' }} />
-                <span className="text-white/65 text-[10px] font-bold uppercase tracking-[2.5px]">Novedades</span>
-              </div>
-              <button onClick={() => router.push('/novedades')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1 transition-opacity active:opacity-60">
-                Ver todas
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
               </button>
             </div>
             <div className="flex flex-col gap-2">
               {[
-                { titulo: 'Pre-temporada Rugby M19 — Inscripciones abiertas', fecha: 'Hoy', color: '#1B2D6E', rgb: '27,45,110', tag: 'Rugby' },
-                { titulo: 'Hockey femenino: torneo triangular este sábado', fecha: 'Ayer', color: '#1A6B3A', rgb: '26,107,58', tag: 'Hockey' },
-                { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', color: '#4a4a5a', rgb: '74,74,90', tag: 'Institucional' },
-              ].map((n, i) => (
-                // MagicUI pattern: animated border via CSS mask on tap + persistent glow shadow
-                <motion.div key={i} onClick={() => router.push('/novedades')}
-                  whileTap={{ scale: 0.98 }}
-                  className="relative rounded-xl overflow-hidden flex cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.04)' }}>
-                  {/* Animated border — shimmer sweep on the 1px border zone */}
-                  <div className="absolute inset-0 rounded-[inherit] pointer-events-none"
-                    style={{
-                      padding: '1px',
-                      background: `linear-gradient(90deg, transparent 0%, rgba(${n.rgb},0.6) 50%, transparent 100%)`,
-                      backgroundSize: '300% 100%',
-                      animation: `shimmer-slide ${3 + i * 0.7}s ease-in-out infinite`,
-                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      WebkitMaskComposite: 'xor',
-                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      maskComposite: 'exclude',
-                    }} />
-                  {/* Left accent */}
-                  <div className="w-[3px] flex-shrink-0 relative z-10"
-                    style={{
-                      background: `linear-gradient(180deg, ${n.color} 0%, ${n.color}88 100%)`,
-                      boxShadow: `2px 0 10px rgba(${n.rgb},0.5)`,
-                    }} />
-                  <div className="flex-1 px-4 py-3 flex items-center gap-3 min-w-0 relative z-10">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white/90 text-sm font-semibold leading-snug line-clamp-2">{n.titulo}</p>
-                      <div className="flex items-center justify-between mt-1.5">
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: `rgba(${n.rgb},0.2)`, color: n.color }}>{n.tag}</span>
-                        <span className="text-white/25 text-[10px]">{n.fecha}</span>
-                      </div>
-                    </div>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-                  </div>
-                </motion.div>
+                {
+                  nombre: 'Rugby', cant: '6 cat.',
+                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
+                },
+                {
+                  nombre: 'Hockey', cant: '4 cat.',
+                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
+                },
+                {
+                  nombre: 'Fútbol', cant: '4 cat.',
+                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
+                },
+              ].map((d) => (
+                <motion.button key={d.nombre}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => router.push('/deportes')}
+                  className="flex items-center gap-3 w-full cursor-pointer"
+                  style={{
+                    clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
+                    background: 'rgba(255,255,255,0.055)',
+                    padding: '11px 16px',
+                    filter: 'drop-shadow(0 0 0.5px rgba(255,255,255,0.10))',
+                  }}>
+                  <span style={{ color: 'rgba(255,255,255,0.42)', flexShrink: 0 }}>{d.icon}</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 600, color: '#fff', flex: 1, textAlign: 'left' }}>
+                    {d.nombre}
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}>
+                    {d.cant}
+                  </span>
+                </motion.button>
               ))}
+            </div>
+          </motion.div>
+
+          {/* ── Parrilleros ── */}
+          <motion.div variants={stagger.item}>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+              <motion.button
+                whileTap={{ scale: 0.99 }}
+                onClick={() => router.push('/reservas')}
+                className="w-full flex items-center gap-4 text-left cursor-pointer"
+                style={{ padding: '18px 0' }}
+              >
+                <div className="flex-1">
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '5px' }}>
+                    Instalaciones
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-display)', fontSize: '21px', fontWeight: 700, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+                    Reservar Parrillero
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.30)', marginTop: '4px' }}>
+                    3 parrilleros disponibles
+                  </p>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.7"><polyline points="9 18 15 12 9 6" /></svg>
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* ── Novedades ── */}
+          <motion.div variants={stagger.item}>
+            <div className="flex items-center justify-between mb-3">
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
+                Novedades
+              </span>
+              <button onClick={() => router.push('/novedades')}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
+                className="transition-opacity active:opacity-60">
+                Ver todas
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+              </button>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              {[
+                { titulo: 'Pre-temporada Rugby M19 — Inscripciones abiertas', fecha: 'Hoy', tag: 'Rugby' },
+                { titulo: 'Hockey femenino: torneo triangular este sábado', fecha: 'Ayer', tag: 'Hockey' },
+                { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', tag: 'Institucional' },
+              ].map((n, i) => (
+                <motion.button key={i}
+                  onClick={() => router.push('/novedades')}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full text-left cursor-pointer block"
+                  style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.07)' : undefined }}
+                >
+                  <div style={{ paddingTop: '14px', paddingBottom: '14px' }}>
+                    <div className="flex items-center justify-between" style={{ marginBottom: '7px' }}>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(var(--club-primary-rgb),0.72)' }}>
+                        {n.tag}
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)' }}>
+                        {n.fecha}
+                      </span>
+                    </div>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.88)', lineHeight: 1.45 }}>
+                      {n.titulo}
+                    </p>
+                  </div>
+                </motion.button>
+              ))}
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }} />
             </div>
           </motion.div>
 
