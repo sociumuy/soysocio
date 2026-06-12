@@ -272,7 +272,7 @@ export default function HomePage() {
               layout
               onClick={() => setCuotaExpanded(v => !v)}
               className="cursor-pointer overflow-hidden"
-              style={{ borderRadius: '10px', background: 'rgba(255,255,255,0.05)' }}
+              style={{ borderRadius: '10px', background: '#0f1c33' }}
               transition={{ layout: { duration: 0.4, ease } }}
             >
               {/* Línea superior de color */}
