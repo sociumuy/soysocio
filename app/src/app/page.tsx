@@ -124,16 +124,16 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4, ease }}
-              className="flex-1 flex flex-col px-6 pt-8 pb-10"
+              className="flex-1 flex flex-col px-4 pt-5 pb-6"
             >
-              <div className="mb-6 text-center">
-                <p className="text-xs font-bold uppercase tracking-[3px] mb-2" style={{ color: GOLD }}>Paso 1 de 2</p>
-                <h2 className="font-sans text-3xl font-bold leading-tight text-white">
+              <div className="mb-4 text-center">
+                <p className="text-[10px] font-bold uppercase tracking-[3px] mb-1.5" style={{ color: GOLD }}>Paso 1 de 2</p>
+                <h2 className="font-sans text-2xl font-bold leading-tight text-white">
                   ¿A qué club pertenecés?
                 </h2>
               </div>
 
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2.5">
                 {clubs.map((c, i) => {
                   const iniciales = getIniciales(c.nombre)
                   const isSelected = selectedClub?.id === c.id
@@ -166,10 +166,10 @@ export default function LandingPage() {
                           transition: 'background 0.2s ease'
                         }} />
 
-                      <div className="flex items-center gap-3 px-4 py-3.5 pl-5">
+                      <div className="flex items-center gap-3 px-3 py-2.5 pl-4">
                         {/* Logo circular */}
                         <div className="relative flex-shrink-0">
-                          <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden"
                             style={{
                               background: c.logo_url ? '#fff' : (isSelected ? `${GOLD}22` : 'rgba(255,255,255,0.10)'),
                               border: `2px solid ${isSelected ? GOLD : 'rgba(255,255,255,0.15)'}`,
@@ -177,8 +177,8 @@ export default function LandingPage() {
                               transition: 'all 0.2s ease',
                             }}>
                             {c.logo_url
-                              ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-1.5" style={{ mixBlendMode: 'multiply' }} />
-                              : <span className="font-sans text-lg font-black text-white">{iniciales}</span>
+                              ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-1" style={{ mixBlendMode: 'multiply' }} />
+                              : <span className="font-sans text-base font-black text-white">{iniciales}</span>
                             }
                           </div>
                           {isSelected && (
