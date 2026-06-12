@@ -482,85 +482,6 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* ── Deportes ── */}
-          <motion.div variants={stagger.item}>
-            <div className="flex items-center justify-between mb-3">
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
-                Deportes
-              </span>
-              <button onClick={() => router.push('/deportes')}
-                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
-                className="transition-opacity active:opacity-60">
-                Ver todo
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-              </button>
-            </div>
-            <div className="flex flex-col gap-2">
-              {[
-                {
-                  nombre: 'Rugby', cant: '10 cat.',
-                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
-                },
-                {
-                  nombre: 'Hockey', cant: '8 cat.',
-                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
-                },
-                {
-                  nombre: 'Fútbol', cant: '2 cat.',
-                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
-                },
-                {
-                  nombre: 'Fitness', cant: '4 act.',
-                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M18 7H6M18 17H6M4 12H20"/><circle cx="4" cy="12" r="2"/><circle cx="20" cy="12" r="2"/></svg>,
-                },
-              ].map((d) => (
-                <motion.button key={d.nombre}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => router.push('/deportes')}
-                  className="flex items-center gap-3 w-full cursor-pointer"
-                  style={{
-                    clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
-                    background: 'rgba(255,255,255,0.055)',
-                    padding: '11px 16px',
-                    filter: 'drop-shadow(0 0 0.5px rgba(255,255,255,0.10))',
-                  }}>
-                  <span style={{ color: 'rgba(255,255,255,0.42)', flexShrink: 0 }}>{d.icon}</span>
-                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 600, color: '#fff', flex: 1, textAlign: 'left' }}>
-                    {d.nombre}
-                  </span>
-                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}>
-                    {d.cant}
-                  </span>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* ── Parrilleros ── */}
-          <motion.div variants={stagger.item}>
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <motion.button
-                whileTap={{ scale: 0.99 }}
-                onClick={() => router.push('/reservas')}
-                className="w-full flex items-center gap-4 text-left cursor-pointer"
-                style={{ padding: '18px 0' }}
-              >
-                <div className="flex-1">
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '5px' }}>
-                    Instalaciones
-                  </p>
-                  <p style={{ fontFamily: 'var(--font-display)', fontSize: '21px', fontWeight: 700, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
-                    Reservar Parrillero
-                  </p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.30)', marginTop: '4px' }}>
-                    3 parrilleros disponibles
-                  </p>
-                </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--club-primary)" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.7"><polyline points="9 18 15 12 9 6" /></svg>
-              </motion.button>
-            </div>
-          </motion.div>
-
           {/* ── Próximo partido ── */}
           <motion.div variants={stagger.item}>
             <motion.div
@@ -622,36 +543,6 @@ export default function HomePage() {
                 </div>
               </div>
             </motion.div>
-          </motion.div>
-
-          {/* ── Nuestro Club ── */}
-          <motion.div variants={stagger.item}>
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={() => router.push('/club')}
-              className="w-full rounded-2xl overflow-hidden relative text-left"
-              style={{ background: 'linear-gradient(135deg, #0D0D0D 0%, #1a1a1a 100%)', border: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <div className="absolute inset-0 opacity-[0.03]"
-                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '10px 10px' }} />
-              <div className="relative z-10 p-4 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0"
-                  style={{ background: `rgba(var(--club-primary-rgb),0.1)`, border: '1px solid rgba(255,255,255,0.08)' }}>
-                  {storedClub?.logo_url
-                    ? <img src={storedClub.logo_url} alt={clubNombre} className="w-full h-full object-contain p-1" />
-                    : <img src="/lobos-logo.png" alt="Lobos" className="w-full h-full object-contain p-1" />
-                  }
-                </div>
-                <div className="flex-1">
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest mb-0.5">El Club</p>
-                  <p className="text-white text-sm font-bold">Nuestro Club</p>
-                  <p className="text-white/40 text-xs">Historia · Valores · Contacto</p>
-                </div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </div>
-            </motion.button>
           </motion.div>
 
         </motion.div>
