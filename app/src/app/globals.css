@@ -25,6 +25,7 @@ body {
 .phone-frame {
   width: 100%;
   min-height: 100dvh;
+  transform: translate(0); /* Hace que los hijos con position:fixed queden dentro del frame */
 }
 
 /* En desktop: marco tipo iPhone 14 Pro (393×852) */
