@@ -39,19 +39,89 @@ const ICONOS: Record<Deporte, React.ReactNode> = {
   ),
 }
 
-const TABLA_PRIMERA = [
-  { pos: 1,  nombre: 'Old Christians', pj: 22, pg: 21, pp: 1,  pts: 104 },
-  { pos: 2,  nombre: 'Old Boys',        pj: 22, pg: 20, pp: 2,  pts: 99  },
-  { pos: 3,  nombre: 'Carrasco Polo',   pj: 22, pg: 15, pp: 7,  pts: 77  },
-  { pos: 4,  nombre: 'Cricket',         pj: 22, pg: 16, pp: 6,  pts: 75  },
-  { pos: 5,  nombre: 'Los Cuervos',     pj: 22, pg: 15, pp: 7,  pts: 73  },
-  { pos: 6,  nombre: 'PGC Trébol',      pj: 22, pg: 13, pp: 9,  pts: 70  },
-  { pos: 7,  nombre: 'Lobos',           pj: 22, pg: 9,  pp: 13, pts: 50, esLobos: true },
-  { pos: 8,  nombre: 'Ceibos',          pj: 22, pg: 7,  pp: 14, pts: 38  },
-  { pos: 9,  nombre: 'Seminario',       pj: 22, pg: 5,  pp: 16, pts: 34  },
-  { pos: 10, nombre: 'Champagnat',      pj: 22, pg: 5,  pp: 17, pts: 24  },
-  { pos: 11, nombre: 'Círculo',         pj: 22, pg: 3,  pp: 19, pts: 17  },
-  { pos: 12, nombre: 'PSG',             pj: 22, pg: 1,  pp: 20, pts: 10  },
+type Equipo = { pos: number; nombre: string; pj: number; pg: number; pp: number; pts: number; esLobos?: boolean }
+type Tabla  = { id: string; label: string; copa: string; fechas: number; equipos: Equipo[] }
+
+const TABLAS_RUGBY: Tabla[] = [
+  {
+    id: 'primera', label: 'Primera', copa: 'Copa Perifar', fechas: 21,
+    equipos: [
+      { pos: 1,  nombre: 'Old Christians', pj: 22, pg: 21, pp: 1,  pts: 104 },
+      { pos: 2,  nombre: 'Old Boys',        pj: 22, pg: 20, pp: 2,  pts: 99  },
+      { pos: 3,  nombre: 'Carrasco Polo',   pj: 22, pg: 15, pp: 7,  pts: 77  },
+      { pos: 4,  nombre: 'Cricket',         pj: 22, pg: 16, pp: 6,  pts: 75  },
+      { pos: 5,  nombre: 'Los Cuervos',     pj: 22, pg: 15, pp: 7,  pts: 73  },
+      { pos: 6,  nombre: 'PGC Trébol',      pj: 22, pg: 13, pp: 9,  pts: 70  },
+      { pos: 7,  nombre: 'Lobos',           pj: 22, pg: 9,  pp: 13, pts: 50, esLobos: true },
+      { pos: 8,  nombre: 'Ceibos',          pj: 22, pg: 7,  pp: 14, pts: 38  },
+      { pos: 9,  nombre: 'Seminario',       pj: 22, pg: 5,  pp: 16, pts: 34  },
+      { pos: 10, nombre: 'Champagnat',      pj: 22, pg: 5,  pp: 17, pts: 24  },
+      { pos: 11, nombre: 'Círculo',         pj: 22, pg: 3,  pp: 19, pts: 17  },
+      { pos: 12, nombre: 'PSG',             pj: 22, pg: 1,  pp: 20, pts: 10  },
+    ],
+  },
+  {
+    id: 'preintermedia', label: 'Preintermedia A', copa: 'Copa Perifar', fechas: 24,
+    equipos: [
+      { pos: 1,  nombre: 'Old Christians', pj: 24, pg: 24, pp: 0,  pts: 119 },
+      { pos: 2,  nombre: 'Old Boys',        pj: 23, pg: 21, pp: 2,  pts: 101 },
+      { pos: 3,  nombre: 'Azules OCC',      pj: 23, pg: 17, pp: 6,  pts: 88  },
+      { pos: 4,  nombre: 'Lobos',           pj: 24, pg: 15, pp: 8,  pts: 79, esLobos: true },
+      { pos: 5,  nombre: 'Carrasco Polo',   pj: 24, pg: 15, pp: 9,  pts: 77  },
+      { pos: 6,  nombre: 'La Olla',         pj: 24, pg: 12, pp: 11, pts: 62  },
+      { pos: 7,  nombre: 'PGC Trébol',      pj: 24, pg: 10, pp: 13, pts: 55  },
+      { pos: 8,  nombre: 'Remeros',         pj: 24, pg: 10, pp: 14, pts: 51  },
+      { pos: 9,  nombre: 'Los Cuervos',     pj: 24, pg: 8,  pp: 14, pts: 44  },
+      { pos: 10, nombre: 'Cardos',          pj: 24, pg: 7,  pp: 17, pts: 40  },
+      { pos: 11, nombre: 'Círculo',         pj: 23, pg: 6,  pp: 17, pts: 33  },
+      { pos: 12, nombre: 'Jubilar',         pj: 22, pg: 4,  pp: 17, pts: 20  },
+      { pos: 13, nombre: 'Los Robles',      pj: 23, pg: 1,  pp: 22, pts: 7   },
+    ],
+  },
+  {
+    id: 'm19', label: 'M19', copa: 'Campeonato Uruguayo', fechas: 21,
+    equipos: [
+      { pos: 1,  nombre: 'Old Boys',        pj: 22, pg: 21, pp: 1,  pts: 104 },
+      { pos: 2,  nombre: 'Old Christians',  pj: 21, pg: 18, pp: 2,  pts: 93  },
+      { pos: 3,  nombre: 'Los Cuervos',     pj: 22, pg: 15, pp: 6,  pts: 73  },
+      { pos: 4,  nombre: 'Cricket',         pj: 22, pg: 13, pp: 7,  pts: 70  },
+      { pos: 5,  nombre: 'Azules OCC',      pj: 22, pg: 12, pp: 10, pts: 63  },
+      { pos: 6,  nombre: 'Seminario',       pj: 22, pg: 13, pp: 9,  pts: 61  },
+      { pos: 7,  nombre: 'Carrasco Polo',   pj: 22, pg: 10, pp: 11, pts: 56  },
+      { pos: 8,  nombre: 'Lobos',           pj: 21, pg: 10, pp: 12, pts: 54, esLobos: true },
+      { pos: 9,  nombre: 'PGC Trébol',      pj: 22, pg: 9,  pp: 11, pts: 51  },
+      { pos: 10, nombre: 'Champagnat',      pj: 22, pg: 4,  pp: 17, pts: 23  },
+      { pos: 11, nombre: 'Ceibos',          pj: 21, pg: 2,  pp: 19, pts: 13  },
+      { pos: 12, nombre: 'Azulgrana',       pj: 22, pg: 0,  pp: 22, pts: 0   },
+    ],
+  },
+  {
+    id: 'm17', label: 'M17', copa: 'Copa Oro', fechas: 4,
+    equipos: [
+      { pos: 1, nombre: 'Carrasco Polo',  pj: 4, pg: 3, pp: 0, pts: 11 },
+      { pos: 2, nombre: 'British',        pj: 4, pg: 3, pp: 1, pts: 10 },
+      { pos: 3, nombre: 'Monte VI',       pj: 4, pg: 3, pp: 1, pts: 10 },
+      { pos: 4, nombre: 'Old Christians', pj: 4, pg: 2, pp: 1, pts: 9  },
+      { pos: 5, nombre: 'Seminario',      pj: 4, pg: 2, pp: 2, pts: 8  },
+      { pos: 6, nombre: 'Lobos',          pj: 4, pg: 1, pp: 3, pts: 6, esLobos: true },
+      { pos: 7, nombre: 'Cricket',        pj: 4, pg: 1, pp: 3, pts: 6  },
+      { pos: 8, nombre: 'Lions',          pj: 4, pg: 0, pp: 4, pts: 4  },
+    ],
+  },
+  {
+    id: 'femenino', label: 'Femenino', copa: 'Nacional General', fechas: 0,
+    equipos: [
+      { pos: 1, nombre: 'CTM Negro',    pj: 0, pg: 0, pp: 0, pts: 36 },
+      { pos: 2, nombre: 'Vaimaca',      pj: 0, pg: 0, pp: 0, pts: 30 },
+      { pos: 3, nombre: 'CTM Blanco',   pj: 0, pg: 0, pp: 0, pts: 24 },
+      { pos: 4, nombre: 'Lobos',        pj: 0, pg: 0, pp: 0, pts: 16, esLobos: true },
+      { pos: 5, nombre: 'Trouville',    pj: 0, pg: 0, pp: 0, pts: 6  },
+      { pos: 6, nombre: 'Joaquín Suárez',pj:0, pg: 0, pp: 0, pts: 6  },
+      { pos: 7, nombre: 'Mulitas',      pj: 0, pg: 0, pp: 0, pts: 4  },
+      { pos: 8, nombre: 'Champagnat',   pj: 0, pg: 0, pp: 0, pts: 2  },
+      { pos: 9, nombre: 'Mcricket',     pj: 0, pg: 0, pp: 0, pts: 0  },
+    ],
+  },
 ]
 
 const DEPORTES = {
@@ -102,8 +172,10 @@ export default function DeportesPage() {
   const rgb     = club?.color_rgb      ?? '27, 45, 110'
   const logoUrl = club?.logo_url
 
-  const [activo, setActivo] = useState<Deporte>('rugby')
-  const deporte = DEPORTES[activo]
+  const [activo, setActivo]     = useState<Deporte>('rugby')
+  const [tablaId, setTablaId]   = useState('primera')
+  const deporte   = DEPORTES[activo]
+  const tablaActiva = TABLAS_RUGBY.find(t => t.id === tablaId) ?? TABLAS_RUGBY[0]
 
   return (
     <main className="min-h-screen flex flex-col" style={{ background: BG }}>
@@ -185,80 +257,104 @@ export default function DeportesPage() {
               </div>
             </div>
 
-            {/* ── Tabla de posiciones (solo Rugby) ── */}
+            {/* ── Tablas de posiciones (solo Rugby) ── */}
             {activo === 'rugby' && (
               <div>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="flex items-center gap-2">
                     <div className="w-[3px] h-3.5 rounded-full" style={{ background: deporte.acento }} />
-                    <span className="text-white/65 text-[10px] font-bold uppercase tracking-[2px]">Primera División</span>
+                    <span className="text-white/65 text-[10px] font-bold uppercase tracking-[2px]">Posiciones</span>
                   </div>
                   <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                  <span className="text-white/20 text-[9px]">Copa Perifar · 21 fechas</span>
+                  <span className="text-white/20 text-[9px]">uru.org.uy</span>
+                </div>
+
+                {/* Selector de categoría */}
+                <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
+                  {TABLAS_RUGBY.map(t => {
+                    const sel = t.id === tablaId
+                    return (
+                      <motion.button key={t.id} whileTap={{ scale: 0.93 }}
+                        onClick={() => setTablaId(t.id)}
+                        className="flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors"
+                        style={{
+                          background: sel ? deporte.acento : 'rgba(255,255,255,0.05)',
+                          border: sel ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                          color: sel ? '#fff' : 'rgba(255,255,255,0.35)',
+                        }}>
+                        {t.label}
+                      </motion.button>
+                    )
+                  })}
+                </div>
+
+                {/* Subtítulo de la tabla activa */}
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <span className="text-white/30 text-[9px]">{tablaActiva.copa}</span>
+                  {tablaActiva.fechas > 0 && (
+                    <span className="text-white/20 text-[9px]">{tablaActiva.fechas} fechas</span>
+                  )}
                 </div>
 
                 {/* Header de columnas */}
-                <div className="flex items-center px-3 py-1.5 mb-1">
+                <div className="flex items-center px-3 py-1 mb-1">
                   <span className="w-6 text-white/20 text-[9px] font-bold text-center">#</span>
                   <span className="flex-1 text-white/20 text-[9px] font-bold uppercase tracking-wider pl-2">Equipo</span>
-                  <span className="w-8 text-white/20 text-[9px] font-bold text-center">PJ</span>
-                  <span className="w-8 text-white/20 text-[9px] font-bold text-center">PG</span>
+                  {tablaActiva.id !== 'femenino' && <>
+                    <span className="w-8 text-white/20 text-[9px] font-bold text-center">PJ</span>
+                    <span className="w-8 text-white/20 text-[9px] font-bold text-center">PG</span>
+                  </>}
                   <span className="w-10 text-white/20 text-[9px] font-bold text-center">PTS</span>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  {TABLA_PRIMERA.map((eq, i) => (
-                    <motion.div
-                      key={eq.nombre}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.03, ease }}
-                      className="flex items-center px-3 py-2.5 rounded-xl relative overflow-hidden"
-                      style={{
-                        background: eq.esLobos
-                          ? `rgba(27,45,110,0.35)`
-                          : i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent',
-                        border: eq.esLobos ? '1px solid rgba(27,45,110,0.5)' : '1px solid transparent',
-                      }}
-                    >
-                      {eq.esLobos && (
-                        <div className="absolute inset-0 pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(90deg, rgba(27,45,110,0.2) 0%, transparent 60%)',
-                          }} />
-                      )}
-                      {/* Posición */}
-                      <span className="w-6 text-center text-[11px] font-bold relative z-10"
-                        style={{ color: eq.pos <= 4 ? '#5a8a5a' : eq.esLobos ? '#fff' : 'rgba(255,255,255,0.3)' }}>
-                        {eq.pos}
-                      </span>
-                      {/* Nombre */}
-                      <span className="flex-1 pl-2 text-[13px] font-semibold relative z-10 leading-tight"
-                        style={{ color: eq.esLobos ? '#fff' : 'rgba(255,255,255,0.8)' }}>
-                        {eq.nombre}
+                <AnimatePresence mode="wait">
+                  <motion.div key={tablaId}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.18, ease }}
+                    className="flex flex-col gap-1">
+                    {tablaActiva.equipos.map((eq, i) => (
+                      <div key={eq.nombre}
+                        className="flex items-center px-3 py-2.5 rounded-xl relative overflow-hidden"
+                        style={{
+                          background: eq.esLobos
+                            ? 'rgba(27,45,110,0.35)'
+                            : i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent',
+                          border: eq.esLobos ? '1px solid rgba(27,45,110,0.5)' : '1px solid transparent',
+                        }}>
                         {eq.esLobos && (
-                          <span className="ml-2 text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-                            style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>
-                            Nosotros
-                          </span>
+                          <div className="absolute inset-0 pointer-events-none"
+                            style={{ background: 'linear-gradient(90deg, rgba(27,45,110,0.25) 0%, transparent 70%)' }} />
                         )}
-                      </span>
-                      {/* PJ */}
-                      <span className="w-8 text-center text-[12px] relative z-10"
-                        style={{ color: 'rgba(255,255,255,0.35)' }}>{eq.pj}</span>
-                      {/* PG */}
-                      <span className="w-8 text-center text-[12px] relative z-10"
-                        style={{ color: 'rgba(255,255,255,0.35)' }}>{eq.pg}</span>
-                      {/* PTS */}
-                      <span className="w-10 text-center text-[13px] font-bold relative z-10"
-                        style={{ color: eq.esLobos ? '#fff' : eq.pos <= 4 ? '#5a8a5a' : 'rgba(255,255,255,0.6)' }}>
-                        {eq.pts}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <p className="text-white/15 text-[9px] text-right mt-2">Fuente: uru.org.uy</p>
+                        <span className="w-6 text-center text-[11px] font-bold relative z-10"
+                          style={{ color: eq.pos <= 4 ? '#5c9e6a' : eq.esLobos ? '#fff' : 'rgba(255,255,255,0.25)' }}>
+                          {eq.pos}
+                        </span>
+                        <span className="flex-1 pl-2 text-[12px] font-semibold relative z-10 leading-tight"
+                          style={{ color: eq.esLobos ? '#fff' : 'rgba(255,255,255,0.78)' }}>
+                          {eq.nombre}
+                          {eq.esLobos && (
+                            <span className="ml-1.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full"
+                              style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.65)' }}>
+                              Nosotros
+                            </span>
+                          )}
+                        </span>
+                        {tablaActiva.id !== 'femenino' && <>
+                          <span className="w-8 text-center text-[11px] relative z-10"
+                            style={{ color: 'rgba(255,255,255,0.3)' }}>{eq.pj}</span>
+                          <span className="w-8 text-center text-[11px] relative z-10"
+                            style={{ color: 'rgba(255,255,255,0.3)' }}>{eq.pg}</span>
+                        </>}
+                        <span className="w-10 text-center text-[13px] font-bold relative z-10"
+                          style={{ color: eq.esLobos ? '#fff' : eq.pos <= 4 ? '#5c9e6a' : 'rgba(255,255,255,0.55)' }}>
+                          {eq.pts}
+                        </span>
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             )}
 
