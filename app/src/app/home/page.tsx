@@ -152,38 +152,36 @@ export default function HomePage() {
             {/* Divider */}
             <div className="w-px h-7 flex-shrink-0" style={{ background: 'rgba(255,255,255,0.10)' }} />
 
-            <div>
-              {/* Club logo + nombre */}
-              <div className="flex items-center gap-1.5">
-                {/* Iconito del club */}
-                <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center">
-                  {storedClub?.logo_url
-                    ? <img src={storedClub.logo_url} alt="" className="w-full h-full object-contain" />
-                    : <span style={{ fontSize: '6px', fontWeight: 800, color: 'rgba(255,255,255,0.5)', lineHeight: 1 }}>
-                        {storedClub?.iniciales ?? 'L'}
-                      </span>
-                  }
-                </div>
-                <span style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  letterSpacing: '0.01em',
-                  color: 'rgba(255,255,255,0.72)',
-                  lineHeight: 1,
-                }}>
-                  {clubNombre}
-                </span>
+            <div className="flex items-center gap-1.5 mt-1">
+              {/* Iconito del club */}
+              <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center">
+                {storedClub?.logo_url
+                  ? <img src={storedClub.logo_url} alt="" className="w-full h-full object-contain" />
+                  : <span style={{ fontSize: '6px', fontWeight: 800, color: 'rgba(255,255,255,0.5)', lineHeight: 1 }}>
+                      {storedClub?.iniciales ?? 'L'}
+                    </span>
+                }
               </div>
-              {/* EN LÍNEA */}
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="relative flex h-2 w-2 flex-shrink-0">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-65"
-                    style={{ animation: 'ping-ring 1.4s cubic-bezier(0,0,0.2,1) infinite' }} />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
-                <span className="text-emerald-400 text-[10px] font-bold tracking-[2px] uppercase">EN LÍNEA</span>
-              </div>
+              {/* Nombre */}
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.01em',
+                color: 'rgba(255,255,255,0.72)',
+                lineHeight: 1,
+              }}>
+                {clubNombre}
+              </span>
+              {/* EN LÍNEA — en la misma línea */}
+              <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-65"
+                  style={{ animation: 'ping-ring 1.4s cubic-bezier(0,0,0.2,1) infinite' }} />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+              </span>
+              <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.15em', color: 'rgba(52,211,153,0.8)', textTransform: 'uppercase' }}>
+                En línea
+              </span>
             </div>
           </div>
 
