@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import NavBar from '@/components/NavBar'
+import Chip from '@/components/Chip'
 import PremiumButton from '@/components/PremiumButton'
 import AnimatedNumber from '@/components/AnimatedNumber'
 import GrainOverlay from '@/components/GrainOverlay'
@@ -152,11 +153,21 @@ export default function HomePage() {
         {socios.length > 1 && (
           <div className="relative z-10 flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
             {socios.map(s => (
-              <button key={s.id} onClick={() => setSocioActivo(s)}
-                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${socioActivo?.id === s.id ? 'bg-[var(--club-primary)] text-white' : 'bg-white/8 text-[#666]'}`}>
-                <span className="w-5 h-5 rounded-full bg-[var(--club-primary)]/30 flex items-center justify-center text-[10px] font-bold text-[var(--club-primary)]">{s.nombre[0]}</span>
+              <Chip
+                key={s.id}
+                active={socioActivo?.id === s.id}
+                onClick={() => setSocioActivo(s)}
+                layoutId="family-chip"
+                size="md"
+                icon={
+                  <span className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold"
+                    style={{ background: 'rgba(var(--club-primary-rgb),0.3)', color: 'var(--club-primary)' }}>
+                    {s.nombre[0]}
+                  </span>
+                }
+              >
                 {s.nombre}
-              </button>
+              </Chip>
             ))}
           </div>
         )}

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import NavBar from '@/components/NavBar'
+import Chip from '@/components/Chip'
 import { getStoredClub } from '@/lib/club-storage'
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
@@ -128,6 +129,7 @@ const DEPORTES = {
   rugby: {
     nombre: 'Rugby',
     acento: '#1B2D6E',
+    acentoRgb: '27,45,110',
     descripcion: 'El corazón del club. Formamos jugadores con valores desde los 6 años.',
     categorias: [
       { nombre: 'M6 – M8',          subtitulo: 'Iniciación',  dias: 'Sáb',                  hora: '9:00 hs'   },
@@ -142,6 +144,7 @@ const DEPORTES = {
   hockey: {
     nombre: 'Hockey',
     acento: '#1A6B3A',
+    acentoRgb: '26,107,58',
     descripcion: 'Disciplina, trabajo en equipo y pasión. Más de 170 jugadoras en el club.',
     categorias: [
       { nombre: 'Bebé Hockey', subtitulo: 'Iniciación',        dias: 'Sáb',           hora: '9:00 hs'   },
@@ -154,6 +157,7 @@ const DEPORTES = {
   futbol: {
     nombre: 'Fútbol',
     acento: '#7D1A1A',
+    acentoRgb: '125,26,26',
     descripcion: 'Fútbol infantil y adulto con énfasis en formación y disfrute del juego.',
     categorias: [
       { nombre: 'Baby Fútbol',    subtitulo: 'Iniciación', dias: 'Sáb',           hora: '9:00 hs'  },
@@ -207,26 +211,24 @@ export default function DeportesPage() {
 
       {/* ── Tab selector ── */}
       <div className="px-5 pb-5">
-        <div className="flex gap-1.5 p-1 rounded-2xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex gap-1 p-1 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
           {(Object.keys(DEPORTES) as Deporte[]).map((key) => {
-            const sel = activo === key
-            const d   = DEPORTES[key]
+            const d = DEPORTES[key]
             return (
-              <motion.button
+              <Chip
                 key={key}
+                active={activo === key}
                 onClick={() => setActivo(key)}
-                className="flex-1 flex flex-col items-center py-2.5 rounded-xl gap-1.5 transition-colors"
-                style={{ background: sel ? d.acento : 'transparent' }}
-                whileTap={{ scale: 0.95 }}
+                accentRgb={d.acentoRgb}
+                icon={ICONOS[key]}
+                direction="col"
+                variant="tab"
+                size="md"
+                layoutId="sport-tab"
+                className="flex-1 py-2"
               >
-                <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.3)' }}>
-                  {ICONOS[key]}
-                </span>
-                <span className="text-[10px] font-bold tracking-wider"
-                  style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.3)' }}>
-                  {d.nombre}
-                </span>
-              </motion.button>
+                {d.nombre}
+              </Chip>
             )
           })}
         </div>
@@ -271,21 +273,18 @@ export default function DeportesPage() {
 
                 {/* Selector de categoría */}
                 <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
-                  {TABLAS_RUGBY.map(t => {
-                    const sel = t.id === tablaId
-                    return (
-                      <motion.button key={t.id} whileTap={{ scale: 0.93 }}
-                        onClick={() => setTablaId(t.id)}
-                        className="flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors"
-                        style={{
-                          background: sel ? deporte.acento : 'rgba(255,255,255,0.05)',
-                          border: sel ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                          color: sel ? '#fff' : 'rgba(255,255,255,0.35)',
-                        }}>
-                        {t.label}
-                      </motion.button>
-                    )
-                  })}
+                  {TABLAS_RUGBY.map(t => (
+                    <Chip
+                      key={t.id}
+                      active={t.id === tablaId}
+                      onClick={() => setTablaId(t.id)}
+                      accentRgb={deporte.acentoRgb}
+                      variant="pill"
+                      layoutId="tabla-tab"
+                    >
+                      {t.label}
+                    </Chip>
+                  ))}
                 </div>
 
                 {/* Subtítulo de la tabla activa */}
