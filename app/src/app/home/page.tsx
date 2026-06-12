@@ -172,15 +172,7 @@ export default function HomePage() {
           className="relative z-10 flex items-center gap-3 mb-6">
           <div className="h-px flex-1"
             style={{ background: 'linear-gradient(90deg, transparent, rgba(var(--club-primary-rgb),0.35), transparent)' }} />
-          <span className="text-[9px] font-bold tracking-[4px] uppercase flex-shrink-0"
-            style={{
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.22) 0%, rgba(var(--club-primary-rgb),1) 35%, rgba(255,255,255,0.9) 50%, rgba(var(--club-primary-rgb),0.85) 65%, rgba(255,255,255,0.22) 100%)',
-              backgroundSize: '300% auto',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              animation: 'shimmer-slide 5s linear infinite',
-            }}>
+          <span className="text-white/22 text-[9px] font-bold tracking-[4px] uppercase flex-shrink-0">
             Somos Familia · Punta del Este · Est. 1989
           </span>
           <div className="h-px flex-1"
@@ -194,59 +186,33 @@ export default function HomePage() {
             Bienvenido de vuelta
           </motion.p>
 
-          {/* Name — horizontal shimmer sweep */}
           <motion.h1
             initial={{ opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease }}
-            className="font-serif text-5xl font-semibold leading-none"
-            style={{
-              background: 'linear-gradient(90deg, rgba(var(--club-primary-rgb),0.65) 0%, #ffffff 28%, rgba(var(--club-primary-rgb),1) 52%, #ffffff 76%, rgba(var(--club-primary-rgb),0.65) 100%)',
-              backgroundSize: '300% auto',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              animation: 'shimmer-slide 3.5s linear infinite',
-            }}
+            className="font-serif text-5xl font-semibold leading-none text-white"
           >
             {socio?.nombre ?? 'Socio'}
           </motion.h1>
 
-          {/* ACTIVO badge — spinning comet border */}
+          {/* ACTIVO badge — rectangular outline */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="inline-flex items-center gap-2 mt-3 relative overflow-hidden"
-            style={{ padding: '6px 14px', borderRadius: '999px' }}
+            className="inline-flex items-center gap-2 mt-3"
+            style={{
+              padding: '4px 10px',
+              borderRadius: '3px',
+              border: '1px solid rgba(var(--club-primary-rgb),0.45)',
+              background: 'transparent',
+            }}
           >
-            {/* bg */}
-            <div className="absolute inset-0 rounded-full"
-              style={{ background: 'rgba(var(--club-primary-rgb),0.10)' }} />
-            {/* spinning comet border */}
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <div className="absolute inset-0 pointer-events-none" style={{
-              borderRadius: 'inherit',
-              padding: '1px',
-              overflow: 'hidden',
-              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              WebkitMaskComposite: 'xor',
-              mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              maskComposite: 'exclude',
-            } as any}>
-              <div style={{
-                position: 'absolute',
-                top: '-50%', left: '-50%',
-                width: '200%', height: '200%',
-                background: 'conic-gradient(transparent 180deg, rgba(var(--club-primary-rgb),0.2) 240deg, rgba(var(--club-primary-rgb),0.9) 285deg, rgba(255,255,255,0.85) 305deg, rgba(var(--club-primary-rgb),0.7) 325deg, transparent 360deg)',
-                animation: 'spin-beam 3s linear infinite',
-              }} />
-            </div>
-            <span className="relative z-10 text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">
+            <span className="text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">
               {socio?.categoria ?? 'Socio'}
             </span>
-            <span className="relative z-10 text-[#3a3a3a] text-[10px]">·</span>
-            <span className="relative z-10 text-[#666] text-[10px] font-mono">N° {socio?.numero_socio ?? '—'}</span>
+            <span className="text-white/15 text-[10px]">·</span>
+            <span className="text-white/35 text-[10px] font-mono">N° {socio?.numero_socio ?? '—'}</span>
           </motion.div>
         </div>
 
@@ -284,11 +250,17 @@ export default function HomePage() {
               <motion.div
                 layout
                 onClick={() => setCuotaExpanded(v => !v)}
-                className="relative overflow-hidden rounded-2xl cursor-pointer"
+                className="relative overflow-hidden rounded-xl cursor-pointer"
                 style={{
                   background: socio?.cuota_al_dia
                     ? 'linear-gradient(135deg, #111 0%, #1c1c1c 100%)'
                     : 'linear-gradient(135deg, #4a0f0f 0%, #7D1A1A 100%)',
+                  borderTop: socio?.cuota_al_dia
+                    ? '1px solid rgba(160,160,160,0.2)'
+                    : '1px solid rgba(220,55,55,0.55)',
+                  border: socio?.cuota_al_dia
+                    ? '1px solid rgba(100,100,100,0.15)'
+                    : '1px solid rgba(180,40,40,0.3)',
                 }}
                 transition={{ layout: { duration: 0.4, ease } }}
               >
@@ -329,17 +301,13 @@ export default function HomePage() {
                   <div className="flex justify-center">
                     <button
                       onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
-                      className="relative overflow-hidden px-6 py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
-                      style={{ background: 'var(--club-primary)' }}
+                      className="px-5 py-1.5 rounded-md text-[11px] font-bold tracking-tight uppercase text-[#0D0D0D] active:opacity-75 transition-opacity"
+                      style={{
+                        background: 'var(--club-primary)',
+                        border: '1px solid rgba(255,255,255,0.18)',
+                      }}
                     >
-                      {/* shimmer sweep */}
-                      <div className="absolute inset-0 pointer-events-none"
-                        style={{
-                          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)',
-                          backgroundSize: '200% 100%',
-                          animation: 'shimmer-slide 2.5s ease-in-out infinite',
-                        }} />
-                      <span className="relative z-10">{socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}</span>
+                      {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
                     </button>
                   </div>
                 </div>
@@ -380,8 +348,14 @@ export default function HomePage() {
           <motion.div variants={stagger.item}>
             <motion.div
               whileTap={{ scale: 0.98 }}
-              className="rounded-2xl overflow-hidden relative cursor-pointer"
-              style={{ background: 'linear-gradient(135deg, #1B2D6E 0%, #0f1d4a 100%)' }}
+              className="rounded-lg overflow-hidden relative cursor-pointer"
+              style={{
+                background: 'linear-gradient(135deg, #1B2D6E 0%, #0f1d4a 100%)',
+                borderTop: '2px solid var(--club-primary)',
+                border: '1px solid rgba(27,45,110,0.6)',
+                borderTopWidth: '2px',
+                borderTopColor: 'var(--club-primary)',
+              }}
               onClick={() => router.push('/deportes')}
             >
               <div className="absolute inset-0 opacity-5"
