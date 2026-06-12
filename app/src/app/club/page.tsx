@@ -95,7 +95,7 @@ export default function ClubPage() {
       {/* ── Stats strip ── */}
       <div className="px-5 pb-8">
         <div className="grid grid-cols-3 divide-x rounded-2xl overflow-hidden"
-          style={{ divideColor: `rgba(${rgb},0.2)`, background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.15)` }}>
+          style={{ background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.15)` }}>
           {[
             { value: '800+', label: 'Socios' },
             { value: '35+',  label: 'Años'   },
