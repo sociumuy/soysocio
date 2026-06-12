@@ -339,40 +339,46 @@ export default function HomePage() {
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
               </button>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+            <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {[
                 {
-                  nombre: 'Rugby', cant: '6 cat.',
-                  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
+                  nombre: 'Rugby', cant: '6 cat.', color: '#4a6fa5', rgb: '74,111,165',
+                  icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
                 },
                 {
-                  nombre: 'Hockey', cant: '4 cat.',
-                  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
+                  nombre: 'Hockey', cant: '4 cat.', color: '#3a9a5c', rgb: '58,154,92',
+                  icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
                 },
                 {
-                  nombre: 'Fútbol', cant: '4 cat.',
-                  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
+                  nombre: 'Fútbol', cant: '4 cat.', color: '#c0674a', rgb: '192,103,74',
+                  icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
                 },
               ].map((d) => (
-                // MagicUI ShimmerButton pattern: comet orbiting the border via CSS mask
-                <motion.button key={d.nombre} whileTap={{ scale: 0.93 }}
+                <motion.button key={d.nombre}
+                  whileTap={{ scale: 0.93 }}
                   onClick={() => router.push('/deportes')}
-                  className="relative flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full overflow-hidden cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.04)' }}>
-                  {/* Comet border: conic-gradient rotates, CSS mask shows ONLY the 1px border zone */}
-                  <div className="absolute inset-0 rounded-[inherit] pointer-events-none"
+                  className="relative flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-2xl overflow-hidden cursor-pointer"
+                  style={{
+                    background: `rgba(${d.rgb},0.12)`,
+                    border: `1px solid rgba(${d.rgb},0.3)`,
+                    boxShadow: `0 0 22px rgba(${d.rgb},0.12)`,
+                  }}>
+                  {/* Shimmer sweep en el color del deporte */}
+                  <div className="absolute inset-0 pointer-events-none"
                     style={{
-                      padding: '1px',
-                      background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(var(--club-primary-rgb),0.9) 20deg, transparent 20deg)',
-                      animation: 'spin-beam 2.5s linear infinite',
-                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      WebkitMaskComposite: 'xor',
-                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      maskComposite: 'exclude',
+                      background: `linear-gradient(105deg, transparent 30%, rgba(${d.rgb},0.12) 50%, transparent 70%)`,
+                      backgroundSize: '250% 100%',
+                      animation: 'shimmer-slide 2.8s ease-in-out infinite',
                     }} />
-                  <span className="relative z-10" style={{ color: 'var(--club-primary)' }}>{d.icon}</span>
-                  <span className="relative z-10 text-white text-xs font-semibold">{d.nombre}</span>
-                  <span className="relative z-10 text-white/30 text-[10px]">{d.cant}</span>
+                  {/* Ícono en cuadrado coloreado */}
+                  <div className="relative z-10 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: `rgba(${d.rgb},0.22)`, color: d.color }}>
+                    {d.icon}
+                  </div>
+                  <div className="relative z-10 text-left">
+                    <div className="text-white text-[13px] font-bold leading-tight">{d.nombre}</div>
+                    <div className="text-white/35 text-[10px] mt-0.5">{d.cant}</div>
+                  </div>
                 </motion.button>
               ))}
             </div>
