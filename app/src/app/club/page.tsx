@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import type { ReactNode } from 'react'
 import NavBar from '@/components/NavBar'
 import { getStoredClub } from '@/lib/club-storage'
 
@@ -272,7 +273,7 @@ export default function ClubPage() {
 }
 
 /* ── Componente de sección reutilizable ── */
-function Section({ label, rgb, children, last }: { label: string; rgb: string; children: React.ReactNode; last?: boolean }) {
+function Section({ label, rgb, children, last }: { label: string; rgb: string; children: ReactNode; last?: boolean }) {
   return (
     <div className={`px-5 ${last ? 'pb-28' : 'pb-6'}`}>
       <div className="flex items-center gap-3 mb-4">
