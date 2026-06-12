@@ -42,7 +42,28 @@ body {
   display: none;
 }
 
-/* En desktop: marco tipo iPhone 14 Pro (393×852) */
+/* ── Premium animation keyframes ── */
+@keyframes shimmer-slide {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+@keyframes spin-beam {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1; }
+}
+
+/* ── En desktop: marco tipo iPhone 14 Pro (393×852) ── */
 @media (min-width: 600px) {
   body {
     background: #111;
