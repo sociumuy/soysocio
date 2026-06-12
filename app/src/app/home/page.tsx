@@ -215,13 +215,15 @@ export default function HomePage() {
                   </div>
                   <p className="text-white/20 text-xs tracking-wider mb-4">UYU · mensual</p>
 
-                  <button
-                    onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
-                    className="w-full py-4 rounded-xl text-sm font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
-                    style={{ background: 'var(--club-primary)' }}
-                  >
-                    {socio?.cuota_al_dia ? 'Ver historial de pagos' : 'Pagar cuota ahora'}
-                  </button>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
+                      className="px-6 py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
+                      style={{ background: 'var(--club-primary)' }}
+                    >
+                      {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
+                    </button>
+                  </div>
                 </div>
 
                 {/* ── Expanded: historial mini ── */}
@@ -296,14 +298,14 @@ export default function HomePage() {
           {/* ── Quick stats ── */}
           <motion.div variants={stagger.item} className="grid grid-cols-3 gap-2">
             {[
-              { label: 'Socios', value: '800+', color: '#1B2D6E' },
-              { label: 'Novedades', value: '3', color: 'var(--club-primary)' },
-              { label: 'Años', value: '35+', color: '#1A6B3A' },
-            ].map(({ label, value, color }) => (
+              { label: 'Socios', value: '800+' },
+              { label: 'Novedades', value: '3' },
+              { label: 'Años', value: '35+' },
+            ].map(({ label, value }) => (
               <div key={label} className="bg-white rounded-2xl p-4 shadow-sm overflow-hidden relative">
-                <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: color }} />
-                <div className="font-serif text-2xl font-bold mb-1" style={{ color }}>{value}</div>
-                <div className="text-[#aaa] text-[10px] font-semibold uppercase tracking-wider">{label}</div>
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--club-primary)]" />
+                <div className="font-serif text-2xl font-bold mb-1 text-[var(--club-primary)]">{value}</div>
+                <div className="text-[#bbb] text-[9px] font-bold uppercase tracking-widest">{label}</div>
               </div>
             ))}
           </motion.div>
@@ -319,18 +321,30 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { nombre: 'Rugby', emoji: '🏉', cats: 'M6–M19\nAdultos · Veteranos', color: '#1B2D6E', cant: '6 cat.' },
-                { nombre: 'Hockey', emoji: '🏑', cats: 'Infantil\nJuvenil · Adultas', color: '#1A6B3A', cant: '4 cat.' },
-                { nombre: 'Fútbol', emoji: '⚽', cats: 'Infantil\nJuvenil', color: '#7D1A1A', cant: '4 cat.' },
+                {
+                  nombre: 'Rugby', cant: '6 cat.',
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(-35 12 12)"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="7" y1="5" x2="17" y2="5"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="7" y1="19" x2="17" y2="19"/></svg>,
+                },
+                {
+                  nombre: 'Hockey', cant: '4 cat.',
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="6" r="2"/><line x1="12" y1="8" x2="12" y2="16"/><path d="M12 16 Q8 18 6 21"/><path d="M6 21 h6"/></svg>,
+                },
+                {
+                  nombre: 'Fútbol', cant: '4 cat.',
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,7 14.5,10.5 18,10.5 16,13.5 17.5,17 12,15 6.5,17 8,13.5 6,10.5 9.5,10.5" strokeLinejoin="round"/></svg>,
+                },
               ].map((d) => (
                 <motion.button key={d.nombre} whileTap={{ scale: 0.96 }}
                   onClick={() => router.push('/deportes')}
-                  className="rounded-2xl p-4 shadow-sm flex flex-col items-start gap-3 text-left overflow-hidden relative"
-                  style={{ background: `linear-gradient(160deg, ${d.color} 0%, ${d.color}cc 100%)` }}>
-                  <span className="text-2xl">{d.emoji}</span>
+                  className="rounded-2xl p-4 flex flex-col items-start gap-3 text-left overflow-hidden relative"
+                  style={{
+                    background: 'rgba(255,255,255,0.07)',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                  }}>
+                  <div style={{ color: 'var(--club-primary)' }}>{d.icon}</div>
                   <div className="w-full">
                     <div className="text-white text-xs font-bold">{d.nombre}</div>
-                    <div className="text-white/50 text-[9px] mt-0.5">{d.cant}</div>
+                    <div className="text-white/35 text-[9px] mt-0.5">{d.cant}</div>
                   </div>
                 </motion.button>
               ))}
