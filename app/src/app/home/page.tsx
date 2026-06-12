@@ -247,96 +247,83 @@ export default function HomePage() {
       <div className="flex-1 bg-[#08101f] rounded-t-3xl px-5 pt-5 pb-32">
         <motion.div variants={stagger.container} initial="initial" animate="animate" className="flex flex-col gap-5">
 
-          {/* ── Expandable Cuota Card ── */}
+          {/* ── Cuota ── */}
           <motion.div variants={stagger.item}>
-            <ShiftCard intensity={4} className="w-full">
-              <motion.div
-                layout
-                onClick={() => setCuotaExpanded(v => !v)}
-                className="relative overflow-hidden rounded-xl cursor-pointer"
-                style={{
-                  background: socio?.cuota_al_dia
-                    ? 'linear-gradient(135deg, #111 0%, #1c1c1c 100%)'
-                    : 'linear-gradient(135deg, #4a0f0f 0%, #7D1A1A 100%)',
-                  borderTop: socio?.cuota_al_dia
-                    ? '1px solid rgba(160,160,160,0.2)'
-                    : '1px solid rgba(220,55,55,0.55)',
-                  border: socio?.cuota_al_dia
-                    ? '1px solid rgba(100,100,100,0.15)'
-                    : '1px solid rgba(180,40,40,0.3)',
-                }}
-                transition={{ layout: { duration: 0.4, ease } }}
-              >
-                <GrainOverlay opacity={0.07} />
-                <div className="pointer-events-none absolute top-0 right-0 w-44 h-44 rounded-full opacity-25"
-                  style={{
-                    background: `radial-gradient(circle, ${socio?.cuota_al_dia ? 'rgba(var(--club-primary-rgb),0.6)' : 'rgba(255,80,80,0.4)'} 0%, transparent 70%)`,
-                    transform: 'translate(30%,-30%)',
-                  }} />
+            <motion.div
+              layout
+              onClick={() => setCuotaExpanded(v => !v)}
+              className="cursor-pointer overflow-hidden"
+              style={{ borderRadius: '10px', background: 'rgba(255,255,255,0.05)' }}
+              transition={{ layout: { duration: 0.4, ease } }}
+            >
+              {/* Línea superior de color */}
+              <div style={{ height: '2px', background: socio?.cuota_al_dia ? 'var(--club-primary)' : '#e53e3e' }} />
 
-                <div className="relative z-10 px-4 py-3 flex items-center justify-between gap-3">
-                  {/* Left: label + amount */}
-                  <div>
-                    <span className="text-white/35 text-[9px] uppercase tracking-[2.5px] block mb-0.5">
-                      {socios.length > 1 ? `Cuota · ${socio?.nombre}` : 'Mi cuota'}
+              <div className="px-4 py-4 flex items-center justify-between gap-4">
+                {/* Izquierda: label + monto */}
+                <div>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.30)', display: 'block', marginBottom: '6px' }}>
+                    {socios.length > 1 ? `Cuota · ${socio?.nombre}` : 'Mi cuota'}
+                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.30)', fontWeight: 500 }}>$</span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '28px', fontWeight: 700, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                      <AnimatedNumber value={2400} />
                     </span>
-                    <div className="flex items-baseline gap-0.5">
-                      <span className="text-white/40 font-mono text-xs">$</span>
-                      <span className="text-white font-mono text-xl font-semibold tracking-tight leading-none">
-                        <AnimatedNumber value={2400} />
-                      </span>
-                      <span className="text-white/20 text-[9px] ml-1">UYU</span>
-                    </div>
-                  </div>
-
-                  {/* Right: status + action */}
-                  <div className="flex flex-col items-end gap-1.5">
-                    <div className={`flex items-center gap-1 text-[10px] font-semibold ${socio?.cuota_al_dia ? 'text-[var(--club-primary)]' : 'text-red-300'}`}>
-                      <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }}
-                        className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${socio?.cuota_al_dia ? 'bg-[var(--club-primary)]' : 'bg-red-400'}`} />
-                      {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
-                    </div>
-                    <button
-                      onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
-                      className="flex items-center gap-0.5 active:opacity-60 transition-opacity"
-                      style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.03em', color: 'var(--club-primary)' }}
-                    >
-                      {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
-                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-                    </button>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.20)', marginLeft: '2px' }}>UYU</span>
                   </div>
                 </div>
 
-                <AnimatePresence>
-                  {cuotaExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.35, ease }}
-                      className="relative z-10 overflow-hidden"
-                    >
-                      <div className="h-px bg-white/8 mx-5" />
-                      <div className="p-5 pt-4">
-                        <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">Últimos 3 meses</p>
-                        {[
-                          { mes: 'Junio 2026', estado: socio?.cuota_al_dia },
-                          { mes: 'Mayo 2026', estado: true },
-                          { mes: 'Abril 2026', estado: true },
-                        ].map(({ mes, estado }) => (
-                          <div key={mes} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-                            <span className="text-white/60 text-xs">{mes}</span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${estado ? 'bg-emerald-400/15 text-emerald-400' : 'bg-red-400/15 text-red-400'}`}>
-                              {estado ? '✓ Pagado' : '✗ Pendiente'}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </ShiftCard>
+                {/* Derecha: estado + acción */}
+                <div className="flex flex-col items-end gap-2.5">
+                  <span style={{
+                    fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.04em',
+                    color: socio?.cuota_al_dia ? 'var(--club-primary)' : '#fc8181',
+                  }}>
+                    {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
+                  </span>
+                  <button
+                    onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
+                    className="flex items-center gap-0.5 active:opacity-50 transition-opacity"
+                    style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.35)' }}
+                  >
+                    {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+                  </button>
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {cuotaExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.35, ease }}
+                    className="overflow-hidden"
+                  >
+                    <div className="h-px mx-4" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                    <div className="px-4 py-4">
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '12px' }}>
+                        Últimos 3 meses
+                      </p>
+                      {[
+                        { mes: 'Junio 2026', estado: socio?.cuota_al_dia },
+                        { mes: 'Mayo 2026', estado: true },
+                        { mes: 'Abril 2026', estado: true },
+                      ].map(({ mes, estado }) => (
+                        <div key={mes} className="flex items-center justify-between py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.50)' }}>{mes}</span>
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, color: estado ? '#68d391' : '#fc8181' }}>
+                            {estado ? 'Pagado' : 'Pendiente'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </motion.div>
 
           {/* ── Hoy en el club ── */}
