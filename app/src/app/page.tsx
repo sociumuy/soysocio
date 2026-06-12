@@ -171,13 +171,13 @@ export default function LandingPage() {
                         <div className="relative flex-shrink-0">
                           <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
                             style={{
-                              background: isSelected ? `${GOLD}22` : 'rgba(255,255,255,0.10)',
+                              background: c.logo_url ? '#fff' : (isSelected ? `${GOLD}22` : 'rgba(255,255,255,0.10)'),
                               border: `2px solid ${isSelected ? GOLD : 'rgba(255,255,255,0.15)'}`,
                               boxShadow: isSelected ? `0 0 0 3px ${GOLD}18` : 'none',
                               transition: 'all 0.2s ease',
                             }}>
                             {c.logo_url
-                              ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-2" />
+                              ? <img src={c.logo_url} alt={c.nombre} className="w-full h-full object-contain p-1.5" style={{ mixBlendMode: 'multiply' }} />
                               : <span className="font-sans text-lg font-black text-white">{iniciales}</span>
                             }
                           </div>
