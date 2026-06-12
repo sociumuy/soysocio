@@ -153,8 +153,30 @@ export default function HomePage() {
             <div className="w-px h-7 flex-shrink-0" style={{ background: 'rgba(255,255,255,0.10)' }} />
 
             <div>
-              <div className="text-white/60 text-xs font-medium leading-tight tracking-wide">{clubNombre}</div>
-              {/* EN LÍNEA — ping animation */}
+              {/* Club logo + nombre */}
+              <div className="flex items-center gap-1.5">
+                {/* Iconito del club */}
+                <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center"
+                  style={{ background: storedClub?.logo_url ? '#fff' : 'rgba(var(--club-primary-rgb),0.25)' }}>
+                  {storedClub?.logo_url
+                    ? <img src={storedClub.logo_url} alt="" className="w-full h-full object-contain" />
+                    : <span style={{ fontSize: '6px', fontWeight: 800, color: 'var(--club-primary)', lineHeight: 1 }}>
+                        {storedClub?.iniciales ?? 'L'}
+                      </span>
+                  }
+                </div>
+                <span style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  letterSpacing: '0.01em',
+                  color: 'rgba(255,255,255,0.72)',
+                  lineHeight: 1,
+                }}>
+                  {clubNombre}
+                </span>
+              </div>
+              {/* EN LÍNEA */}
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="relative flex h-2 w-2 flex-shrink-0">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-65"
