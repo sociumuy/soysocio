@@ -339,50 +339,6 @@ export default function HomePage() {
             </ShiftCard>
           </motion.div>
 
-          {/* ── Novedades ── */}
-          <motion.div variants={stagger.item}>
-            <div className="flex items-center justify-between mb-3">
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
-                Novedades
-              </span>
-              <button onClick={() => router.push('/novedades')}
-                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
-                className="transition-opacity active:opacity-60">
-                Ver todas
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-              </button>
-            </div>
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-              {[
-                { titulo: 'Convocatoria Rugby Primera — Pretemporada 2026', fecha: 'Jun 2026', tag: 'Rugby' },
-                { titulo: 'Hockey Mamis: horarios de temporada confirmados', fecha: 'May 2026', tag: 'Hockey' },
-                { titulo: 'Copa Lobos Infantil de Fútbol — ¡Inscribite!', fecha: 'May 2026', tag: 'Fútbol' },
-              ].map((n, i) => (
-                <motion.button key={i}
-                  onClick={() => router.push('/novedades')}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full text-left cursor-pointer block"
-                  style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.07)' : undefined }}
-                >
-                  <div style={{ paddingTop: '14px', paddingBottom: '14px' }}>
-                    <div className="flex items-center justify-between" style={{ marginBottom: '7px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(var(--club-primary-rgb),0.72)' }}>
-                        {n.tag}
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)' }}>
-                        {n.fecha}
-                      </span>
-                    </div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.88)', lineHeight: 1.45 }}>
-                      {n.titulo}
-                    </p>
-                  </div>
-                </motion.button>
-              ))}
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }} />
-            </div>
-          </motion.div>
-
           {/* ── Hoy en el club ── */}
           <motion.div variants={stagger.item}>
             {(() => {
@@ -474,6 +430,50 @@ export default function HomePage() {
                 </>
               )
             })()}
+          </motion.div>
+
+          {/* ── Novedades ── */}
+          <motion.div variants={stagger.item}>
+            <div className="flex items-center justify-between mb-3">
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
+                Novedades
+              </span>
+              <button onClick={() => router.push('/novedades')}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
+                className="transition-opacity active:opacity-60">
+                Ver todas
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+              </button>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              {[
+                { titulo: 'Convocatoria Rugby Primera — Pretemporada 2026', fecha: 'Jun 2026', tag: 'Rugby' },
+                { titulo: 'Hockey Mamis: horarios de temporada confirmados', fecha: 'May 2026', tag: 'Hockey' },
+                { titulo: 'Copa Lobos Infantil de Fútbol — ¡Inscribite!', fecha: 'May 2026', tag: 'Fútbol' },
+              ].map((n, i) => (
+                <motion.button key={i}
+                  onClick={() => router.push('/novedades')}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full text-left cursor-pointer block"
+                  style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.07)' : undefined }}
+                >
+                  <div style={{ paddingTop: '14px', paddingBottom: '14px' }}>
+                    <div className="flex items-center justify-between" style={{ marginBottom: '7px' }}>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(var(--club-primary-rgb),0.72)' }}>
+                        {n.tag}
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)' }}>
+                        {n.fecha}
+                      </span>
+                    </div>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.88)', lineHeight: 1.45 }}>
+                      {n.titulo}
+                    </p>
+                  </div>
+                </motion.button>
+              ))}
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }} />
+            </div>
           </motion.div>
 
           {/* ── Deportes ── */}
