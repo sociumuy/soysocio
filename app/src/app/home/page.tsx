@@ -389,6 +389,36 @@ export default function HomePage() {
             </div>
           </motion.div>
 
+          {/* ── Nuestro Club ── */}
+          <motion.div variants={stagger.item}>
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={() => router.push('/club')}
+              className="w-full rounded-2xl overflow-hidden relative text-left"
+              style={{ background: 'linear-gradient(135deg, #0D0D0D 0%, #1a1a1a 100%)', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
+              <div className="absolute inset-0 opacity-[0.03]"
+                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '10px 10px' }} />
+              <div className="relative z-10 p-4 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0"
+                  style={{ background: `rgba(var(--club-primary-rgb),0.1)`, border: '1px solid rgba(255,255,255,0.08)' }}>
+                  {storedClub?.logo_url
+                    ? <img src={storedClub.logo_url} alt={clubNombre} className="w-full h-full object-contain p-1" />
+                    : <img src="/lobos-logo.png" alt="Lobos" className="w-full h-full object-contain p-1" />
+                  }
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/40 text-[10px] uppercase tracking-widest mb-0.5">El Club</p>
+                  <p className="text-white text-sm font-bold">Nuestro Club</p>
+                  <p className="text-white/40 text-xs">Historia · Valores · Contacto</p>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+            </motion.button>
+          </motion.div>
+
         </motion.div>
       </div>
 
