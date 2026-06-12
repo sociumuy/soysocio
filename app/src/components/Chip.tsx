@@ -21,10 +21,10 @@ interface ChipProps {
 }
 
 /**
- * Universal pill / chip / tab for the whole app.
- * Inactive: glassmorphism + very slow ghost-shimmer border.
- * Active:   accent bg + fast bright shimmer border + glow box-shadow.
- * Transition: spring animation via Framer Motion layoutId (optional).
+ * Universal pill / chip / tab.
+ * Inactive: static gradient border lit from top-left corner (no animation).
+ * Active:   spinning comet orbiting the border perimeter (conic-gradient + spin-beam).
+ * Transition: Framer Motion layoutId spring for sliding background.
  */
 export default function Chip({
   children,
@@ -44,23 +44,6 @@ export default function Chip({
   const py = size === 'md' ? '10px' : '6px'
   const isCol = direction === 'col'
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const borderStyle: any = {
-    borderRadius: 'inherit',
-    padding: '1px',
-    background: active
-      ? `linear-gradient(90deg, transparent 0%, rgba(${rgb},0.9) 50%, transparent 100%)`
-      : `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.13) 50%, transparent 100%)`,
-    backgroundSize: '300% 100%',
-    animation: active
-      ? 'shimmer-slide 2s ease-in-out infinite'
-      : 'shimmer-slide 7s ease-in-out infinite',
-    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-    WebkitMaskComposite: 'xor',
-    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-    maskComposite: 'exclude',
-  }
-
   return (
     <motion.button
       onClick={onClick}
@@ -70,66 +53,91 @@ export default function Chip({
         ${className}`}
       style={{
         borderRadius,
-        padding: isCol ? `${py} ${px}` : `${py} ${px}`,
+        padding: `${py} ${px}`,
         boxShadow: active
-          ? `0 0 22px rgba(${rgb},0.30), 0 0 0 0.5px rgba(${rgb},0.18)`
+          ? `0 0 24px rgba(${rgb},0.32), 0 0 0 0.5px rgba(${rgb},0.15)`
           : 'none',
         transition: 'box-shadow 0.3s ease',
       }}
     >
-      {/* ── Base background (CSS-only fallback / no-layoutId mode) ── */}
+      {/* ── Base background ── */}
       {!layoutId && (
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             borderRadius: 'inherit',
-            background: active ? `rgba(${rgb},0.18)` : 'rgba(255,255,255,0.04)',
+            background: active ? `rgba(${rgb},0.16)` : 'rgba(255,255,255,0.04)',
             transition: 'background 0.25s ease',
           }}
         />
       )}
 
-      {/* ── Framer Motion shared-layout sliding background ── */}
+      {/* ── Framer Motion shared-layout sliding bg (segment controls) ── */}
       {layoutId && !active && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ borderRadius: 'inherit', background: 'rgba(255,255,255,0.04)' }}
-        />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ borderRadius: 'inherit', background: 'rgba(255,255,255,0.04)' }} />
       )}
       {layoutId && active && (
         <motion.div
           layoutId={layoutId}
           className="absolute inset-0 pointer-events-none"
-          style={{ borderRadius: 'inherit', background: `rgba(${rgb},0.22)` }}
+          style={{ borderRadius: 'inherit', background: `rgba(${rgb},0.20)` }}
           transition={{ type: 'spring', stiffness: 500, damping: 42 }}
         />
       )}
 
-      {/* ── Animated border via CSS mask ── */}
-      <div className="absolute inset-0 pointer-events-none" style={borderStyle} />
+      {/* ── INACTIVE border: static gradient lit from top-left ── */}
+      {!active && (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        <div className="absolute inset-0 pointer-events-none" style={{
+          borderRadius: 'inherit',
+          padding: '1px',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.10) 100%)',
+          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          maskComposite: 'exclude',
+        } as any} />
+      )}
 
-      {/* ── Active shimmer sweep over bg ── */}
+      {/* ── ACTIVE border: spinning comet orbiting the perimeter ── */}
       {active && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            borderRadius: 'inherit',
-            background: `linear-gradient(105deg, transparent 25%, rgba(${rgb},0.14) 50%, transparent 75%)`,
-            backgroundSize: '250% 100%',
-            animation: 'shimmer-slide 3.5s ease-in-out infinite',
-          }}
-        />
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        <div className="absolute inset-0 pointer-events-none" style={{
+          borderRadius: 'inherit',
+          padding: '1px',
+          overflow: 'hidden',
+          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          maskComposite: 'exclude',
+        } as any}>
+          <div style={{
+            position: 'absolute',
+            top: '-50%',
+            left: '-50%',
+            width: '200%',
+            height: '200%',
+            background: `conic-gradient(
+              transparent 180deg,
+              rgba(${rgb},0.15) 240deg,
+              rgba(${rgb},0.85) 285deg,
+              rgba(255,255,255,0.9) 305deg,
+              rgba(${rgb},0.75) 325deg,
+              transparent 360deg
+            )`,
+            animation: 'spin-beam 2.5s linear infinite',
+          }} />
+        </div>
       )}
 
       {/* ── Icon ── */}
       {icon && (
-        <span
-          className="relative z-10 flex items-center leading-none"
+        <span className="relative z-10 flex items-center leading-none"
           style={{
             color: active ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.28)',
             transition: 'color 0.22s ease',
-          }}
-        >
+          }}>
           {icon}
         </span>
       )}
@@ -140,7 +148,7 @@ export default function Chip({
         style={{
           color: active ? '#ffffff' : 'rgba(255,255,255,0.38)',
           transition: 'color 0.22s ease',
-          textShadow: active ? `0 0 14px rgba(${rgb},0.55)` : 'none',
+          textShadow: active ? `0 0 14px rgba(${rgb},0.6)` : 'none',
         }}
       >
         {children}
