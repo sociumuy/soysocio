@@ -41,11 +41,13 @@ export default function RootLayout({
       </head>
       <body className="min-h-full font-sans">
         <div className="phone-frame" style={{ background: '#0D0D0D' }}>
-        <ClubTheme />
-        {children}
-        <script dangerouslySetInnerHTML={{
-          __html: `if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js') }`
-        }} />
+          <div className="phone-frame-scroll">
+            <ClubTheme />
+            {children}
+          </div>
+          <script dangerouslySetInnerHTML={{
+            __html: `if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js') }`
+          }} />
         </div>
       </body>
     </html>

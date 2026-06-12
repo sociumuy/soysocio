@@ -23,9 +23,23 @@ body {
 
 /* En mobile: sin frame, full screen */
 .phone-frame {
+  position: relative;
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
   transform: translate(0); /* Hace que los hijos con position:fixed queden dentro del frame */
+}
+
+/* Contenedor interior: es el que scrollea, no el frame */
+.phone-frame-scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.phone-frame-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 /* En desktop: marco tipo iPhone 14 Pro (393×852) */
@@ -44,20 +58,11 @@ body {
     min-width: 393px;
     max-width: 393px;
     height: 852px;
-    min-height: unset;
     border-radius: 50px;
-    overflow: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
     box-shadow:
       0 0 0 10px #1c1c1e,
       0 0 0 12px #3a3a3c,
       0 0 0 13px #1c1c1e,
       0 40px 100px rgba(0,0,0,0.7);
-    position: relative;
-  }
-
-  .phone-frame::-webkit-scrollbar {
-    display: none;
   }
 }
