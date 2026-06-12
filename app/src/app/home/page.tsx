@@ -24,6 +24,20 @@ type Socio = {
   cuota_al_dia: boolean
 }
 
+const PRECIOS_TRANSFERENCIA: Record<string, number> = {
+  'Infantiles -13': 2190,
+  'Juveniles -21': 2890,
+  'Mayores +22': 3490,
+  'Cuota Familiar': 6590,
+  'Fitness': 2190,
+  'Cuota Amigo': 890,
+}
+
+function getPrecio(categoria?: string): number {
+  if (!categoria) return 3490
+  return PRECIOS_TRANSFERENCIA[categoria] ?? 3490
+}
+
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 const METEORS = [
@@ -287,7 +301,7 @@ export default function HomePage() {
                   <div className="flex items-baseline gap-1">
                     <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.30)', fontWeight: 500 }}>$</span>
                     <span style={{ fontFamily: 'var(--font-body)', fontSize: '28px', fontWeight: 700, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                      <AnimatedNumber value={2400} />
+                      <AnimatedNumber value={getPrecio(socio?.categoria)} />
                     </span>
                     <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.20)', marginLeft: '2px' }}>UYU</span>
                   </div>
