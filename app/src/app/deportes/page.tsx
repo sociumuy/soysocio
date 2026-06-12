@@ -39,6 +39,21 @@ const ICONOS: Record<Deporte, React.ReactNode> = {
   ),
 }
 
+const TABLA_PRIMERA = [
+  { pos: 1,  nombre: 'Old Christians', pj: 22, pg: 21, pp: 1,  pts: 104 },
+  { pos: 2,  nombre: 'Old Boys',        pj: 22, pg: 20, pp: 2,  pts: 99  },
+  { pos: 3,  nombre: 'Carrasco Polo',   pj: 22, pg: 15, pp: 7,  pts: 77  },
+  { pos: 4,  nombre: 'Cricket',         pj: 22, pg: 16, pp: 6,  pts: 75  },
+  { pos: 5,  nombre: 'Los Cuervos',     pj: 22, pg: 15, pp: 7,  pts: 73  },
+  { pos: 6,  nombre: 'PGC Trébol',      pj: 22, pg: 13, pp: 9,  pts: 70  },
+  { pos: 7,  nombre: 'Lobos',           pj: 22, pg: 9,  pp: 13, pts: 50, esLobos: true },
+  { pos: 8,  nombre: 'Ceibos',          pj: 22, pg: 7,  pp: 14, pts: 38  },
+  { pos: 9,  nombre: 'Seminario',       pj: 22, pg: 5,  pp: 16, pts: 34  },
+  { pos: 10, nombre: 'Champagnat',      pj: 22, pg: 5,  pp: 17, pts: 24  },
+  { pos: 11, nombre: 'Círculo',         pj: 22, pg: 3,  pp: 19, pts: 17  },
+  { pos: 12, nombre: 'PSG',             pj: 22, pg: 1,  pp: 20, pts: 10  },
+]
+
 const DEPORTES = {
   rugby: {
     nombre: 'Rugby',
@@ -169,6 +184,83 @@ export default function DeportesPage() {
                 <p className="text-white/65 text-sm leading-relaxed">{deporte.descripcion}</p>
               </div>
             </div>
+
+            {/* ── Tabla de posiciones (solo Rugby) ── */}
+            {activo === 'rugby' && (
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-[3px] h-3.5 rounded-full" style={{ background: deporte.acento }} />
+                    <span className="text-white/65 text-[10px] font-bold uppercase tracking-[2px]">Primera División</span>
+                  </div>
+                  <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                  <span className="text-white/20 text-[9px]">Copa Perifar · 21 fechas</span>
+                </div>
+
+                {/* Header de columnas */}
+                <div className="flex items-center px-3 py-1.5 mb-1">
+                  <span className="w-6 text-white/20 text-[9px] font-bold text-center">#</span>
+                  <span className="flex-1 text-white/20 text-[9px] font-bold uppercase tracking-wider pl-2">Equipo</span>
+                  <span className="w-8 text-white/20 text-[9px] font-bold text-center">PJ</span>
+                  <span className="w-8 text-white/20 text-[9px] font-bold text-center">PG</span>
+                  <span className="w-10 text-white/20 text-[9px] font-bold text-center">PTS</span>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  {TABLA_PRIMERA.map((eq, i) => (
+                    <motion.div
+                      key={eq.nombre}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.03, ease }}
+                      className="flex items-center px-3 py-2.5 rounded-xl relative overflow-hidden"
+                      style={{
+                        background: eq.esLobos
+                          ? `rgba(27,45,110,0.35)`
+                          : i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent',
+                        border: eq.esLobos ? '1px solid rgba(27,45,110,0.5)' : '1px solid transparent',
+                      }}
+                    >
+                      {eq.esLobos && (
+                        <div className="absolute inset-0 pointer-events-none"
+                          style={{
+                            background: 'linear-gradient(90deg, rgba(27,45,110,0.2) 0%, transparent 60%)',
+                          }} />
+                      )}
+                      {/* Posición */}
+                      <span className="w-6 text-center text-[11px] font-bold relative z-10"
+                        style={{ color: eq.pos <= 4 ? '#5a8a5a' : eq.esLobos ? '#fff' : 'rgba(255,255,255,0.3)' }}>
+                        {eq.pos}
+                      </span>
+                      {/* Nombre */}
+                      <span className="flex-1 pl-2 text-[13px] font-semibold relative z-10 leading-tight"
+                        style={{ color: eq.esLobos ? '#fff' : 'rgba(255,255,255,0.8)' }}>
+                        {eq.nombre}
+                        {eq.esLobos && (
+                          <span className="ml-2 text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                            style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>
+                            Nosotros
+                          </span>
+                        )}
+                      </span>
+                      {/* PJ */}
+                      <span className="w-8 text-center text-[12px] relative z-10"
+                        style={{ color: 'rgba(255,255,255,0.35)' }}>{eq.pj}</span>
+                      {/* PG */}
+                      <span className="w-8 text-center text-[12px] relative z-10"
+                        style={{ color: 'rgba(255,255,255,0.35)' }}>{eq.pg}</span>
+                      {/* PTS */}
+                      <span className="w-10 text-center text-[13px] font-bold relative z-10"
+                        style={{ color: eq.esLobos ? '#fff' : eq.pos <= 4 ? '#5a8a5a' : 'rgba(255,255,255,0.6)' }}>
+                        {eq.pts}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <p className="text-white/15 text-[9px] text-right mt-2">Fuente: uru.org.uy</p>
+              </div>
+            )}
 
             {/* Categorías */}
             <div>
