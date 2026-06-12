@@ -64,10 +64,6 @@ export default function LandingPage() {
     setStoredClub(club)
     document.documentElement.style.setProperty('--club-primary', club.color_primario)
     document.documentElement.style.setProperty('--club-primary-rgb', club.color_rgb)
-  }
-
-  function handleContinue() {
-    if (!selectedClub) return
     setStep('roles')
   }
 
