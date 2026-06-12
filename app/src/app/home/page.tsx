@@ -26,6 +26,14 @@ type Socio = {
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
+const METEORS = [
+  { id: 0, top: 8,  left: 58, delay: 0,   duration: 4.5, width: 72 },
+  { id: 1, top: 22, left: 78, delay: 1.8, duration: 5.5, width: 55 },
+  { id: 2, top: 4,  left: 88, delay: 0.6, duration: 3.8, width: 88 },
+  { id: 3, top: 33, left: 68, delay: 2.6, duration: 6.2, width: 60 },
+  { id: 4, top: 14, left: 96, delay: 3.3, duration: 4.2, width: 76 },
+]
+
 const stagger = {
   container: { animate: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } },
   item: {
@@ -87,69 +95,162 @@ export default function HomePage() {
       {/* ── Dark header ── */}
       <div className="relative bg-[#0D0D0D] px-5 pt-16 pb-8 overflow-hidden">
         <GrainOverlay opacity={0.05} />
-        <div className="pointer-events-none absolute top-0 right-0 w-56 h-56 rounded-full opacity-[0.18]"
-          style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.5) 0%, transparent 70%)', transform: 'translate(35%,-35%)' }} />
 
-        {/* top bar */}
+        {/* Radial glow — top right */}
+        <div className="pointer-events-none absolute top-0 right-0 w-80 h-80 opacity-[0.14]"
+          style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.8) 0%, transparent 65%)', transform: 'translate(40%,-40%)' }} />
+        {/* Radial glow — top left, dimmer */}
+        <div className="pointer-events-none absolute top-0 left-0 w-56 h-56 opacity-[0.07]"
+          style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.6) 0%, transparent 70%)', transform: 'translate(-40%,-40%)' }} />
+
+        {/* ── Meteors ── */}
+        {METEORS.map(m => (
+          <span key={m.id} className="absolute pointer-events-none"
+            style={{
+              top: `${m.top}%`,
+              left: `${m.left}%`,
+              width: `${m.width}px`,
+              height: '1.5px',
+              borderRadius: '999px',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.0) 0%, rgba(var(--club-primary-rgb),0.6) 40%, rgba(255,255,255,0.85) 65%, rgba(var(--club-primary-rgb),0.4) 85%, transparent 100%)',
+              boxShadow: '0 0 5px rgba(var(--club-primary-rgb),0.5), 0 0 1px rgba(255,255,255,0.6)',
+              animation: `meteor-fall ${m.duration}s linear ${m.delay}s infinite`,
+              opacity: 0,
+            }} />
+        ))}
+
+        {/* ── Top bar ── */}
         <div className="relative z-10 flex items-center justify-between mb-8">
+
+          {/* Logo + Club info */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              {storedClub?.logo_url
-                ? <img src={storedClub.logo_url} alt={clubNombre} className="w-full h-full object-contain p-1" />
-                : <img src="/lobos-logo.png" alt="Lobos Rugby Club" className="w-full h-full object-contain p-1" />
-              }
+            {/* Logo — glow ring */}
+            <div className="relative flex-shrink-0">
+              <div className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{ boxShadow: '0 0 0 1px rgba(var(--club-primary-rgb),0.45), 0 0 20px rgba(var(--club-primary-rgb),0.20)' }} />
+              <div className="w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center"
+                style={{ background: 'rgba(255,255,255,0.06)' }}>
+                {storedClub?.logo_url
+                  ? <img src={storedClub.logo_url} alt={clubNombre} className="w-full h-full object-contain p-1" />
+                  : <img src="/lobos-logo.png" alt="Lobos Rugby Club" className="w-full h-full object-contain p-1" />
+                }
+              </div>
             </div>
+
             <div>
-              <div className="text-white text-sm font-semibold">{clubNombre}</div>
-              <div className="flex items-center gap-1.5">
-                <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }}
-                  className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span className="text-emerald-400 text-[10px] font-semibold tracking-wider">EN LÍNEA</span>
+              <div className="text-white text-sm font-bold tracking-wide leading-tight">{clubNombre}</div>
+              {/* EN LÍNEA — ping animation */}
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="relative flex h-2 w-2 flex-shrink-0">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-65"
+                    style={{ animation: 'ping-ring 1.4s cubic-bezier(0,0,0.2,1) infinite' }} />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                </span>
+                <span className="text-emerald-400 text-[10px] font-bold tracking-[2px] uppercase">EN LÍNEA</span>
               </div>
             </div>
           </div>
+
+          {/* Salir — ghost with gradient border */}
           <button onClick={async () => { await supabase.auth.signOut(); router.push('/') }}
-            className="text-[#3a3a3a] text-xs hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-white/5 hover:border-white/15">
+            className="relative overflow-hidden text-white/25 hover:text-white/60 transition-colors text-xs px-3 py-1.5 rounded-lg">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <div className="absolute inset-0 rounded-[inherit] pointer-events-none" style={{
+              padding: '1px',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.03) 60%, rgba(255,255,255,0.10) 100%)',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              maskComposite: 'exclude',
+            } as any} />
             Salir
           </button>
         </div>
 
-        {/* Club identity strip */}
+        {/* ── Club identity strip — animated gradient text ── */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
-          className="relative z-10 flex items-center gap-3 mb-6 overflow-hidden">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          <span className="text-white/20 text-[9px] font-bold tracking-[4px] uppercase">Somos Familia · Punta del Este · Est. 1989</span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          className="relative z-10 flex items-center gap-3 mb-6">
+          <div className="h-px flex-1"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(var(--club-primary-rgb),0.35), transparent)' }} />
+          <span className="text-[9px] font-bold tracking-[4px] uppercase flex-shrink-0"
+            style={{
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.22) 0%, rgba(var(--club-primary-rgb),1) 35%, rgba(255,255,255,0.9) 50%, rgba(var(--club-primary-rgb),0.85) 65%, rgba(255,255,255,0.22) 100%)',
+              backgroundSize: '300% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              animation: 'shimmer-slide 5s linear infinite',
+            }}>
+            Somos Familia · Punta del Este · Est. 1989
+          </span>
+          <div className="h-px flex-1"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(var(--club-primary-rgb),0.35), transparent)' }} />
         </motion.div>
 
-        {/* Greeting */}
+        {/* ── Greeting ── */}
         <div className="relative z-10">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-            className="text-white/30 text-[10px] uppercase tracking-[3px] mb-1">
+            className="text-white/28 text-[10px] uppercase tracking-[3.5px] mb-1 font-medium">
             Bienvenido de vuelta
           </motion.p>
+
+          {/* Name — horizontal shimmer sweep */}
           <motion.h1
             initial={{ opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease }}
             className="font-serif text-5xl font-semibold leading-none"
-            style={{ background: 'linear-gradient(135deg, #ffffff 30%, rgba(var(--club-primary-rgb),0.75) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            style={{
+              background: 'linear-gradient(90deg, rgba(var(--club-primary-rgb),0.65) 0%, #ffffff 28%, rgba(var(--club-primary-rgb),1) 52%, #ffffff 76%, rgba(var(--club-primary-rgb),0.65) 100%)',
+              backgroundSize: '300% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              animation: 'shimmer-slide 3.5s linear infinite',
+            }}
           >
             {socio?.nombre ?? 'Socio'}
           </motion.h1>
 
-          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
+          {/* ACTIVO badge — spinning comet border */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
-            className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full"
-            style={{ background: 'rgba(var(--club-primary-rgb),0.12)', border: '1px solid rgba(var(--club-primary-rgb),0.25)' }}>
-            <span className="text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">{socio?.categoria ?? 'Socio'}</span>
-            <span className="text-[#333]">·</span>
-            <span className="text-[#555] text-[10px] font-mono">N° {socio?.numero_socio ?? '—'}</span>
+            className="inline-flex items-center gap-2 mt-3 relative overflow-hidden"
+            style={{ padding: '6px 14px', borderRadius: '999px' }}
+          >
+            {/* bg */}
+            <div className="absolute inset-0 rounded-full"
+              style={{ background: 'rgba(var(--club-primary-rgb),0.10)' }} />
+            {/* spinning comet border */}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              borderRadius: 'inherit',
+              padding: '1px',
+              overflow: 'hidden',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              maskComposite: 'exclude',
+            } as any}>
+              <div style={{
+                position: 'absolute',
+                top: '-50%', left: '-50%',
+                width: '200%', height: '200%',
+                background: 'conic-gradient(transparent 180deg, rgba(var(--club-primary-rgb),0.2) 240deg, rgba(var(--club-primary-rgb),0.9) 285deg, rgba(255,255,255,0.85) 305deg, rgba(var(--club-primary-rgb),0.7) 325deg, transparent 360deg)',
+                animation: 'spin-beam 3s linear infinite',
+              }} />
+            </div>
+            <span className="relative z-10 text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">
+              {socio?.categoria ?? 'Socio'}
+            </span>
+            <span className="relative z-10 text-[#3a3a3a] text-[10px]">·</span>
+            <span className="relative z-10 text-[#666] text-[10px] font-mono">N° {socio?.numero_socio ?? '—'}</span>
           </motion.div>
         </div>
 
-        {/* Family selector */}
+        {/* ── Family selector ── */}
         {socios.length > 1 && (
           <div className="relative z-10 flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
             {socios.map(s => (
@@ -228,10 +329,17 @@ export default function HomePage() {
                   <div className="flex justify-center">
                     <button
                       onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
-                      className="px-6 py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
+                      className="relative overflow-hidden px-6 py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
                       style={{ background: 'var(--club-primary)' }}
                     >
-                      {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
+                      {/* shimmer sweep */}
+                      <div className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)',
+                          backgroundSize: '200% 100%',
+                          animation: 'shimmer-slide 2.5s ease-in-out infinite',
+                        }} />
+                      <span className="relative z-10">{socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}</span>
                     </button>
                   </div>
                 </div>

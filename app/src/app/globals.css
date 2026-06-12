@@ -76,6 +76,19 @@ body {
   50%       { opacity: 1; }
 }
 
+/* Meteor / shooting star — diagonal streak */
+@keyframes meteor-fall {
+  0%   { opacity: 0;   transform: rotate(215deg) translateX(0); }
+  8%   { opacity: 0.9; }
+  80%  { opacity: 0.9; }
+  100% { opacity: 0;   transform: rotate(215deg) translateX(500px); }
+}
+
+/* Ping expand ring (for live status indicators) */
+@keyframes ping-ring {
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+
 /* ── En desktop: marco tipo iPhone 14 Pro (393×852) ── */
 @media (min-width: 600px) {
   body {
