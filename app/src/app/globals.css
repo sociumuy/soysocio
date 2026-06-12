@@ -38,6 +38,15 @@ body {
   height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cada página que renderiza dentro del frame ocupa al menos toda su altura.
+   Cubre el caso donde 100vh < 852px (desktop con ventana pequeña). */
+.phone-frame-scroll > main,
+.phone-frame-scroll > div {
+  flex: 1;
 }
 
 .phone-frame-scroll::-webkit-scrollbar {
