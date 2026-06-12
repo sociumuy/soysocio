@@ -58,46 +58,44 @@ export default function NavBar() {
   const router = useRouter()
 
   return (
-    <div className="fixed bottom-5 left-0 right-0 flex justify-center z-50 pointer-events-none px-6">
-      <motion.nav
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="pointer-events-auto flex items-center gap-1 px-4 py-3 rounded-2xl shadow-2xl"
-        style={{
-          background: 'rgba(13,13,13,0.92)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
-        }}
-      >
-        {items.map((item) => {
-          const active = pathname.startsWith(item.href)
-          return (
-            <motion.button
-              key={item.href}
-              onClick={() => router.push(item.href)}
-              whileTap={{ scale: 0.88 }}
-              className="relative flex flex-col items-center gap-1.5 px-5 py-2 rounded-xl transition-colors"
-              style={{ background: active ? 'rgba(var(--club-primary-rgb),0.12)' : 'transparent' }}
-            >
-              {item.icon(active)}
-              <span className="text-[9px] font-bold tracking-widest uppercase"
-                style={{ color: active ? 'var(--club-primary)' : '#555' }}>
-                {item.label}
-              </span>
-              {active && (
-                <motion.div
-                  layoutId="dock-indicator"
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--club-primary)]"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                />
-              )}
-            </motion.button>
-          )
-        })}
-      </motion.nav>
-    </div>
+    <motion.nav
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2 pt-2 pb-2"
+      style={{
+        background: 'rgba(10,10,10,0.96)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
+      {items.map((item) => {
+        const active = pathname.startsWith(item.href)
+        return (
+          <motion.button
+            key={item.href}
+            onClick={() => router.push(item.href)}
+            whileTap={{ scale: 0.88 }}
+            className="relative flex flex-col items-center gap-1.5 flex-1 py-1.5 rounded-xl"
+            style={{ background: active ? 'rgba(var(--club-primary-rgb),0.12)' : 'transparent' }}
+          >
+            {item.icon(active)}
+            <span className="text-[9px] font-bold tracking-widest uppercase"
+              style={{ color: active ? 'var(--club-primary)' : '#555' }}>
+              {item.label}
+            </span>
+            {active && (
+              <motion.div
+                layoutId="dock-indicator"
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full"
+                style={{ background: 'var(--club-primary)' }}
+                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              />
+            )}
+          </motion.button>
+        )
+      })}
+    </motion.nav>
   )
 }
