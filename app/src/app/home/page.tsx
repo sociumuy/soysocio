@@ -182,18 +182,6 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* ── Club identity strip — animated gradient text ── */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
-          className="relative z-10 flex items-center gap-3 mb-6">
-          <div className="h-px flex-1"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(var(--club-primary-rgb),0.35), transparent)' }} />
-          <span className="text-white/22 text-[9px] font-bold tracking-[1.5px] uppercase">
-            Somos Familia · Punta del Este · Est. 1989
-          </span>
-          <div className="h-px flex-1"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(var(--club-primary-rgb),0.35), transparent)' }} />
-        </motion.div>
-
         {/* ── Greeting ── */}
         <div className="relative z-10">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
@@ -366,9 +354,9 @@ export default function HomePage() {
             </div>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
               {[
-                { titulo: 'Intermedia B campeona: Copa de Oro Summum', fecha: 'Oct 2023', tag: 'Hockey' },
-                { titulo: 'Circuito Femenino de Seven en Lobos', fecha: 'Oct 2022', tag: 'Rugby' },
-                { titulo: 'Pretemporada Rugby Infantil — Arrancamos 2023', fecha: 'Mar 2023', tag: 'Rugby' },
+                { titulo: 'Convocatoria Rugby Primera — Pretemporada 2026', fecha: 'Jun 2026', tag: 'Rugby' },
+                { titulo: 'Hockey Mamis: horarios de temporada confirmados', fecha: 'May 2026', tag: 'Hockey' },
+                { titulo: 'Copa Lobos Infantil de Fútbol — ¡Inscribite!', fecha: 'May 2026', tag: 'Fútbol' },
               ].map((n, i) => (
                 <motion.button key={i}
                   onClick={() => router.push('/novedades')}
@@ -395,37 +383,97 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* ── Stats — floating numbers ── */}
+          {/* ── Hoy en el club ── */}
           <motion.div variants={stagger.item}>
-            <div className="flex items-start justify-around px-2 py-2">
-              {[
-                { label: 'Socios', value: '800+' },
-                { label: 'Disciplinas', value: '4' },
-                { label: 'Años', value: '35+' },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex flex-col items-center gap-1.5">
-                  <span style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '2.5rem',
-                    fontWeight: 800,
-                    lineHeight: 1,
-                    color: '#ffffff',
-                    letterSpacing: '-0.03em',
-                  }}>
-                    {value}
-                  </span>
-                  <span style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '9px',
-                    letterSpacing: '0.14em',
-                    color: 'rgba(255,255,255,0.30)',
-                    textTransform: 'uppercase',
-                  }}>
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </div>
+            {(() => {
+              const ahora = new Date()
+              const dia = ahora.getDay()
+              const minutoActual = ahora.getHours() * 60 + ahora.getMinutes()
+
+              type Act = { hora: string; min: number; nombre: string; tag: string }
+              const GYM_M: Act  = { hora: '08:00', min: 480,  nombre: 'Gym · Sala',    tag: 'Fitness' }
+              const FUNC: Act   = { hora: '08:15', min: 495,  nombre: 'Funcional',      tag: 'Fitness' }
+              const ZUMBA: Act  = { hora: '08:30', min: 510,  nombre: 'Zumba',          tag: 'Fitness' }
+              const YOGA: Act   = { hora: '08:30', min: 510,  nombre: 'Yoga',           tag: 'Fitness' }
+              const PILATES: Act= { hora: '09:30', min: 570,  nombre: 'Pilates',        tag: 'Fitness' }
+              const FUNC2: Act  = { hora: '09:30', min: 570,  nombre: 'Funcional',      tag: 'Fitness' }
+              const GYM_T: Act  = { hora: '16:00', min: 960,  nombre: 'Gym · Sala',    tag: 'Fitness' }
+              const HOCKEY: Act = { hora: '18:00', min: 1080, nombre: 'Hockey Mamis',   tag: 'Hockey'  }
+
+              const semana: Record<number, Act[]> = {
+                1: [GYM_M, FUNC, ZUMBA, GYM_T],
+                2: [GYM_M, FUNC, YOGA, PILATES, FUNC2, GYM_T, HOCKEY],
+                3: [GYM_M, FUNC, ZUMBA, GYM_T],
+                4: [GYM_M, FUNC, YOGA, PILATES, FUNC2, GYM_T, HOCKEY],
+                5: [GYM_M, FUNC, ZUMBA, GYM_T],
+              }
+
+              const actividades = semana[dia] ?? []
+              const sinAct = actividades.length === 0
+              const proximoIdx = actividades.findIndex(a => a.min > minutoActual)
+              const actualIdx  = actividades.findIndex(a => minutoActual >= a.min && minutoActual < a.min + 75)
+
+              return (
+                <>
+                  <div className="flex items-center justify-between mb-3">
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
+                      Hoy en el club
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)' }}>
+                      {ahora.toLocaleDateString('es-UY', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    </span>
+                  </div>
+
+                  {sinAct ? (
+                    <div className="py-5 text-center" style={{ color: 'rgba(255,255,255,0.22)', fontSize: '12px' }}>
+                      Sin actividades programadas hoy
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-1">
+                      {actividades.map((a, i) => {
+                        const esActual  = i === actualIdx
+                        const esProximo = i === proximoIdx && actualIdx === -1
+                        const pasado    = proximoIdx !== -1 ? i < proximoIdx : actualIdx !== -1 ? i < actualIdx : true
+                        return (
+                          <div
+                            key={`${a.hora}-${a.nombre}`}
+                            className="flex items-center gap-3 rounded-xl px-3 py-2"
+                            style={{
+                              background: esActual ? 'rgba(var(--club-primary-rgb),0.13)' : esProximo ? 'rgba(255,255,255,0.05)' : 'transparent',
+                              border: esActual ? '1px solid rgba(var(--club-primary-rgb),0.28)' : '1px solid transparent',
+                            }}
+                          >
+                            <span style={{
+                              fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
+                              color: esActual ? 'var(--club-primary)' : pasado ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.42)',
+                              width: '38px', flexShrink: 0, fontVariantNumeric: 'tabular-nums',
+                            }}>
+                              {a.hora}
+                            </span>
+                            <div className="w-px h-3.5 flex-shrink-0" style={{ background: esActual ? 'rgba(var(--club-primary-rgb),0.35)' : 'rgba(255,255,255,0.07)' }} />
+                            <span style={{
+                              fontFamily: 'var(--font-body)', fontSize: '13px',
+                              fontWeight: esActual || esProximo ? 600 : 400,
+                              color: esActual ? '#fff' : pasado ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.70)',
+                              flex: 1,
+                            }}>
+                              {a.nombre}
+                            </span>
+                            <span style={{
+                              fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.12em',
+                              textTransform: 'uppercase',
+                              color: esActual ? 'rgba(var(--club-primary-rgb),0.65)' : 'rgba(255,255,255,0.15)',
+                            }}>
+                              {esActual ? 'En curso' : esProximo ? 'Próximo' : a.tag}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </motion.div>
 
           {/* ── Deportes ── */}
@@ -523,16 +571,32 @@ export default function HomePage() {
               <div className="absolute inset-0 opacity-5"
                 style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }} />
               <div className="relative z-10 p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-1.5">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round">
-                      <ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)" />
-                      <line x1="12" y1="4" x2="12" y2="20" />
-                    </svg>
-                    <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">Próximo Partido · Rugby Primera</span>
-                  </div>
-                  <span className="text-[var(--club-primary)] text-[9px] font-bold uppercase tracking-wider">SAB 14 JUN</span>
-                </div>
+                {(() => {
+                  const hoy = new Date(); hoy.setHours(0,0,0,0)
+                  const partido = new Date('2026-06-14')
+                  const diff = Math.round((partido.getTime() - hoy.getTime()) / 86400000)
+                  const label = diff > 1 ? `Faltan ${diff} días` : diff === 1 ? 'Mañana' : diff === 0 ? 'Hoy' : null
+                  return (
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-1.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round">
+                          <ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)" />
+                          <line x1="12" y1="4" x2="12" y2="20" />
+                        </svg>
+                        <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">Próximo Partido · Rugby Primera</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {label && (
+                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ background: 'rgba(var(--club-primary-rgb),0.18)', color: 'var(--club-primary)' }}>
+                            {label}
+                          </span>
+                        )}
+                        <span className="text-[var(--club-primary)] text-[9px] font-bold uppercase tracking-wider">SAB 14 JUN</span>
+                      </div>
+                    </div>
+                  )
+                })()}
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col items-center gap-1">
                     <img src="/lobos-logo.png" alt="Lobos" className="w-10 h-10 object-contain" />
