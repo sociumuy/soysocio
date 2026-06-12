@@ -51,6 +51,8 @@ export default function CuotaPage() {
       </div>
 
       <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-32 flex flex-col gap-4">
+
+        {/* ── Estado ── */}
         <div className="bg-white rounded-2xl p-5 shadow-sm">
           <p className="text-[#888] text-xs uppercase tracking-widest mb-4">Estado</p>
           <div className="flex items-center justify-between">
@@ -64,6 +66,56 @@ export default function CuotaPage() {
             </div>
           </div>
         </div>
+
+        {/* ── Beneficio Itaú ── */}
+        <div className="rounded-2xl overflow-hidden" style={{ background: '#0f1c33' }}>
+          {/* Franja superior dorada */}
+          <div style={{ height: '3px', background: 'linear-gradient(90deg, #C8940A, #f0b429)' }} />
+          <div className="p-5">
+            {/* Header: 5% + Itaú */}
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '38px', fontWeight: 800, color: '#f0b429', lineHeight: 1, letterSpacing: '-0.03em' }}>
+                  5% OFF
+                </div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.70)', marginTop: '4px' }}>
+                  en tu cuota mensual
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>itaú</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '8px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)' }}>Sponsor oficial</div>
+              </div>
+            </div>
+
+            {/* Divisor */}
+            <div style={{ height: '1px', background: 'rgba(255,255,255,0.07)', marginBottom: '14px' }} />
+
+            {/* Tarjetas */}
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.30)', marginBottom: '8px' }}>
+              Tarjetas habilitadas
+            </div>
+            <div className="flex flex-col gap-2">
+              {[
+                'Débito automático Itaú',
+                'Visa Platinum Itaú',
+                'Visa Infinite Itaú',
+                'Mastercard Black Itaú',
+              ].map(t => (
+                <div key={t} className="flex items-center gap-2.5">
+                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#f0b429', flexShrink: 0 }} />
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.75)' }}>{t}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Nota */}
+            <div className="mt-4" style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)', lineHeight: 1.5 }}>
+              El descuento se aplica automáticamente al pagar con cualquiera de estas tarjetas en débito automático.
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <NavBar />

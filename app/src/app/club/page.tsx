@@ -43,6 +43,25 @@ const DISCIPLINAS = [
   },
 ]
 
+const SPONSORS_PRINCIPALES = [
+  { nombre: 'MP',              desc: null },
+  { nombre: 'Cardiomóvil',     desc: 'Emergencia Médica Móvil' },
+  { nombre: 'Reserva Montoya', desc: 'La Barra · Punta del Este' },
+  { nombre: 'Itaú Uruguay',    desc: 'Sponsor bancario oficial' },
+]
+const SPONSORS_SECUNDARIOS = [
+  { nombre: 'Woodside School', desc: 'Punta del Este' },
+  { nombre: 'Zillertal',       desc: null },
+  { nombre: 'KP Pro',          desc: null },
+  { nombre: 'Gatorade',        desc: null },
+  { nombre: 'Tienda Inglesa',  desc: null },
+]
+const SPONSORS_COMUNIDAD = [
+  'Market del Este', 'Barraca Maldonado', 'Cattivelli',
+  'Aguilera', 'Reverdecer', 'Bancoff', 'WMW', 'Barbot Ingenieros',
+  'Avícolas del Oeste', 'Radio Viva 96.7', 'Solstar',
+]
+
 const SERVICIOS = [
   { emoji: '🍖', nombre: 'Cantina',            desc: 'Bar disponible en días de entrenamiento y partido.' },
   { emoji: '🏟️', nombre: 'Alquiler de Canchas', desc: 'Canchas de rugby, hockey y fútbol para alquiler.' },
@@ -208,6 +227,44 @@ export default function ClubPage() {
                 <p className="text-white text-sm font-bold">{s.nombre}</p>
                 <p className="text-white/40 text-xs mt-0.5 leading-relaxed">{s.desc}</p>
               </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── Sponsors ── */}
+      <Section label="Sponsors" rgb={rgb}>
+        {/* Principales */}
+        <p className="text-[9px] uppercase tracking-[3px] mb-3" style={{ color: `rgba(${rgb},0.5)` }}>Principales</p>
+        <div className="grid grid-cols-2 gap-2 mb-5">
+          {SPONSORS_PRINCIPALES.map(s => (
+            <div key={s.nombre} className="rounded-xl px-4 py-3.5"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)' }}>
+              <p className="text-white text-sm font-bold leading-tight">{s.nombre}</p>
+              {s.desc && <p className="text-white/35 text-[10px] mt-0.5 leading-snug">{s.desc}</p>}
+            </div>
+          ))}
+        </div>
+
+        {/* Secundarios */}
+        <p className="text-[9px] uppercase tracking-[3px] mb-3" style={{ color: `rgba(${rgb},0.5)` }}>Secundarios</p>
+        <div className="grid grid-cols-2 gap-2 mb-5">
+          {SPONSORS_SECUNDARIOS.map(s => (
+            <div key={s.nombre} className="rounded-xl px-4 py-3"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <p className="text-white text-[13px] font-semibold leading-tight">{s.nombre}</p>
+              {s.desc && <p className="text-white/30 text-[10px] mt-0.5">{s.desc}</p>}
+            </div>
+          ))}
+        </div>
+
+        {/* Comunidad */}
+        <p className="text-[9px] uppercase tracking-[3px] mb-3" style={{ color: `rgba(${rgb},0.5)` }}>Comunidad</p>
+        <div className="flex flex-wrap gap-2">
+          {SPONSORS_COMUNIDAD.map(nombre => (
+            <div key={nombre} className="px-3 py-1.5 rounded-lg"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <p className="text-white/60 text-[12px] font-medium">{nombre}</p>
             </div>
           ))}
         </div>
