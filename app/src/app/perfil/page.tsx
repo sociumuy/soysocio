@@ -116,21 +116,43 @@ export default function PerfilPage() {
           </div>
 
           <div className="relative z-10 flex items-center gap-4">
-            <div
+            {/* Avatar — botón explícito con cámara */}
+            <button
+              type="button"
               onClick={() => fileRef.current?.click()}
-              className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center cursor-pointer overflow-hidden flex-shrink-0 border border-white/20"
+              className="relative flex-shrink-0 group"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              {fotoUrl ? (
-                <img src={fotoUrl} alt="foto" className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-white font-serif text-2xl font-semibold">{iniciales}</span>
-              )}
-            </div>
+              <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center overflow-hidden border border-white/20">
+                {fotoUrl ? (
+                  <img src={fotoUrl} alt="foto" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-white font-serif text-2xl font-semibold">{iniciales}</span>
+                )}
+              </div>
+              {/* Badge de cámara */}
+              <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full flex items-center justify-center"
+                style={{ background: 'var(--club-primary)', border: '2px solid #0d1c4a' }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </div>
+            </button>
+
             <div className="flex-1">
               <h1 className="text-white font-serif text-xl font-semibold leading-tight">
                 {socio ? `${socio.nombre} ${socio.apellido}` : 'Mi Perfil'}
               </h1>
               <p className="text-white/50 text-xs mt-0.5 uppercase tracking-wider">{socio?.categoria ?? 'Activo'}</p>
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="mt-1.5 text-[10px] font-semibold uppercase tracking-widest active:opacity-60 transition-opacity"
+                style={{ color: 'rgba(var(--club-primary-rgb),0.7)' }}
+              >
+                Cambiar foto →
+              </button>
             </div>
           </div>
 
