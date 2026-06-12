@@ -156,11 +156,10 @@ export default function HomePage() {
               {/* Club logo + nombre */}
               <div className="flex items-center gap-1.5">
                 {/* Iconito del club */}
-                <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center"
-                  style={{ background: storedClub?.logo_url ? '#fff' : 'rgba(var(--club-primary-rgb),0.25)' }}>
+                <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center">
                   {storedClub?.logo_url
                     ? <img src={storedClub.logo_url} alt="" className="w-full h-full object-contain" />
-                    : <span style={{ fontSize: '6px', fontWeight: 800, color: 'var(--club-primary)', lineHeight: 1 }}>
+                    : <span style={{ fontSize: '6px', fontWeight: 800, color: 'rgba(255,255,255,0.5)', lineHeight: 1 }}>
                         {storedClub?.iniciales ?? 'L'}
                       </span>
                   }
