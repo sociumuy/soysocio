@@ -222,7 +222,7 @@ export default function NovedadesPage() {
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col">
 
       {/* ── Dark header ── */}
-      <div className="relative px-5 pt-20 pb-6 overflow-hidden">
+      <div className="relative px-5 pt-20 pb-10 overflow-hidden">
         <GrainOverlay opacity={0.05} />
         <div className="pointer-events-none absolute top-0 left-0 w-64 h-64 rounded-full opacity-15"
           style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.5) 0%, transparent 70%)', transform: 'translate(-40%, -40%)' }} />
