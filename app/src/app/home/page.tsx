@@ -298,16 +298,20 @@ export default function HomePage() {
                   </div>
                   <p className="text-white/20 text-xs tracking-wider mb-4">UYU · mensual</p>
 
-                  <div className="flex justify-center">
+                  <div className="flex items-center justify-end">
                     <button
                       onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
-                      className="px-5 py-1.5 rounded-md text-[11px] font-bold tracking-tight uppercase text-[#0D0D0D] active:opacity-75 transition-opacity"
+                      className="flex items-center gap-1 active:opacity-60 transition-opacity"
                       style={{
-                        background: 'var(--club-primary)',
-                        border: '1px solid rgba(255,255,255,0.18)',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        letterSpacing: '0.04em',
+                        color: 'var(--club-primary)',
                       }}
                     >
                       {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                     </button>
                   </div>
                 </div>
