@@ -43,21 +43,34 @@ body {
 }
 
 /* ── Premium animation keyframes ── */
+
+/* Shimmer sweep: slide background-position left→right */
 @keyframes shimmer-slide {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
+  0%   { background-position: -300% 0; }
+  100% { background-position:  300% 0; }
 }
 
+/* Gradient shift for animated text / borders */
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50%       { background-position: 100% 50%; }
 }
 
+/* Smooth spin (border beam, comet) */
 @keyframes spin-beam {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
 
+/* Non-linear comet spin (MagicUI ShimmerButton pattern) */
+@keyframes spin-around {
+  0%         { transform: translateZ(0) rotate(0deg); }
+  15%, 35%   { transform: translateZ(0) rotate(90deg); }
+  65%, 85%   { transform: translateZ(0) rotate(270deg); }
+  100%       { transform: translateZ(0) rotate(360deg); }
+}
+
+/* Glow pulse for dot indicators */
 @keyframes glow-pulse {
   0%, 100% { opacity: 0.45; }
   50%       { opacity: 1; }

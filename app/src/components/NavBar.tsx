@@ -79,23 +79,21 @@ export default function NavBar() {
             whileTap={{ scale: 0.86 }}
             className="relative flex flex-col items-center gap-1.5 flex-1 py-2 rounded-xl overflow-hidden"
           >
-            {/* Radial glow behind active icon */}
+            {/* Active background: radial spotlight from top */}
             {active && (
               <motion.div
-                layoutId="nav-glow"
-                className="absolute inset-0 pointer-events-none"
+                layoutId="nav-bg"
+                className="absolute inset-0 pointer-events-none rounded-xl"
                 style={{
-                  background: 'radial-gradient(ellipse 70% 60% at 50% 35%, rgba(var(--club-primary-rgb),0.18) 0%, transparent 70%)',
+                  background: 'radial-gradient(ellipse 80% 65% at 50% 30%, rgba(var(--club-primary-rgb),0.16) 0%, transparent 70%)',
                 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 40 }}
               />
             )}
 
-            {/* Icon with glow filter when active */}
+            {/* Icon — glow filter on active */}
             <div style={{
-              filter: active
-                ? 'drop-shadow(0 0 5px rgba(var(--club-primary-rgb),0.55))'
-                : 'none',
+              filter: active ? 'drop-shadow(0 0 6px rgba(var(--club-primary-rgb),0.6))' : 'none',
               transition: 'filter 0.2s ease',
             }}>
               {item.icon(active)}
@@ -106,17 +104,24 @@ export default function NavBar() {
               {item.label}
             </span>
 
-            {/* Glowing dot indicator */}
+            {/* Bottom indicator: animated pill with CSS mask shimmer border */}
             {active && (
               <motion.div
-                layoutId="dock-indicator"
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[3px] rounded-full"
-                style={{
-                  background: 'var(--club-primary)',
-                  boxShadow: '0 0 10px 1px rgba(var(--club-primary-rgb),0.7)',
-                }}
+                layoutId="dock-pill"
+                className="relative h-[3px] rounded-full overflow-hidden"
+                style={{ width: '28px' }}
                 transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-              />
+              >
+                {/* Solid fill */}
+                <div className="absolute inset-0 rounded-full" style={{ background: 'var(--club-primary)' }} />
+                {/* Shimmer sweep over it */}
+                <div className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 50%, transparent 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer-slide 1.8s ease-in-out infinite',
+                  }} />
+              </motion.div>
             )}
           </motion.button>
         )

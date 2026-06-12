@@ -299,7 +299,7 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
 
-          {/* ── Quick stats — tipografía pura con glow en números ── */}
+          {/* ── Quick stats — animated gradient text (MagicUI pattern) ── */}
           <motion.div variants={stagger.item}>
             <div className="flex items-center rounded-2xl overflow-hidden"
               style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -310,10 +310,15 @@ export default function HomePage() {
               ].map(({ label, value }, i) => (
                 <div key={label} className="flex-1 flex flex-col items-center py-4"
                   style={{ borderRight: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  {/* AnimatedGradientText: sweep from club-primary → white → club-primary */}
                   <span className="font-serif text-3xl font-bold leading-none"
                     style={{
-                      color: 'var(--club-primary)',
-                      textShadow: '0 0 18px rgba(var(--club-primary-rgb),0.5)',
+                      background: 'linear-gradient(90deg, rgba(var(--club-primary-rgb),0.7) 0%, #ffffff 35%, rgba(var(--club-primary-rgb),1) 65%, #ffffff 100%)',
+                      backgroundSize: '300% auto',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      animation: 'shimmer-slide 4s linear infinite',
                     }}>{value}</span>
                   <span className="text-white/30 text-[9px] font-bold uppercase tracking-[2px] mt-1.5">{label}</span>
                 </div>
@@ -349,20 +354,21 @@ export default function HomePage() {
                   icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
                 },
               ].map((d) => (
+                // MagicUI ShimmerButton pattern: comet orbiting the border via CSS mask
                 <motion.button key={d.nombre} whileTap={{ scale: 0.93 }}
                   onClick={() => router.push('/deportes')}
-                  className="relative flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full overflow-hidden"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(var(--club-primary-rgb),0.28)',
-                    boxShadow: '0 0 16px rgba(var(--club-primary-rgb),0.06)',
-                  }}>
-                  {/* Shimmer slide */}
-                  <div className="absolute inset-0 pointer-events-none rounded-full"
+                  className="relative flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full overflow-hidden cursor-pointer"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  {/* Comet border: conic-gradient rotates, CSS mask shows ONLY the 1px border zone */}
+                  <div className="absolute inset-0 rounded-[inherit] pointer-events-none"
                     style={{
-                      background: 'linear-gradient(90deg, transparent 0%, rgba(var(--club-primary-rgb),0.09) 50%, transparent 100%)',
-                      backgroundSize: '200% 100%',
-                      animation: 'shimmer-slide 3.5s ease-in-out infinite',
+                      padding: '1px',
+                      background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(var(--club-primary-rgb),0.9) 20deg, transparent 20deg)',
+                      animation: 'spin-beam 2.5s linear infinite',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      maskComposite: 'exclude',
                     }} />
                   <span className="relative z-10" style={{ color: 'var(--club-primary)' }}>{d.icon}</span>
                   <span className="relative z-10 text-white text-xs font-semibold">{d.nombre}</span>
@@ -374,26 +380,28 @@ export default function HomePage() {
 
           {/* ── Parrilleros — border beam card ── */}
           <motion.div variants={stagger.item}>
+            {/* MagicUI AnimatedBorder: CSS mask shows gradient ONLY in 1px border zone */}
             <motion.div whileTap={{ scale: 0.98 }} onClick={() => router.push('/reservas')}
-              className="relative rounded-2xl overflow-hidden cursor-pointer p-px">
-              {/* Spinning beam: 200%×200% centered, rotates, conic peek through 1px */}
-              <div
-                className="absolute pointer-events-none"
+              className="relative rounded-2xl overflow-hidden cursor-pointer"
+              style={{ background: '#0c1626' }}>
+              {/* Sliding gradient visible only on the 1px border */}
+              <div className="absolute inset-0 rounded-[inherit] pointer-events-none"
                 style={{
-                  top: '-50%', left: '-50%',
-                  width: '200%', height: '200%',
-                  background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(var(--club-primary-rgb),0.85) 50deg, transparent 100deg)',
-                  animation: 'spin-beam 4s linear infinite',
+                  padding: '1px',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(var(--club-primary-rgb),0.7) 40%, rgba(var(--club-primary-rgb),0.9) 50%, rgba(var(--club-primary-rgb),0.7) 60%, transparent 100%)',
+                  backgroundSize: '300% 100%',
+                  animation: 'shimmer-slide 2.5s ease-in-out infinite',
+                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                  WebkitMaskComposite: 'xor',
+                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                  maskComposite: 'exclude',
                 }} />
-              {/* Inner solid covers everything except the 1px rim */}
-              <div className="absolute inset-[1px] rounded-[15px]" style={{ background: '#0c1626' }} />
-              {/* Content */}
               <div className="relative z-10 p-4 flex items-center gap-4">
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{
                     background: 'rgba(var(--club-primary-rgb),0.12)',
                     color: 'var(--club-primary)',
-                    boxShadow: '0 0 12px rgba(var(--club-primary-rgb),0.2)',
+                    boxShadow: '0 0 14px rgba(var(--club-primary-rgb),0.2)',
                   }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 2h6l1 4H8z" /><path d="M8 6c0 5 8 5 8 0" />
@@ -430,27 +438,35 @@ export default function HomePage() {
                 { titulo: 'Hockey femenino: torneo triangular este sábado', fecha: 'Ayer', color: '#1A6B3A', rgb: '26,107,58', tag: 'Hockey' },
                 { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', color: '#4a4a5a', rgb: '74,74,90', tag: 'Institucional' },
               ].map((n, i) => (
+                // MagicUI pattern: animated border via CSS mask on tap + persistent glow shadow
                 <motion.div key={i} onClick={() => router.push('/novedades')}
                   whileTap={{ scale: 0.98 }}
-                  className="rounded-xl overflow-hidden flex cursor-pointer"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    boxShadow: `0 4px 24px rgba(${n.rgb},0.1), inset 0 0 0 1px rgba(${n.rgb},0.08)`,
-                    transition: 'box-shadow 0.2s ease',
-                  }}>
-                  {/* Left accent — glowing bar */}
-                  <div className="w-[3px] flex-shrink-0"
+                  className="relative rounded-xl overflow-hidden flex cursor-pointer"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  {/* Animated border — shimmer sweep on the 1px border zone */}
+                  <div className="absolute inset-0 rounded-[inherit] pointer-events-none"
+                    style={{
+                      padding: '1px',
+                      background: `linear-gradient(90deg, transparent 0%, rgba(${n.rgb},0.6) 50%, transparent 100%)`,
+                      backgroundSize: '300% 100%',
+                      animation: `shimmer-slide ${3 + i * 0.7}s ease-in-out infinite`,
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      maskComposite: 'exclude',
+                    }} />
+                  {/* Left accent */}
+                  <div className="w-[3px] flex-shrink-0 relative z-10"
                     style={{
                       background: `linear-gradient(180deg, ${n.color} 0%, ${n.color}88 100%)`,
-                      boxShadow: `2px 0 8px rgba(${n.rgb},0.4)`,
+                      boxShadow: `2px 0 10px rgba(${n.rgb},0.5)`,
                     }} />
-                  <div className="flex-1 px-4 py-3 flex items-center gap-3 min-w-0">
+                  <div className="flex-1 px-4 py-3 flex items-center gap-3 min-w-0 relative z-10">
                     <div className="flex-1 min-w-0">
                       <p className="text-white/90 text-sm font-semibold leading-snug line-clamp-2">{n.titulo}</p>
                       <div className="flex items-center justify-between mt-1.5">
                         <span className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: `rgba(${n.rgb},0.18)`, color: n.color }}>{n.tag}</span>
+                          style={{ background: `rgba(${n.rgb},0.2)`, color: n.color }}>{n.tag}</span>
                         <span className="text-white/25 text-[10px]">{n.fecha}</span>
                       </div>
                     </div>
