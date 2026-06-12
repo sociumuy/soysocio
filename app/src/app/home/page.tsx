@@ -286,47 +286,35 @@ export default function HomePage() {
                     transform: 'translate(30%,-30%)',
                   }} />
 
-                <div className="relative z-10 p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-white/40 text-[10px] uppercase tracking-[3px]">
-                      {socios.length > 1 ? `Cuota — ${socio?.nombre}` : 'Mi Cuota'}
+                <div className="relative z-10 px-4 py-3 flex items-center justify-between gap-3">
+                  {/* Left: label + amount */}
+                  <div>
+                    <span className="text-white/35 text-[9px] uppercase tracking-[2.5px] block mb-0.5">
+                      {socios.length > 1 ? `Cuota · ${socio?.nombre}` : 'Mi cuota'}
                     </span>
-                    <div className="flex items-center gap-2">
-                      <div className={`flex items-center gap-1.5 text-xs font-semibold ${socio?.cuota_al_dia ? 'text-[var(--club-primary)]' : 'text-red-300'}`}>
-                        <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }}
-                          className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-[var(--club-primary)]' : 'bg-red-400'}`} />
-                        {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
-                      </div>
-                      <motion.div animate={{ rotate: cuotaExpanded ? 180 : 0 }} transition={{ duration: 0.3 }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round">
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </motion.div>
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="text-white/40 font-mono text-xs">$</span>
+                      <span className="text-white font-mono text-xl font-semibold tracking-tight leading-none">
+                        <AnimatedNumber value={2400} />
+                      </span>
+                      <span className="text-white/20 text-[9px] ml-1">UYU</span>
                     </div>
                   </div>
 
-                  <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-white/40 font-mono text-lg">$</span>
-                    <span className="text-white font-mono text-4xl font-semibold tracking-tight leading-none">
-                      <AnimatedNumber value={2400} />
-                    </span>
-                  </div>
-                  <p className="text-white/20 text-xs tracking-wider mb-4">UYU · mensual</p>
-
-                  <div className="flex items-center justify-end">
+                  {/* Right: status + action */}
+                  <div className="flex flex-col items-end gap-1.5">
+                    <div className={`flex items-center gap-1 text-[10px] font-semibold ${socio?.cuota_al_dia ? 'text-[var(--club-primary)]' : 'text-red-300'}`}>
+                      <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }}
+                        className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${socio?.cuota_al_dia ? 'bg-[var(--club-primary)]' : 'bg-red-400'}`} />
+                      {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
+                    </div>
                     <button
                       onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
-                      className="flex items-center gap-1 active:opacity-60 transition-opacity"
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.04em',
-                        color: 'var(--club-primary)',
-                      }}
+                      className="flex items-center gap-0.5 active:opacity-60 transition-opacity"
+                      style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.03em', color: 'var(--club-primary)' }}
                     >
                       {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                     </button>
                   </div>
                 </div>
