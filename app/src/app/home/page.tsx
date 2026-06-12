@@ -374,25 +374,26 @@ export default function HomePage() {
 
           {/* ── Parrilleros — border beam card ── */}
           <motion.div variants={stagger.item}>
-            {/* Outer shell: 1px padding = border thickness */}
             <motion.div whileTap={{ scale: 0.98 }} onClick={() => router.push('/reservas')}
               className="relative rounded-2xl overflow-hidden cursor-pointer p-px">
-              {/* Spinning conic beam — visible only through the 1px gap */}
-              <div className="absolute inset-[-100%] pointer-events-none"
-                style={{ animation: 'spin-beam 5s linear infinite' }}>
-                <div className="absolute inset-0"
-                  style={{
-                    background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(var(--club-primary-rgb),0.7) 45deg, transparent 90deg)',
-                  }} />
-              </div>
-              {/* Inner filled card */}
-              <div className="relative rounded-[15px] p-4 flex items-center gap-4"
-                style={{ background: '#0c1626' }}>
+              {/* Spinning beam: 200%×200% centered, rotates, conic peek through 1px */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  top: '-50%', left: '-50%',
+                  width: '200%', height: '200%',
+                  background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(var(--club-primary-rgb),0.85) 50deg, transparent 100deg)',
+                  animation: 'spin-beam 4s linear infinite',
+                }} />
+              {/* Inner solid covers everything except the 1px rim */}
+              <div className="absolute inset-[1px] rounded-[15px]" style={{ background: '#0c1626' }} />
+              {/* Content */}
+              <div className="relative z-10 p-4 flex items-center gap-4">
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{
                     background: 'rgba(var(--club-primary-rgb),0.12)',
                     color: 'var(--club-primary)',
-                    boxShadow: '0 0 12px rgba(var(--club-primary-rgb),0.15)',
+                    boxShadow: '0 0 12px rgba(var(--club-primary-rgb),0.2)',
                   }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 2h6l1 4H8z" /><path d="M8 6c0 5 8 5 8 0" />
