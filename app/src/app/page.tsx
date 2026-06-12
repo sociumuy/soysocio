@@ -217,24 +217,6 @@ export default function LandingPage() {
                 })}
               </div>
 
-              <AnimatePresence>
-                {selectedClub && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 16 }}
-                    className="mt-6"
-                  >
-                    <button
-                      onClick={handleContinue}
-                      className="w-full py-4 rounded-2xl text-sm font-bold tracking-widest uppercase transition-opacity active:opacity-80"
-                      style={{ background: GOLD, color: '#0f1d4e' }}
-                    >
-                      Continuar →
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.div>
           )}
 
