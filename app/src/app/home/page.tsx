@@ -351,52 +351,48 @@ export default function HomePage() {
             </ShiftCard>
           </motion.div>
 
-          {/* ── Próximo partido ── */}
+          {/* ── Novedades ── */}
           <motion.div variants={stagger.item}>
-            <motion.div
-              whileTap={{ scale: 0.98 }}
-              className="rounded-lg overflow-hidden relative cursor-pointer"
-              style={{
-                background: 'linear-gradient(135deg, #1B2D6E 0%, #0f1d4a 100%)',
-                borderTop: '2px solid var(--club-primary)',
-                border: '1px solid rgba(27,45,110,0.6)',
-                borderTopWidth: '2px',
-                borderTopColor: 'var(--club-primary)',
-              }}
-              onClick={() => router.push('/deportes')}
-            >
-              <div className="absolute inset-0 opacity-5"
-                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }} />
-              <div className="relative z-10 p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-1.5">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round">
-                      <ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)" />
-                      <line x1="12" y1="4" x2="12" y2="20" />
-                    </svg>
-                    <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">Próximo Partido · Rugby Primera</span>
-                  </div>
-                  <span className="text-[var(--club-primary)] text-[9px] font-bold uppercase tracking-wider">SAB 14 JUN</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col items-center gap-1">
-                    <img src="/lobos-logo.png" alt="Lobos" className="w-10 h-10 object-contain" />
-                    <span className="text-white text-xs font-bold">Lobos RC</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-white/20 text-[10px] tracking-widest uppercase">vs</span>
-                    <span className="text-white font-mono text-2xl font-bold tracking-widest mt-1">16:00</span>
-                    <span className="text-white/30 text-[9px] mt-1">Cancha Principal</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                      <span className="text-white text-lg font-bold">OB</span>
+            <div className="flex items-center justify-between mb-3">
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
+                Novedades
+              </span>
+              <button onClick={() => router.push('/novedades')}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
+                className="transition-opacity active:opacity-60">
+                Ver todas
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+              </button>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              {[
+                { titulo: 'Intermedia B campeona: Copa de Oro Summum', fecha: 'Oct 2023', tag: 'Hockey' },
+                { titulo: 'Circuito Femenino de Seven en Lobos', fecha: 'Oct 2022', tag: 'Rugby' },
+                { titulo: 'Pretemporada Rugby Infantil — Arrancamos 2023', fecha: 'Mar 2023', tag: 'Rugby' },
+              ].map((n, i) => (
+                <motion.button key={i}
+                  onClick={() => router.push('/novedades')}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full text-left cursor-pointer block"
+                  style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.07)' : undefined }}
+                >
+                  <div style={{ paddingTop: '14px', paddingBottom: '14px' }}>
+                    <div className="flex items-center justify-between" style={{ marginBottom: '7px' }}>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(var(--club-primary-rgb),0.72)' }}>
+                        {n.tag}
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)' }}>
+                        {n.fecha}
+                      </span>
                     </div>
-                    <span className="text-white text-xs font-bold">Old Boys</span>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.88)', lineHeight: 1.45 }}>
+                      {n.titulo}
+                    </p>
                   </div>
-                </div>
-              </div>
-            </motion.div>
+                </motion.button>
+              ))}
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }} />
+            </div>
           </motion.div>
 
           {/* ── Stats — floating numbers ── */}
@@ -511,48 +507,51 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* ── Novedades ── */}
+          {/* ── Próximo partido ── */}
           <motion.div variants={stagger.item}>
-            <div className="flex items-center justify-between mb-3">
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)' }}>
-                Novedades
-              </span>
-              <button onClick={() => router.push('/novedades')}
-                style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--club-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
-                className="transition-opacity active:opacity-60">
-                Ver todas
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-              </button>
-            </div>
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-              {[
-                { titulo: 'Intermedia B campeona: Copa de Oro Summum', fecha: 'Oct 2023', tag: 'Hockey' },
-                { titulo: 'Circuito Femenino de Seven en Lobos', fecha: 'Oct 2022', tag: 'Rugby' },
-                { titulo: 'Pretemporada Rugby Infantil — Arrancamos 2023', fecha: 'Mar 2023', tag: 'Rugby' },
-              ].map((n, i) => (
-                <motion.button key={i}
-                  onClick={() => router.push('/novedades')}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full text-left cursor-pointer block"
-                  style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.07)' : undefined }}
-                >
-                  <div style={{ paddingTop: '14px', paddingBottom: '14px' }}>
-                    <div className="flex items-center justify-between" style={{ marginBottom: '7px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(var(--club-primary-rgb),0.72)' }}>
-                        {n.tag}
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.22)' }}>
-                        {n.fecha}
-                      </span>
-                    </div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.88)', lineHeight: 1.45 }}>
-                      {n.titulo}
-                    </p>
+            <motion.div
+              whileTap={{ scale: 0.98 }}
+              className="rounded-lg overflow-hidden relative cursor-pointer"
+              style={{
+                background: 'linear-gradient(135deg, #1B2D6E 0%, #0f1d4a 100%)',
+                border: '1px solid rgba(27,45,110,0.6)',
+                borderTopWidth: '2px',
+                borderTopColor: 'var(--club-primary)',
+              }}
+              onClick={() => router.push('/deportes')}
+            >
+              <div className="absolute inset-0 opacity-5"
+                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }} />
+              <div className="relative z-10 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-1.5">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round">
+                      <ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)" />
+                      <line x1="12" y1="4" x2="12" y2="20" />
+                    </svg>
+                    <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">Próximo Partido · Rugby Primera</span>
                   </div>
-                </motion.button>
-              ))}
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }} />
-            </div>
+                  <span className="text-[var(--club-primary)] text-[9px] font-bold uppercase tracking-wider">SAB 14 JUN</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col items-center gap-1">
+                    <img src="/lobos-logo.png" alt="Lobos" className="w-10 h-10 object-contain" />
+                    <span className="text-white text-xs font-bold">Lobos RC</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-white/20 text-[10px] tracking-widest uppercase">vs</span>
+                    <span className="text-white font-mono text-2xl font-bold tracking-widest mt-1">16:00</span>
+                    <span className="text-white/30 text-[9px] mt-1">Cancha Principal</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">OB</span>
+                    </div>
+                    <span className="text-white text-xs font-bold">Old Boys</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
 
           {/* ── Nuestro Club ── */}
