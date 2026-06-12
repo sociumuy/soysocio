@@ -73,8 +73,23 @@ export default function HomePage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
-        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="w-7 h-7 rounded-full border-2 border-[var(--club-primary)] border-t-transparent" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-center gap-8"
+        >
+          <img
+            src="/delclub-logo.jpg"
+            alt="DelClub"
+            style={{ width: 152, height: 152, borderRadius: '30px', display: 'block' }}
+          />
+          <motion.div
+            animate={{ opacity: [0.2, 0.55, 0.2] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ width: 28, height: 2, background: 'rgba(255,255,255,0.35)', borderRadius: 2 }}
+          />
+        </motion.div>
       </main>
     )
   }
@@ -122,23 +137,23 @@ export default function HomePage() {
         {/* ── Top bar ── */}
         <div className="relative z-10 flex items-center justify-between mb-8">
 
-          {/* Logo + Club info */}
+          {/* App mark + Club info */}
           <div className="flex items-center gap-3">
-            {/* Logo — glow ring */}
-            <div className="relative flex-shrink-0">
-              <div className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{ boxShadow: '0 0 0 1px rgba(var(--club-primary-rgb),0.45), 0 0 20px rgba(var(--club-primary-rgb),0.20)' }} />
-              <div className="w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center"
-                style={{ background: 'rgba(255,255,255,0.06)' }}>
-                {storedClub?.logo_url
-                  ? <img src={storedClub.logo_url} alt={clubNombre} className="w-full h-full object-contain p-1" />
-                  : <img src="/lobos-logo.png" alt="Lobos Rugby Club" className="w-full h-full object-contain p-1" />
-                }
-              </div>
-            </div>
+            {/* DelClub "dc" — app identity mark */}
+            <span className="flex-shrink-0" style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '26px',
+              fontWeight: 800,
+              color: 'rgba(255,255,255,0.90)',
+              letterSpacing: '-0.04em',
+              lineHeight: 1,
+            }}>dc</span>
+
+            {/* Divider */}
+            <div className="w-px h-7 flex-shrink-0" style={{ background: 'rgba(255,255,255,0.10)' }} />
 
             <div>
-              <div className="text-white text-sm font-bold tracking-wide leading-tight">{clubNombre}</div>
+              <div className="text-white/60 text-xs font-medium leading-tight tracking-wide">{clubNombre}</div>
               {/* EN LÍNEA — ping animation */}
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="relative flex h-2 w-2 flex-shrink-0">

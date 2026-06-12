@@ -73,34 +73,44 @@ function LoginForm() {
         style={{ background: `radial-gradient(circle, rgba(${rgb}, 0.5) 0%, transparent 70%)` }}
       />
 
-      {/* ── Identidad del club ── */}
+      {/* ── DelClub identity ── */}
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease }}
-        className="relative z-10 flex flex-col items-center mb-8 gap-3"
+        className="relative z-10 flex flex-col items-center mb-8 gap-4"
       >
-        {/* Logo o iniciales */}
-        <div
-          className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden"
-          style={{
-            background: `rgba(${rgb}, 0.12)`,
-            border: `1.5px solid rgba(${rgb}, 0.28)`,
-          }}
-        >
-          {club?.logo_url
-            ? <img src={club.logo_url} alt={club.nombre} className="w-full h-full object-contain p-2" />
-            : <span className="font-sans text-2xl font-black text-white">{iniciales}</span>
-          }
-        </div>
+        {/* Logo DelClub */}
+        <img
+          src="/delclub-logo.jpg"
+          alt="DelClub"
+          style={{ width: 96, height: 96, borderRadius: '22px', display: 'block' }}
+        />
 
-        {/* Nombre del club */}
-        <div className="text-center">
-          <h1 className="font-sans text-xl font-bold text-white tracking-tight">
-            {club?.nombre ?? 'DelClub'}
+        {/* Brand name + club badge */}
+        <div className="text-center flex flex-col items-center gap-2">
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '28px',
+            fontWeight: 800,
+            color: '#ffffff',
+            letterSpacing: '-0.04em',
+            lineHeight: 1,
+          }}>
+            DelClub
           </h1>
+          {club?.nombre && (
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.38)',
+              letterSpacing: '0.04em',
+            }}>
+              {club.nombre}
+            </span>
+          )}
           <span
-            className="inline-block mt-2 text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-[3px]"
+            className="inline-block text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-[3px]"
             style={{
               background: `rgba(${rgb}, 0.14)`,
               color: primary,
@@ -113,7 +123,7 @@ function LoginForm() {
 
         {/* Separador */}
         <div
-          className="w-28 h-px mt-1"
+          className="w-28 h-px"
           style={{ background: `linear-gradient(90deg, transparent, rgba(${rgb}, 0.45), transparent)` }}
         />
       </motion.div>
