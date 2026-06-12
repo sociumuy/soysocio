@@ -64,9 +64,7 @@ export default function NavBar() {
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2 pt-2 pb-2"
       style={{
-        background: 'rgba(10,10,10,0.96)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        background: '#0a0a0a',
         borderTop: '1px solid rgba(255,255,255,0.07)',
       }}
     >
