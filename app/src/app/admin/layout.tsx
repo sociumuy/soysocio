@@ -45,6 +45,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const rgb     = club?.color_rgb      ?? '200, 148, 10'
 
   useEffect(() => {
+    // Admin usa fondo beige — reemplazamos el negro del phone-frame
+    const frame = document.querySelector('.phone-frame') as HTMLElement | null
+    if (frame) frame.style.background = '#F4F3EF'
+    return () => { if (frame) frame.style.background = '#0D0D0D' }
+  }, [])
+
+  useEffect(() => {
     async function verificar() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
@@ -67,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (cargando) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F4F3EF' }}>
+      <div className="min-h-full flex items-center justify-center" style={{ background: '#F4F3EF' }}>
         <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin"
           style={{ borderColor: `rgba(${rgb},0.4)`, borderTopColor: primary }} />
       </div>
@@ -82,13 +89,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AdminContext.Provider value={admin}>
       {/*
-        Contenedor raíz: ocupa toda la altura disponible, sin overflow propio.
-        El drawer usa `absolute` (no `fixed`) para quedar DENTRO del phone frame.
-        Solo el <main> hace scroll.
+        min-height: 100% rellena el phone-frame-scroll (= altura exacta del frame),
+        sin depender de 100dvh que varía con la altura del browser window en desktop.
       */}
       <div
-        className="relative flex flex-col w-full overflow-hidden"
-        style={{ background: '#F4F3EF', minHeight: '100dvh' }}
+        className="relative flex flex-col w-full"
+        style={{ background: '#F4F3EF', minHeight: '100%' }}
       >
         {/* ── Top bar ── */}
         <header
@@ -128,7 +134,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <AnimatePresence>
           {drawerAbierto && (
             <>
-              {/* Backdrop: cubre todo el contenedor raíz */}
               <motion.div
                 key="bd"
                 initial={{ opacity: 0 }}
@@ -140,7 +145,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 onClick={() => setDrawer(false)}
               />
 
-              {/* Panel del drawer */}
               <motion.aside
                 key="panel"
                 initial={{ x: '-100%' }}
@@ -234,8 +238,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
         </AnimatePresence>
 
-        {/* ── Contenido principal: único area con scroll ── */}
-        <main className="flex-1 overflow-y-auto p-4">
+        {/* ── Contenido principal ── */}
+        <main className="flex-1 p-4">
           {children}
         </main>
       </div>

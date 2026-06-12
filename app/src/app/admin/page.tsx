@@ -72,7 +72,7 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Acciones rápidas — siempre 1 columna */}
+      {/* Acciones rápidas — 1 col mobile, 2 col desktop */}
       {ACCIONES.length > 0 && (
         <>
           <div className="text-[#888] text-[10px] uppercase tracking-widest mb-3">Acciones rápidas</div>

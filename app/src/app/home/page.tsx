@@ -187,7 +187,7 @@ export default function HomePage() {
           className="relative z-10 flex items-center gap-3 mb-6">
           <div className="h-px flex-1"
             style={{ background: 'linear-gradient(90deg, transparent, rgba(var(--club-primary-rgb),0.35), transparent)' }} />
-          <span className="text-white/22 text-[9px] font-bold tracking-[4px] uppercase flex-shrink-0">
+          <span className="text-white/22 text-[9px] font-bold tracking-[1.5px] uppercase">
             Somos Familia · Punta del Este · Est. 1989
           </span>
           <div className="h-px flex-1"
@@ -306,8 +306,8 @@ export default function HomePage() {
                   </div>
 
                   <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-white/40 font-mono text-xl">$</span>
-                    <span className="text-white font-mono text-5xl font-semibold tracking-tight leading-none">
+                    <span className="text-white/40 font-mono text-lg">$</span>
+                    <span className="text-white font-mono text-4xl font-semibold tracking-tight leading-none">
                       <AnimatedNumber value={2400} />
                     </span>
                   </div>
