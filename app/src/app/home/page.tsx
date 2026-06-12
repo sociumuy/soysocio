@@ -162,9 +162,9 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* ── Cream content ── */}
-      <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-5 pb-32">
-        <motion.div variants={stagger.container} initial="initial" animate="animate" className="flex flex-col gap-4">
+      {/* ── Content ── */}
+      <div className="flex-1 bg-[#08101f] rounded-t-3xl px-5 pt-5 pb-32">
+        <motion.div variants={stagger.container} initial="initial" animate="animate" className="flex flex-col gap-5">
 
           {/* ── Expandable Cuota Card ── */}
           <motion.div variants={stagger.item}>
@@ -187,7 +187,6 @@ export default function HomePage() {
                     transform: 'translate(30%,-30%)',
                   }} />
 
-                {/* Main content */}
                 <div className="relative z-10 p-5">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-white/40 text-[10px] uppercase tracking-[3px]">
@@ -226,7 +225,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* ── Expanded: historial mini ── */}
                 <AnimatePresence>
                   {cuotaExpanded && (
                     <motion.div
@@ -271,7 +269,13 @@ export default function HomePage() {
                 style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }} />
               <div className="relative z-10 p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">🏉 Próximo Partido · Rugby Primera</span>
+                  <div className="flex items-center gap-1.5">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round">
+                      <ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)" />
+                      <line x1="12" y1="4" x2="12" y2="20" />
+                    </svg>
+                    <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">Próximo Partido · Rugby Primera</span>
+                  </div>
                   <span className="text-[var(--club-primary)] text-[9px] font-bold uppercase tracking-wider">SAB 14 JUN</span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -295,86 +299,92 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
 
-          {/* ── Quick stats ── */}
-          <motion.div variants={stagger.item} className="grid grid-cols-3 gap-2">
-            {[
-              { label: 'Socios', value: '800+' },
-              { label: 'Novedades', value: '3' },
-              { label: 'Años', value: '35+' },
-            ].map(({ label, value }) => (
-              <div key={label} className="bg-white rounded-2xl p-4 shadow-sm overflow-hidden relative">
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--club-primary)]" />
-                <div className="font-serif text-2xl font-bold mb-1 text-[var(--club-primary)]">{value}</div>
-                <div className="text-[#bbb] text-[9px] font-bold uppercase tracking-widest">{label}</div>
-              </div>
-            ))}
+          {/* ── Quick stats — tipografía pura, sin cards ── */}
+          <motion.div variants={stagger.item}>
+            <div className="flex items-center rounded-2xl overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              {[
+                { label: 'Socios', value: '800+' },
+                { label: 'Novedades', value: '3' },
+                { label: 'Años', value: '35+' },
+              ].map(({ label, value }, i) => (
+                <div key={label} className="flex-1 flex flex-col items-center py-4"
+                  style={{ borderRight: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  <span className="font-serif text-3xl font-bold leading-none" style={{ color: 'var(--club-primary)' }}>{value}</span>
+                  <span className="text-white/30 text-[9px] font-bold uppercase tracking-[2px] mt-1.5">{label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
-          {/* ── Deportes ── */}
+          {/* ── Deportes — pills horizontales ── */}
           <motion.div variants={stagger.item}>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[#888] text-[10px] uppercase tracking-widest">Deportes</p>
-              <button onClick={() => router.push('/deportes')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1">
+              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[2px]"
+                style={{ borderLeft: '3px solid var(--club-primary)', paddingLeft: '8px' }}>Deportes</p>
+              <button onClick={() => router.push('/deportes')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1 transition-opacity active:opacity-60">
                 Ver todo
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {[
                 {
                   nombre: 'Rugby', cant: '6 cat.',
-                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(-35 12 12)"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="7" y1="5" x2="17" y2="5"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="7" y1="19" x2="17" y2="19"/></svg>,
+                  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
                 },
                 {
                   nombre: 'Hockey', cant: '4 cat.',
-                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="6" r="2"/><line x1="12" y1="8" x2="12" y2="16"/><path d="M12 16 Q8 18 6 21"/><path d="M6 21 h6"/></svg>,
+                  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
                 },
                 {
                   nombre: 'Fútbol', cant: '4 cat.',
-                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,7 14.5,10.5 18,10.5 16,13.5 17.5,17 12,15 6.5,17 8,13.5 6,10.5 9.5,10.5" strokeLinejoin="round"/></svg>,
+                  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
                 },
               ].map((d) => (
-                <motion.button key={d.nombre} whileTap={{ scale: 0.96 }}
+                <motion.button key={d.nombre} whileTap={{ scale: 0.95 }}
                   onClick={() => router.push('/deportes')}
-                  className="rounded-2xl p-4 flex flex-col items-start gap-3 text-left overflow-hidden relative"
+                  className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full transition-colors"
                   style={{
-                    background: 'rgba(255,255,255,0.07)',
-                    border: '1px solid rgba(255,255,255,0.09)',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(var(--club-primary-rgb),0.25)',
                   }}>
-                  <div style={{ color: 'var(--club-primary)' }}>{d.icon}</div>
-                  <div className="w-full">
-                    <div className="text-white text-xs font-bold">{d.nombre}</div>
-                    <div className="text-white/35 text-[9px] mt-0.5">{d.cant}</div>
-                  </div>
+                  <span style={{ color: 'var(--club-primary)' }}>{d.icon}</span>
+                  <span className="text-white text-xs font-semibold">{d.nombre}</span>
+                  <span className="text-white/30 text-[10px]">{d.cant}</span>
                 </motion.button>
               ))}
             </div>
           </motion.div>
 
-          {/* ── Parrilleros ── */}
+          {/* ── Parrilleros — dark card con SVG ── */}
           <motion.div variants={stagger.item}>
             <motion.div whileTap={{ scale: 0.98 }} onClick={() => router.push('/reservas')}
-              className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-4 cursor-pointer">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, rgba(var(--club-primary-rgb),0.1), rgba(var(--club-primary-rgb),0.04))', border: '1px solid rgba(var(--club-primary-rgb),0.15)' }}>
-                <span className="text-2xl">🔥</span>
+              className="rounded-2xl p-4 flex items-center gap-4 cursor-pointer transition-colors"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'rgba(var(--club-primary-rgb),0.12)', color: 'var(--club-primary)' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 2h6l1 4H8z" /><path d="M8 6c0 5 8 5 8 0" />
+                  <rect x="5" y="10" width="14" height="11" rx="2" />
+                  <line x1="9" y1="14" x2="9" y2="18" /><line x1="12" y1="13" x2="12" y2="18" /><line x1="15" y1="14" x2="15" y2="18" />
+                </svg>
               </div>
               <div className="flex-1">
-                <p className="text-[#aaa] text-[10px] uppercase tracking-wider mb-0.5">Instalaciones</p>
-                <p className="text-[#0D0D0D] text-sm font-bold">Reservar Parrillero</p>
-                <p className="text-[#aaa] text-xs">3 parrilleros disponibles</p>
+                <p className="text-white/30 text-[9px] uppercase tracking-[3px] mb-0.5">Instalaciones</p>
+                <p className="text-white text-sm font-bold">Reservar Parrillero</p>
+                <p className="text-white/35 text-xs">3 parrilleros disponibles</p>
               </div>
-              <div className="w-8 h-8 rounded-full bg-[#F4F3EF] flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
-              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
             </motion.div>
           </motion.div>
 
-          {/* ── Novedades preview ── */}
+          {/* ── Novedades ── */}
           <motion.div variants={stagger.item}>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[#888] text-[10px] uppercase tracking-widest">Novedades</p>
-              <button onClick={() => router.push('/novedades')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1">
+              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[2px]"
+                style={{ borderLeft: '3px solid var(--club-primary)', paddingLeft: '8px' }}>Novedades</p>
+              <button onClick={() => router.push('/novedades')} className="text-[var(--club-primary)] text-xs font-semibold flex items-center gap-1 transition-opacity active:opacity-60">
                 Ver todas
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
               </button>
@@ -383,20 +393,22 @@ export default function HomePage() {
               {[
                 { titulo: 'Pre-temporada Rugby M19 — Inscripciones abiertas', fecha: 'Hoy', color: '#1B2D6E', tag: 'Rugby' },
                 { titulo: 'Hockey femenino: torneo triangular este sábado', fecha: 'Ayer', color: '#1A6B3A', tag: 'Hockey' },
-                { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', color: '#555', tag: 'Institucional' },
+                { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', color: '#4a4a5a', tag: 'Institucional' },
               ].map((n, i) => (
                 <motion.div key={i} onClick={() => router.push('/novedades')} whileTap={{ scale: 0.98 }}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm flex cursor-pointer">
-                  <div className="w-1 flex-shrink-0" style={{ background: n.color }} />
+                  className="rounded-xl overflow-hidden flex cursor-pointer transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="w-[3px] flex-shrink-0 rounded-l-xl" style={{ background: n.color }} />
                   <div className="flex-1 px-4 py-3 flex items-center gap-3 min-w-0">
                     <div className="flex-1 min-w-0">
-                      <p className="text-[#0D0D0D] text-sm font-semibold leading-snug truncate">{n.titulo}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${n.color}18`, color: n.color }}>{n.tag}</span>
-                        <span className="text-[#ccc] text-[10px]">{n.fecha}</span>
+                      <p className="text-white text-sm font-semibold leading-snug line-clamp-2">{n.titulo}</p>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full"
+                          style={{ background: `${n.color}22`, color: n.color }}>{n.tag}</span>
+                        <span className="text-white/25 text-[10px]">{n.fecha}</span>
                       </div>
                     </div>
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                   </div>
                 </motion.div>
               ))}
