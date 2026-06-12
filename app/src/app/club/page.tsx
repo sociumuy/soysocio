@@ -21,10 +21,26 @@ const VALORES = [
 ]
 
 const DISCIPLINAS = [
-  { emoji: '🏉', nombre: 'Rugby',   cats: 'M7 · M13 · M19 · Intermedia · Primera · Veteranos', color: '#1B2D6E' },
-  { emoji: '🏑', nombre: 'Hockey',  cats: 'Sub-12 · Sub-14 · Sub-16 · Intermedia · Primera',    color: '#1A6B3A' },
-  { emoji: '⚽', nombre: 'Fútbol',  cats: 'Baby Fútbol · Infantil · Senior · Master +45',         color: '#7D1A1A' },
-  { emoji: '🏋️', nombre: 'Fitness', cats: 'Disponible para todos los socios',                    color: '#444' },
+  {
+    emoji: '🏉', nombre: 'Rugby', color: '#1B2D6E',
+    cats: 'M7 · M9 · M11 · M13 · M15 · M17 · M19 · Intermedia · Primera · Veteranos',
+    desc: 'Participamos en el Campeonato Uruguayo de Rugby. Valores de compañerismo, humildad y solidaridad en todas las categorías.',
+  },
+  {
+    emoji: '🏑', nombre: 'Hockey', color: '#1A6B3A',
+    cats: 'Sub-8 · Sub-10 · Sub-12 · Sub-14 · Sub-16 · Intermedia B · Reserva · Senior',
+    desc: 'Más de 170 jugadoras. Competimos en la Federación Uruguaya de Hockey y en torneos locales en Maldonado y Montevideo.',
+  },
+  {
+    emoji: '⚽', nombre: 'Fútbol', color: '#7D1A1A',
+    cats: 'Infantiles · Juveniles',
+    desc: 'Fútbol formativo para niños y jóvenes del club. Pretemporada anual y participación en torneos locales de la región.',
+  },
+  {
+    emoji: '🏋️', nombre: 'Fitness', color: '#5a4a2a',
+    cats: 'Sala de aparatos · Yoga · Zumba · Funcional',
+    desc: '"Fitness para todos los gustos." Grupos pequeños con profesionales altamente capacitados para ayudarte a lograr tus metas.',
+  },
 ]
 
 const SERVICIOS = [
@@ -99,7 +115,7 @@ export default function ClubPage() {
           {[
             { value: '800+', label: 'Socios' },
             { value: '35+',  label: 'Años'   },
-            { value: '3',    label: 'Deportes' },
+            { value: '4',    label: 'Disciplinas' },
           ].map(({ value, label }) => (
             <div key={label} className="flex flex-col items-center py-4 gap-0.5"
               style={{ borderColor: `rgba(${rgb},0.2)` }}>
@@ -113,16 +129,23 @@ export default function ClubPage() {
       {/* ── Historia ── */}
       <Section label="Historia" rgb={rgb}>
         <p className="text-white/70 text-sm leading-relaxed">
-          Lobos Rugby Club nació hace más de 35 años en Maldonado como un club de rugby. Con el tiempo
-          creció hasta convertirse en una institución deportiva que hoy reúne a más de{' '}
-          <span className="text-white font-semibold">800 socios</span> alrededor de tres disciplinas:
-          Rugby, Hockey y Fútbol.
+          Lobos Rugby Club nació hace más de 35 años en Maldonado como institución de rugby.
+          Con el tiempo creció hasta convertirse en un club familiar que hoy reúne a más de{' '}
+          <span className="text-white font-semibold">800 socios</span> en cuatro disciplinas:
+          Rugby, Hockey, Fútbol y Fitness.
         </p>
         <p className="text-white/50 text-sm leading-relaxed mt-3">
-          El club fomenta la integración de niños, jóvenes y sus familias a través del deporte,
-          el compañerismo y los valores que definen la identidad lobos.
+          El club integra niños, jóvenes y familias promoviendo principios básicos de respeto,
+          cortesía, compromiso y espíritu indomable. Desarrolla sentido de pertenencia comunitario
+          y fomenta el deporte tanto en el ámbito educativo como competitivo.
         </p>
-        <p className="text-white/20 text-[11px] italic mt-4 text-right">Hecho con ♥ en Punta del Este</p>
+        <p className="text-white/50 text-sm leading-relaxed mt-3">
+          Hoy el club cuenta con más de{' '}
+          <span className="text-white font-semibold">170 jugadoras de hockey</span> y categorías
+          de rugby desde M7 hasta Veteranos, compitiendo en el Campeonato Uruguayo de Rugby y la
+          Federación Uruguaya de Hockey.
+        </p>
+        <p className="text-white/20 text-[11px] italic mt-4 text-right">Maldonado, Uruguay</p>
       </Section>
 
       {/* ── Valores ── */}
@@ -153,13 +176,14 @@ export default function ClubPage() {
         <div className="flex flex-col gap-2">
           {DISCIPLINAS.map((d) => (
             <div key={d.nombre}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl"
+              className="px-4 py-3.5 rounded-xl"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderLeft: `3px solid ${d.color}` }}>
-              <span className="text-xl w-6 text-center flex-shrink-0">{d.emoji}</span>
-              <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-1.5">
+                <span className="text-xl w-6 text-center flex-shrink-0">{d.emoji}</span>
                 <p className="text-white text-sm font-bold">{d.nombre}</p>
-                <p className="text-white/35 text-[11px] mt-0.5 truncate">{d.cats}</p>
               </div>
+              <p className="text-white/45 text-[11px] leading-relaxed mb-1">{d.desc}</p>
+              <p className="text-white/20 text-[10px] tracking-wide">{d.cats}</p>
             </div>
           ))}
         </div>
@@ -199,7 +223,7 @@ export default function ClubPage() {
             {
               icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
               label: 'Email',
-              value: 'hola@lobosrugbyclub.uy',
+              value: 'hola@lobosrugbyclub.uy\nclublobosoficina@gmail.com',
             },
             {
               icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,

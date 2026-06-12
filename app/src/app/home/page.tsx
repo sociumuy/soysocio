@@ -401,7 +401,7 @@ export default function HomePage() {
             <div className="flex items-start justify-around px-2 py-2">
               {[
                 { label: 'Socios', value: '800+' },
-                { label: 'Equipos', value: '3' },
+                { label: 'Disciplinas', value: '4' },
                 { label: 'Años', value: '35+' },
               ].map(({ label, value }) => (
                 <div key={label} className="flex flex-col items-center gap-1.5">
@@ -445,16 +445,20 @@ export default function HomePage() {
             <div className="flex flex-col gap-2">
               {[
                 {
-                  nombre: 'Rugby', cant: '6 cat.',
+                  nombre: 'Rugby', cant: '10 cat.',
                   icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="8.5" y1="14.5" x2="15.5" y2="14.5"/></svg>,
                 },
                 {
-                  nombre: 'Hockey', cant: '4 cat.',
+                  nombre: 'Hockey', cant: '8 cat.',
                   icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><line x1="12" y1="3" x2="12" y2="17"/><path d="M12 17 Q9 19.5 7 22"/><line x1="7" y1="22" x2="13" y2="22"/><circle cx="12" cy="3" r="2"/></svg>,
                 },
                 {
-                  nombre: 'Fútbol', cant: '4 cat.',
+                  nombre: 'Fútbol', cant: '2 cat.',
                   icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7 l2.5 3.5 H18 l-2.5 3 1.5 3.5L12 15l-5 2 1.5-3.5L6 10h3.5z"/></svg>,
+                },
+                {
+                  nombre: 'Fitness', cant: '4 act.',
+                  icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M18 7H6M18 17H6M4 12H20"/><circle cx="4" cy="12" r="2"/><circle cx="20" cy="12" r="2"/></svg>,
                 },
               ].map((d) => (
                 <motion.button key={d.nombre}
@@ -519,9 +523,9 @@ export default function HomePage() {
             </div>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
               {[
-                { titulo: 'Pre-temporada Rugby M19 — Inscripciones abiertas', fecha: 'Hoy', tag: 'Rugby' },
-                { titulo: 'Hockey femenino: torneo triangular este sábado', fecha: 'Ayer', tag: 'Hockey' },
-                { titulo: 'Asamblea anual de socios — 20 de junio', fecha: 'Jun 8', tag: 'Institucional' },
+                { titulo: 'Intermedia B campeona: Copa de Oro Summum', fecha: 'Oct 2023', tag: 'Hockey' },
+                { titulo: 'Circuito Femenino de Seven en Lobos', fecha: 'Oct 2022', tag: 'Rugby' },
+                { titulo: 'Pretemporada Rugby Infantil — Arrancamos 2023', fecha: 'Mar 2023', tag: 'Rugby' },
               ].map((n, i) => (
                 <motion.button key={i}
                   onClick={() => router.push('/novedades')}

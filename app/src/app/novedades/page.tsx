@@ -41,6 +41,89 @@ const CAT_BADGE: Record<string, { bg: string; text: string }> = {
   Todos: { bg: '#F4F3EF', text: '#888' },
 }
 
+const SEED_NOVEDADES: Novedad[] = [
+  {
+    id: 'seed-1',
+    titulo: 'Intermedia B campeona: Copa de Oro Summum',
+    resumen: 'El equipo de Intermedia B de hockey conquistó la Copa de Oro Summum tras una destacada campaña. Un logro histórico para las chicas del club.',
+    cuerpo: 'El equipo de Intermedia B de hockey de Lobos Rugby Club conquistó la Copa de Oro Summum tras una destacada campaña en el campeonato 2023. El resultado fue contundente ante Seminario y coronó una temporada de trabajo constante de las jugadoras y su cuerpo técnico.',
+    categoria: 'Hockey',
+    destacada: true,
+    imagen_url: null,
+    created_at: '2023-10-15T12:00:00Z',
+  },
+  {
+    id: 'seed-2',
+    titulo: 'Circuito Femenino de Seven en Lobos',
+    resumen: 'Lobos Rugby Club fue sede del Circuito Femenino de Seven, recibiendo a equipos de todo el Uruguay en nuestra cancha de Maldonado.',
+    cuerpo: 'Lobos Rugby Club fue sede del Circuito Femenino de Seven, recibiendo a equipos de todo el Uruguay en nuestra cancha de Maldonado. Una fiesta del rugby femenino con gran nivel de juego y el calor de toda la familia lobos.',
+    categoria: 'Rugby',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2022-10-24T12:00:00Z',
+  },
+  {
+    id: 'seed-3',
+    titulo: 'Colonia de Vacaciones Lobos 2022–2023',
+    resumen: '"Aprender jugando." Lobos RC organiza su tradicional colonia de vacaciones para niños de todas las categorías del club durante el verano.',
+    cuerpo: '"Aprender jugando." Durante el verano, Lobos RC organiza su tradicional colonia de vacaciones para niños de todas las categorías del club. Una semana de actividades, deporte y convivencia que refuerza los valores del club: respeto, compañerismo y espíritu indomable.',
+    categoria: 'Institucional',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2022-11-22T12:00:00Z',
+  },
+  {
+    id: 'seed-4',
+    titulo: 'Triangular y cuadrangular Intermedia y M19',
+    resumen: 'La primera semana de marzo el plantel Intermedia y M19 de Lobos participaron en torneos para dar inicio a la temporada 2023.',
+    cuerpo: 'La primera semana de marzo el plantel Intermedia y M19 de Lobos participaron en torneos triangulares y cuadrangulares para dar inicio a la temporada 2023. Un arranque prometedor que ilusiona a toda la familia lobos de cara al campeonato.',
+    categoria: 'Rugby',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2023-03-02T09:00:00Z',
+  },
+  {
+    id: 'seed-5',
+    titulo: 'Pretemporada Hockey Infantil',
+    resumen: 'Arranca la pretemporada de hockey infantil en Lobos. Las más pequeñas del club dan sus primeros pasos en el deporte.',
+    cuerpo: 'Arranca la pretemporada de hockey infantil en Lobos Rugby Club. Las categorías Sub-8, Sub-10 y Sub-12 se suman a los entrenamientos con entusiasmo y alegría. El hockey infantil es la base de las más de 170 jugadoras que hoy tiene el club.',
+    categoria: 'Hockey',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2023-03-02T10:00:00Z',
+  },
+  {
+    id: 'seed-6',
+    titulo: 'Pretemporada Rugby Infantil',
+    resumen: '¡Arrancan los más chicos! El rugby infantil de Lobos comenzó la pretemporada 2023 con categorías desde M7 hasta M13.',
+    cuerpo: '¡Arrancan los más chicos! El rugby infantil de Lobos comenzó la pretemporada 2023 con categorías desde M7 hasta M13. El plantel formativo es la cantera del club y el semillero de los valores que definen la identidad lobos: compañerismo, humildad y solidaridad.',
+    categoria: 'Rugby',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2023-03-02T11:00:00Z',
+  },
+  {
+    id: 'seed-7',
+    titulo: 'Pretemporada Fútbol Infantil y Juvenil',
+    resumen: 'El departamento de fútbol de Lobos inicia la pretemporada 2023. Inscripciones abiertas para categorías infantiles y juveniles.',
+    cuerpo: 'El departamento de fútbol de Lobos Rugby Club inicia la pretemporada 2023. Las categorías Infantiles y Juveniles vuelven a los entrenamientos con ganas de una gran temporada. Las inscripciones están abiertas — consultá en la oficina del club.',
+    categoria: 'Fútbol',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2023-03-02T12:00:00Z',
+  },
+  {
+    id: 'seed-8',
+    titulo: 'Triangular Veteranos — Inicio de temporada',
+    resumen: 'Los Veteranos de Lobos abrieron la temporada 2023 con un triangular entre equipos del club y rivales tradicionales.',
+    cuerpo: 'Los Veteranos de Lobos Rugby Club abrieron la temporada 2023 con un triangular entre equipos del club y rivales tradicionales de la zona. Los Veteranos entrenan dos veces por semana y son el corazón histórico del club.',
+    categoria: 'Rugby',
+    destacada: false,
+    imagen_url: null,
+    created_at: '2023-03-02T08:00:00Z',
+  },
+]
+
 function formatFecha(iso: string) {
   const d = new Date(iso)
   const diff = Math.floor((Date.now() - d.getTime()) / 86400000)
@@ -119,7 +202,11 @@ export default function NovedadesPage() {
 
   useEffect(() => {
     supabase.from('novedades').select('*').order('created_at', { ascending: false })
-      .then(({ data }) => { setNovedades((data as Novedad[]) ?? []); setLoading(false) })
+      .then(({ data }) => {
+        const result = (data as Novedad[]) ?? []
+        setNovedades(result.length > 0 ? result : SEED_NOVEDADES)
+        setLoading(false)
+      })
   }, [])
 
   const filtradas = categoriaActiva === 'Todos'
