@@ -4,371 +4,437 @@ export const dynamic = 'force-dynamic'
 
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import type { ReactNode } from 'react'
 import NavBar from '@/components/NavBar'
 import { getStoredClub } from '@/lib/club-storage'
 
 const LOGO = 'https://www.lobosrugbyclub.uy/wp-content/uploads/2019/10/lrc_logo_menu.png'
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
 const VALORES = [
-  { titulo: 'Respeto', desc: 'Con el rival, el árbitro y los compañeros.' },
-  { titulo: 'Cortesía', desc: 'En la cancha y fuera de ella.' },
-  { titulo: 'Compromiso', desc: 'Con el equipo, el club y la familia.' },
-  { titulo: 'Espíritu Indomable', desc: 'Nunca rendirse. Siempre levantarse.' },
-  { titulo: 'Compañerismo', desc: 'El equipo es más que la suma de sus partes.' },
-  { titulo: 'Humildad', desc: 'Aprender siempre, de todos y en todo momento.' },
-  { titulo: 'Solidaridad', desc: 'Somos una familia que se apoya.' },
+  { n: '01', titulo: 'Respeto',           desc: 'Con el rival, el árbitro y los compañeros.' },
+  { n: '02', titulo: 'Cortesía',          desc: 'En la cancha y fuera de ella.' },
+  { n: '03', titulo: 'Compromiso',        desc: 'Con el equipo, el club y la familia.' },
+  { n: '04', titulo: 'Espíritu Indomable',desc: 'Nunca rendirse. Siempre levantarse.' },
+  { n: '05', titulo: 'Compañerismo',      desc: 'El equipo es más que la suma de sus partes.' },
+  { n: '06', titulo: 'Humildad',          desc: 'Aprender siempre, de todos y en todo momento.' },
+  { n: '07', titulo: 'Solidaridad',       desc: 'Somos una familia que se apoya.' },
 ]
 
 const DISCIPLINAS = [
-  {
-    emoji: '🏉', nombre: 'Rugby', color: '#1B2D6E',
-    cats: 'M7 · M9 · M11 · M13 · M15 · M17 · M19 · Intermedia · Primera · Veteranos',
-    desc: 'Participamos en el Campeonato Uruguayo de Rugby. Valores de compañerismo, humildad y solidaridad en todas las categorías.',
-  },
-  {
-    emoji: '🏑', nombre: 'Hockey', color: '#1A6B3A',
-    cats: 'Sub-8 · Sub-10 · Sub-12 · Sub-14 · Sub-16 · Intermedia B · Reserva · Senior',
-    desc: 'Más de 170 jugadoras. Competimos en la Federación Uruguaya de Hockey y en torneos locales en Maldonado y Montevideo.',
-  },
-  {
-    emoji: '⚽', nombre: 'Fútbol', color: '#7D1A1A',
-    cats: 'Infantiles · Juveniles',
-    desc: 'Fútbol formativo para niños y jóvenes del club. Pretemporada anual y participación en torneos locales de la región.',
-  },
-  {
-    emoji: '🏋️', nombre: 'Fitness', color: '#5a4a2a',
-    cats: 'Sala de aparatos · Yoga · Zumba · Funcional',
-    desc: '"Fitness para todos los gustos." Grupos pequeños con profesionales altamente capacitados para ayudarte a lograr tus metas.',
-  },
+  { nombre: 'Rugby',   color: '#1B2D6E', rgb: '27,45,110',   socios: '380+', cats: '10 categorías',   desde: 'M7 hasta Veteranos' },
+  { nombre: 'Hockey',  color: '#1A6B3A', rgb: '26,107,58',   socios: '170+', cats: '8 categorías',    desde: 'Sub-8 hasta Senior'  },
+  { nombre: 'Fútbol',  color: '#7D1A1A', rgb: '125,26,26',   socios: '120+', cats: '4 categorías',    desde: 'Infantiles · Juveniles' },
+  { nombre: 'Fitness', color: '#4a3520', rgb: '74,53,32',    socios: '130+', cats: 'Gym · Clases',    desde: 'Yoga · Funcional · Zumba' },
 ]
 
-const SPONSORS_PRINCIPALES = [
-  { nombre: 'MP',              desc: null },
-  { nombre: 'Cardiomóvil',     desc: 'Emergencia Médica Móvil' },
-  { nombre: 'Reserva Montoya', desc: 'La Barra · Punta del Este' },
-  { nombre: 'Itaú Uruguay',    desc: 'Sponsor bancario oficial' },
+const SPONSORS_TOP = [
+  { nombre: 'MP',              sub: null },
+  { nombre: 'Cardiomóvil',     sub: 'Emergencia Médica' },
+  { nombre: 'Reserva Montoya', sub: 'La Barra · PDE'    },
+  { nombre: 'Itaú Uruguay',    sub: 'Banco oficial'      },
 ]
-const SPONSORS_SECUNDARIOS = [
-  { nombre: 'Woodside School', desc: 'Punta del Este' },
-  { nombre: 'Zillertal',       desc: null },
-  { nombre: 'KP Pro',          desc: null },
-  { nombre: 'Gatorade',        desc: null },
-  { nombre: 'Tienda Inglesa',  desc: null },
-]
+const SPONSORS_MID = ['Woodside School', 'Zillertal', 'KP Pro', 'Gatorade', 'Tienda Inglesa']
 const SPONSORS_COMUNIDAD = [
-  'Market del Este', 'Barraca Maldonado', 'Cattivelli',
-  'Aguilera', 'Reverdecer', 'Bancoff', 'WMW', 'Barbot Ingenieros',
+  'Market del Este', 'Barraca Maldonado', 'Cattivelli', 'Aguilera',
+  'Reverdecer', 'Bancoff', 'WMW', 'Barbot Ingenieros',
   'Avícolas del Oeste', 'Radio Viva 96.7', 'Solstar',
 ]
 
-const SERVICIOS = [
-  { emoji: '🍖', nombre: 'Cantina',            desc: 'Bar disponible en días de entrenamiento y partido.' },
-  { emoji: '🏟️', nombre: 'Alquiler de Canchas', desc: 'Canchas de rugby, hockey y fútbol para alquiler.' },
-  { emoji: '🎉', nombre: 'Salón de Fiestas',   desc: 'Club House para eventos y celebraciones privadas.' },
-]
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
-const BG = '#08101f'
-
 export default function ClubPage() {
-  const router = useRouter()
-  const club   = getStoredClub()
+  const router   = useRouter()
+  const club     = getStoredClub()
   const primary  = club?.color_primario ?? '#1B2D6E'
   const rgb      = club?.color_rgb      ?? '27, 45, 110'
   const logoUrl  = club?.logo_url       ?? LOGO
   const clubName = club?.nombre         ?? 'Lobos Rugby Club'
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: BG }}>
+    <main className="min-h-screen flex flex-col" style={{ background: '#08101f' }}>
 
-      {/* ── Hero ── */}
-      <div className="relative px-5 pt-20 pb-10 overflow-hidden">
-        {/* Ambient glow */}
+      {/* ════════════════════════════════════
+          HERO — editorial, asimétrico
+      ════════════════════════════════════ */}
+      <div className="relative overflow-hidden" style={{ minHeight: '340px' }}>
+        {/* Glow top */}
         <div className="pointer-events-none absolute inset-0"
-          style={{ background: `radial-gradient(ellipse 80% 60% at 50% -10%, rgba(${rgb},0.18) 0%, transparent 70%)` }} />
+          style={{ background: `radial-gradient(ellipse 90% 55% at 50% -5%, rgba(${rgb},0.22) 0%, transparent 65%)` }} />
+        {/* Grain */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.75\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")', backgroundSize: '180px' }} />
 
-        <div className="relative z-10 flex items-center justify-between mb-8">
-          <button onClick={() => router.push('/home')}
-            className="flex items-center gap-2 text-white/30 text-xs hover:text-white/70 transition-colors">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        {/* Nav row */}
+        <div className="relative z-10 flex items-center justify-between px-5 pt-20 mb-10">
+          <button onClick={() => router.back()}
+            className="w-8 h-8 rounded-full flex items-center justify-center active:opacity-60 transition-opacity"
+            style={{ background: 'rgba(255,255,255,0.06)' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2.2" strokeLinecap="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            Inicio
           </button>
-          <img
-            src="/delclub-logo.jpg"
-            alt="DelClub"
-            style={{ width: 36, height: 36, borderRadius: '9px', opacity: 0.85 }}
-          />
+          <img src="/lobos-logo.png" alt="Lobos" className="w-8 h-8 object-contain opacity-60" />
         </div>
 
-        {/* Logo + nombre */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease }}
-          className="relative z-10 flex flex-col items-center text-center gap-5"
-        >
-          <div className="relative">
-            <div className="w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center"
-              style={{ background: `rgba(${rgb},0.10)`, border: `1.5px solid rgba(${rgb},0.25)` }}>
-              <img src={logoUrl} alt={clubName} className="w-full h-full object-contain p-2" />
-            </div>
-            {/* glow bajo el logo */}
-            <div className="pointer-events-none absolute -bottom-3 left-1/2 -translate-x-1/2 w-16 h-4 rounded-full blur-md opacity-40"
-              style={{ background: primary }} />
-          </div>
+        {/* Club name — large editorial treatment */}
+        <div className="relative z-10 px-5">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease }}
+          >
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.28em', textTransform: 'uppercase', color: `rgba(${rgb},0.7)`, marginBottom: '10px', fontWeight: 700 }}>
+              Est. 1989 · Maldonado, Uruguay
+            </p>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '52px', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 0.92, marginBottom: '16px' }}>
+              Lobos<br />
+              <span style={{ color: primary }}>Rugby</span><br />
+              Club
+            </h1>
+          </motion.div>
 
-          <div>
-            <h1 className="text-white font-serif text-4xl font-bold tracking-tight leading-tight">{clubName}</h1>
-            <p className="text-white/30 text-xs tracking-[4px] uppercase mt-2">Maldonado · Uruguay · Est. 1989</p>
-          </div>
-
-          {/* Tagline */}
-          <div className="w-full flex items-center gap-3">
-            <div className="flex-1 h-px" style={{ background: `linear-gradient(to right, transparent, rgba(${rgb},0.4))` }} />
-            <span className="text-white/50 font-serif text-lg italic">Somos Familia</span>
-            <div className="flex-1 h-px" style={{ background: `linear-gradient(to left, transparent, rgba(${rgb},0.4))` }} />
-          </div>
-        </motion.div>
+          {/* Stats inline — no boxes */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="flex items-center gap-5 mt-6 pb-8"
+          >
+            {[
+              { v: '800+', l: 'socios' },
+              { v: '35+',  l: 'años'   },
+              { v: '4',    l: 'disciplinas' },
+              { v: '10',   l: 'categorías rugby' },
+            ].map(({ v, l }, i) => (
+              <div key={l} className="flex flex-col" style={{ opacity: 1 - i * 0.15 }}>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>{v}</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', color: 'rgba(255,255,255,0.30)', marginTop: '2px', letterSpacing: '0.05em' }}>{l}</span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </div>
 
-      {/* ── Stats strip ── */}
-      <div className="px-5 pb-8">
-        <div className="grid grid-cols-3 divide-x rounded-2xl overflow-hidden"
-          style={{ background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.15)` }}>
+      {/* Línea separadora dorada */}
+      <div className="px-5 mb-10">
+        <div className="h-px" style={{ background: `linear-gradient(to right, ${primary}, rgba(${rgb},0.15), transparent)` }} />
+      </div>
+
+      {/* ════════════════════════════════════
+          HISTORIA — pull quote + hitos
+      ════════════════════════════════════ */}
+      <div className="px-5 mb-10">
+        <Eyebrow>Historia</Eyebrow>
+
+        {/* Pull quote */}
+        <blockquote className="mb-6" style={{ borderLeft: `2px solid rgba(${rgb},0.5)`, paddingLeft: '16px' }}>
+          <p style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 700, color: '#fff', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
+            "Un club familiar construido en 35 años de deporte y comunidad."
+          </p>
+        </blockquote>
+
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.50)', lineHeight: 1.7 }}>
+          Lobos RC nació en Maldonado como institución de rugby y creció hasta convertirse en el club de referencia de la costa uruguaya. Hoy reúne más de{' '}
+          <span style={{ color: '#fff', fontWeight: 600 }}>800 socios</span> en cuatro disciplinas, con categorías desde los 6 años hasta los Veteranos.
+        </p>
+
+        {/* Hitos */}
+        <div className="flex flex-col gap-0 mt-6">
           {[
-            { value: '800+', label: 'Socios' },
-            { value: '35+',  label: 'Años'   },
-            { value: '4',    label: 'Disciplinas' },
-          ].map(({ value, label }) => (
-            <div key={label} className="flex flex-col items-center py-4 gap-0.5"
-              style={{ borderColor: `rgba(${rgb},0.2)` }}>
-              <span className="font-serif text-2xl font-bold" style={{ color: primary }}>{value}</span>
-              <span className="text-white/30 text-[10px] uppercase tracking-widest">{label}</span>
+            { año: '1989', hecho: 'Fundación del club en Maldonado' },
+            { año: '2005', hecho: 'Incorporación del Hockey femenino' },
+            { año: '2015', hecho: 'Más de 500 socios activos' },
+            { año: '2024', hecho: '800+ socios, 4 disciplinas, 35 años' },
+          ].map(({ año, hecho }, i, arr) => (
+            <div key={año} className="flex gap-4 relative">
+              {/* Línea vertical */}
+              {i < arr.length - 1 && (
+                <div className="absolute left-[31px] top-7 bottom-0 w-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+              )}
+              <div className="flex-shrink-0 flex flex-col items-center pt-1">
+                <div className="w-2 h-2 rounded-full mt-1" style={{ background: primary, flexShrink: 0 }} />
+              </div>
+              <div className="pb-5">
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700, color: primary, letterSpacing: '0.12em' }}>{año}</span>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginTop: '1px' }}>{hecho}</p>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── Historia ── */}
-      <Section label="Historia" rgb={rgb}>
-        <p className="text-white/70 text-sm leading-relaxed">
-          Lobos Rugby Club nació hace más de 35 años en Maldonado como institución de rugby.
-          Con el tiempo creció hasta convertirse en un club familiar que hoy reúne a más de{' '}
-          <span className="text-white font-semibold">800 socios</span> en cuatro disciplinas:
-          Rugby, Hockey, Fútbol y Fitness.
-        </p>
-        <p className="text-white/50 text-sm leading-relaxed mt-3">
-          El club integra niños, jóvenes y familias promoviendo principios básicos de respeto,
-          cortesía, compromiso y espíritu indomable. Desarrolla sentido de pertenencia comunitario
-          y fomenta el deporte tanto en el ámbito educativo como competitivo.
-        </p>
-        <p className="text-white/50 text-sm leading-relaxed mt-3">
-          Hoy el club cuenta con más de{' '}
-          <span className="text-white font-semibold">170 jugadoras de hockey</span> y categorías
-          de rugby desde M7 hasta Veteranos, compitiendo en el Campeonato Uruguayo de Rugby y la
-          Federación Uruguaya de Hockey.
-        </p>
-        <p className="text-white/20 text-[11px] italic mt-4 text-right">Maldonado, Uruguay</p>
-      </Section>
-
-      {/* ── Valores ── */}
-      <Section label="Valores" rgb={rgb}>
-        <div className="flex flex-col">
-          {VALORES.map((v, i) => (
+      {/* ════════════════════════════════════
+          DISCIPLINAS — cards con número grande
+      ════════════════════════════════════ */}
+      <div className="mb-10">
+        <div className="px-5 mb-4">
+          <Eyebrow>Disciplinas</Eyebrow>
+        </div>
+        <div className="flex flex-col gap-2 px-5">
+          {DISCIPLINAS.map((d, i) => (
             <motion.div
-              key={v.titulo}
-              initial={{ opacity: 0, x: -10 }}
+              key={d.nombre}
+              initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.05, ease }}
-              className={`flex items-start gap-4 py-3.5 ${i < VALORES.length - 1 ? 'border-b' : ''}`}
-              style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+              transition={{ delay: i * 0.07, ease }}
+              className="relative overflow-hidden rounded-2xl"
+              style={{ background: `rgba(${d.rgb},0.12)`, border: `1px solid rgba(${d.rgb},0.22)` }}
             >
-              <div className="w-0.5 h-full min-h-[2rem] rounded-full flex-shrink-0 mt-0.5"
-                style={{ background: `rgba(${rgb},0.6)` }} />
-              <div>
-                <p className="text-white text-sm font-semibold leading-tight">{v.titulo}</p>
-                <p className="text-white/40 text-xs mt-0.5 leading-snug">{v.desc}</p>
+              {/* Número en background */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 select-none pointer-events-none"
+                style={{ fontFamily: 'var(--font-display)', fontSize: '72px', fontWeight: 900, color: `rgba(${d.rgb},0.18)`, letterSpacing: '-0.05em', lineHeight: 1 }}>
+                {String(i + 1).padStart(2, '0')}
+              </div>
+
+              <div className="relative z-10 px-5 py-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-1 h-5 rounded-full flex-shrink-0" style={{ background: d.color }} />
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '26px', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    {d.nombre}
+                  </h3>
+                </div>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.38)', marginLeft: '12px' }}>
+                  {d.desde}
+                </p>
+                <div className="flex items-center gap-4 mt-3 ml-3">
+                  <div>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 700, color: '#fff', letterSpacing: '-0.03em' }}>{d.socios}</span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.30)', marginLeft: '4px' }}>socios</span>
+                  </div>
+                  <div className="w-px h-5" style={{ background: 'rgba(255,255,255,0.08)' }} />
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.40)' }}>{d.cats}</span>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
-      </Section>
+      </div>
 
-      {/* ── Disciplinas ── */}
-      <Section label="Disciplinas" rgb={rgb}>
-        <div className="flex flex-col gap-2">
-          {DISCIPLINAS.map((d) => (
-            <div key={d.nombre}
-              className="px-4 py-3.5 rounded-xl"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderLeft: `3px solid ${d.color}` }}>
-              <div className="flex items-center gap-3 mb-1.5">
-                <span className="text-xl w-6 text-center flex-shrink-0">{d.emoji}</span>
-                <p className="text-white text-sm font-bold">{d.nombre}</p>
-              </div>
-              <p className="text-white/45 text-[11px] leading-relaxed mb-1">{d.desc}</p>
-              <p className="text-white/20 text-[10px] tracking-wide">{d.cats}</p>
-            </div>
-          ))}
+      {/* ════════════════════════════════════
+          VALORES — scroll horizontal editorial
+      ════════════════════════════════════ */}
+      <div className="mb-10">
+        <div className="px-5 mb-4">
+          <Eyebrow>Valores</Eyebrow>
         </div>
-      </Section>
 
-      {/* ── Servicios ── */}
-      <Section label="Instalaciones y Servicios" rgb={rgb}>
-        <div className="flex flex-col gap-2">
-          {SERVICIOS.map((s) => (
-            <div key={s.nombre}
-              className="flex items-start gap-3 px-4 py-3.5 rounded-xl"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-              <span className="text-lg flex-shrink-0 mt-0.5">{s.emoji}</span>
+        {/* Horizontal scroll de valores */}
+        <div className="flex gap-3 overflow-x-auto pb-3 px-5" style={{ scrollbarWidth: 'none' }}>
+          {VALORES.map((v) => (
+            <div
+              key={v.n}
+              className="flex-shrink-0 flex flex-col justify-between rounded-2xl p-4"
+              style={{
+                width: '140px',
+                minHeight: '160px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.07)',
+              }}
+            >
+              <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: 900, color: `rgba(${rgb},0.2)`, letterSpacing: '-0.04em', lineHeight: 1 }}>
+                {v.n}
+              </span>
               <div>
-                <p className="text-white text-sm font-bold">{s.nombre}</p>
-                <p className="text-white/40 text-xs mt-0.5 leading-relaxed">{s.desc}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: '6px' }}>
+                  {v.titulo}
+                </p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.35)', lineHeight: 1.4 }}>
+                  {v.desc}
+                </p>
               </div>
             </div>
           ))}
         </div>
-      </Section>
+      </div>
 
-      {/* ── Sponsors ── */}
-      <Section label="Sponsors" rgb={rgb}>
-        {/* Principales */}
-        <p className="text-[9px] uppercase tracking-[3px] mb-3" style={{ color: `rgba(${rgb},0.5)` }}>Principales</p>
-        <div className="grid grid-cols-2 gap-2 mb-5">
-          {SPONSORS_PRINCIPALES.map(s => (
-            <div key={s.nombre} className="rounded-xl px-4 py-3.5"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)' }}>
-              <p className="text-white text-sm font-bold leading-tight">{s.nombre}</p>
-              {s.desc && <p className="text-white/35 text-[10px] mt-0.5 leading-snug">{s.desc}</p>}
+      {/* ════════════════════════════════════
+          INSTALACIONES — minimalista
+      ════════════════════════════════════ */}
+      <div className="px-5 mb-10">
+        <Eyebrow>Instalaciones</Eyebrow>
+        <div className="flex flex-col divide-y" style={{ borderTop: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.07)' }}>
+          {[
+            { titulo: 'Canchas de césped',   sub: 'Rugby · Hockey · Fútbol' },
+            { titulo: 'Gimnasio y SUM',       sub: 'Fitness · Clases grupales' },
+            { titulo: 'Cantina y Club House', sub: 'Bar · Eventos · Fiestas' },
+            { titulo: 'Parrilleros',          sub: '3 parrilleros disponibles' },
+          ].map(({ titulo, sub }) => (
+            <div key={titulo} className="flex items-center justify-between py-4">
+              <div>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 600, color: '#fff' }}>{titulo}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginTop: '2px' }}>{sub}</p>
+              </div>
+              <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: `rgba(${rgb},0.5)` }} />
             </div>
           ))}
         </div>
+      </div>
+
+      {/* ════════════════════════════════════
+          SPONSORS — wall editorial
+      ════════════════════════════════════ */}
+      <div className="px-5 mb-10">
+        <Eyebrow>Acompañan al club</Eyebrow>
+
+        {/* Gold line */}
+        <div className="h-px mb-5" style={{ background: 'linear-gradient(to right, #C8940A, rgba(200,148,10,0.15), transparent)' }} />
+
+        {/* Principales — nombres grandes */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 mb-7">
+          {SPONSORS_TOP.map(s => (
+            <div key={s.nombre}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                {s.nombre}
+              </p>
+              {s.sub && (
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.28)', marginTop: '3px' }}>
+                  {s.sub}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Separador */}
+        <div className="h-px mb-5" style={{ background: 'rgba(255,255,255,0.06)' }} />
 
         {/* Secundarios */}
-        <p className="text-[9px] uppercase tracking-[3px] mb-3" style={{ color: `rgba(${rgb},0.5)` }}>Secundarios</p>
-        <div className="grid grid-cols-2 gap-2 mb-5">
-          {SPONSORS_SECUNDARIOS.map(s => (
-            <div key={s.nombre} className="rounded-xl px-4 py-3"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-              <p className="text-white text-[13px] font-semibold leading-tight">{s.nombre}</p>
-              {s.desc && <p className="text-white/30 text-[10px] mt-0.5">{s.desc}</p>}
-            </div>
+        <div className="flex flex-wrap gap-x-6 gap-y-3 mb-7">
+          {SPONSORS_MID.map(nombre => (
+            <span key={nombre} style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.45)' }}>
+              {nombre}
+            </span>
           ))}
         </div>
 
-        {/* Comunidad */}
-        <p className="text-[9px] uppercase tracking-[3px] mb-3" style={{ color: `rgba(${rgb},0.5)` }}>Comunidad</p>
-        <div className="flex flex-wrap gap-2">
-          {SPONSORS_COMUNIDAD.map(nombre => (
-            <div key={nombre} className="px-3 py-1.5 rounded-lg"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-              <p className="text-white/60 text-[12px] font-medium">{nombre}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
+        {/* Separador */}
+        <div className="h-px mb-4" style={{ background: 'rgba(255,255,255,0.04)' }} />
 
-      {/* ── Contacto ── */}
-      <Section label="Contacto" rgb={rgb}>
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          {[
-            {
-              icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
-              label: 'Dirección',
-              value: 'Honorato Balzac esq. Calderón de la Barca\nMaldonado, Uruguay 20000',
-            },
-            {
-              icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.37 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
-              label: 'Teléfono',
-              value: '+598 93 357 676',
-            },
-            {
-              icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
-              label: 'Email',
-              value: 'hola@lobosrugbyclub.uy\nclublobosoficina@gmail.com',
-            },
-            {
-              icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-              label: 'Horario',
-              value: 'Lun–Vie  9:30–12:30 · 15:30–19:30\nSáb  10:00–12:00',
-            },
-          ].map((row, i, arr) => (
-            <div key={row.label}
-              className={`flex items-start gap-3.5 px-4 py-4 ${i < arr.length - 1 ? 'border-b' : ''}`}
-              style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: `rgba(${rgb},0.12)`, color: primary }}>
-                {row.icon}
-              </div>
-              <div>
-                <p className="text-white/30 text-[9px] uppercase tracking-[3px] mb-0.5">{row.label}</p>
-                <p className="text-white text-sm font-medium leading-relaxed whitespace-pre-line">{row.value}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
+        {/* Comunidad — pequeño */}
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.20)', marginBottom: '10px' }}>
+          Comunidad
+        </p>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)', lineHeight: 1.8 }}>
+          {SPONSORS_COMUNIDAD.join(' · ')}
+        </p>
+      </div>
 
-      {/* ── Redes sociales ── */}
-      <Section label="Redes Sociales" rgb={rgb} last>
+      {/* ════════════════════════════════════
+          CONTACTO — tarjetas de acción
+      ════════════════════════════════════ */}
+      <div className="px-5 mb-10">
+        <Eyebrow>Contacto</Eyebrow>
+
         <div className="flex flex-col gap-2">
+          {/* Dirección */}
+          <div className="rounded-2xl px-5 py-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>Dirección</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 600, color: '#fff', lineHeight: 1.35 }}>
+              Honorato Balzac esq.<br />Calderón de la Barca
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.30)', marginTop: '3px' }}>Maldonado, Uruguay 20000</p>
+          </div>
+
+          {/* Teléfono + Email — dos columnas */}
+          <div className="grid grid-cols-2 gap-2">
+            <a href="tel:+59893357676"
+              className="rounded-2xl px-4 py-4 active:opacity-70 transition-opacity"
+              style={{ background: `rgba(${rgb},0.12)`, border: `1px solid rgba(${rgb},0.22)` }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: `rgba(${rgb},0.7)`, marginBottom: '6px' }}>Teléfono</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>+598 93<br />357 676</p>
+            </a>
+            <a href="mailto:hola@lobosrugbyclub.uy"
+              className="rounded-2xl px-4 py-4 active:opacity-70 transition-opacity"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>Email</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#fff', lineHeight: 1.35 }}>hola@lobos<br />rugbyclub.uy</p>
+            </a>
+          </div>
+
+          {/* Horario */}
+          <div className="rounded-2xl px-5 py-4 flex items-center justify-between" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <div>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>Horario secretaría</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600, color: '#fff' }}>Lun–Vie  9:30 – 19:30</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.35)', marginTop: '2px' }}>Sáb  10:00 – 12:00</p>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.8" strokeLinecap="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ════════════════════════════════════
+          REDES — minimal, icono grande
+      ════════════════════════════════════ */}
+      <div className="px-5 pb-36">
+        <Eyebrow>Redes</Eyebrow>
+        <div className="grid grid-cols-2 gap-2">
           {[
             {
-              label: 'Instagram', handle: '@lobosclubpde', url: 'https://www.instagram.com/lobosclubpde/',
+              label: 'Instagram',
+              handle: '@lobosclubpde',
+              url: 'https://www.instagram.com/lobosclubpde/',
               color: '#E1306C',
-              icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>,
+              icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>,
             },
             {
-              label: 'Facebook', handle: 'lobos.club', url: 'https://www.facebook.com/pg/lobos.club/',
+              label: 'Facebook',
+              handle: 'lobos.club',
+              url: 'https://www.facebook.com/pg/lobos.club/',
               color: '#1877F2',
-              icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+              icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
             },
             {
-              label: 'Twitter / X', handle: '@lobosclubpde', url: 'https://twitter.com/lobosclubpde',
+              label: 'Twitter / X',
+              handle: '@lobosclubpde',
+              url: 'https://twitter.com/lobosclubpde',
               color: '#fff',
-              icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
+              icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
             },
             {
-              label: 'Sitio oficial', handle: 'lobosrugbyclub.uy', url: 'https://www.lobosrugbyclub.uy/',
+              label: 'Sitio web',
+              handle: 'lobosrugbyclub.uy',
+              url: 'https://www.lobosrugbyclub.uy/',
               color: primary,
-              icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+              icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
             },
           ].map((red) => (
-            <a key={red.label} href={red.url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-4 px-4 py-4 rounded-xl transition-opacity active:opacity-60"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderLeftWidth: 3, borderLeftColor: red.color }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: `${red.color}18`, color: red.color }}>
-                {red.icon}
+            <a
+              key={red.label}
+              href={red.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-2xl p-4 flex flex-col gap-3 active:opacity-70 transition-opacity"
+              style={{ background: `${red.color}0d`, border: `1px solid ${red.color}22` }}
+            >
+              <div style={{ color: red.color }}>{red.icon}</div>
+              <div>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{red.label}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.30)', marginTop: '3px' }}>{red.handle}</p>
               </div>
-              <div className="flex-1">
-                <p className="text-white text-sm font-bold">{red.label}</p>
-                <p className="text-white/35 text-xs mt-0.5">{red.handle}</p>
-              </div>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" strokeLinecap="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
             </a>
           ))}
         </div>
-      </Section>
+      </div>
 
       <NavBar />
     </main>
   )
 }
 
-/* ── Componente de sección reutilizable ── */
-function Section({ label, rgb, children, last }: { label: string; rgb: string; children: ReactNode; last?: boolean }) {
+function Eyebrow({ children }: { children: string }) {
   return (
-    <div className={`px-5 ${last ? 'pb-28' : 'pb-6'}`}>
-      <div className="flex items-center gap-3 mb-4">
-        <span className="text-[9px] font-bold uppercase tracking-[3px]" style={{ color: `rgba(${rgb},0.7)` }}>{label}</span>
-        <div className="flex-1 h-px" style={{ background: `rgba(${rgb},0.15)` }} />
-      </div>
+    <p style={{
+      fontFamily: 'var(--font-body)',
+      fontSize: '9px',
+      fontWeight: 700,
+      letterSpacing: '0.22em',
+      textTransform: 'uppercase',
+      color: 'rgba(255,255,255,0.28)',
+      marginBottom: '16px',
+    }}>
       {children}
-    </div>
+    </p>
   )
 }
