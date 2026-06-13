@@ -17,6 +17,20 @@ type Socio = {
   foto_url: string | null
 }
 
+const PRECIOS_CUOTA: Record<string, number> = {
+  'Infantiles -13': 2190,
+  'Juveniles -21':  2890,
+  'Mayores +22':    3490,
+  'Cuota Familiar': 6590,
+  'Fitness':        2190,
+  'Cuota Amigo':    890,
+}
+
+function getPrecioCuota(categoria?: string): number {
+  if (!categoria) return 3490
+  return PRECIOS_CUOTA[categoria] ?? 3490
+}
+
 export default function PerfilPage() {
   const [socio, setSocio] = useState<Socio | null>(null)
   const [fotoUrl, setFotoUrl] = useState<string | null>(null)
@@ -96,7 +110,7 @@ export default function PerfilPage() {
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col">
 
       {/* Header oscuro */}
-      <div className="bg-[#0D0D0D] px-5 pt-12 pb-6">
+      <div className="bg-[#0D0D0D] px-5 pt-20 pb-6">
         <h1 className="text-white/40 text-[10px] uppercase tracking-[3px] mb-6">Mi Perfil</h1>
 
         {/* Credencial del socio */}
@@ -189,8 +203,10 @@ export default function PerfilPage() {
           <div className="text-[#888] text-xs uppercase tracking-widest mb-3">Estado de cuenta</div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[#0D0D0D] text-lg font-mono font-semibold">$2.400 UYU</div>
-              <div className="text-[#aaa] text-xs mt-0.5">Cuota mensual</div>
+              <div className="text-[#0D0D0D] text-lg font-mono font-semibold">
+                $U {getPrecioCuota(socio?.categoria).toLocaleString('es-UY')}
+              </div>
+              <div className="text-[#aaa] text-xs mt-0.5">{socio?.categoria ?? 'Cuota mensual'}</div>
             </div>
             <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${socio?.cuota_al_dia ? 'bg-[#EAF7EE] text-[#219653]' : 'bg-[#FEF0F0] text-[#C0392B]'}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-[#219653]' : 'bg-[#C0392B]'}`} />

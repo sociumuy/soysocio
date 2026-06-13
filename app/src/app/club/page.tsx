@@ -83,7 +83,7 @@ export default function ClubPage() {
     <main className="min-h-screen flex flex-col" style={{ background: BG }}>
 
       {/* ── Hero ── */}
-      <div className="relative px-5 pt-12 pb-10 overflow-hidden">
+      <div className="relative px-5 pt-20 pb-10 overflow-hidden">
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0"
           style={{ background: `radial-gradient(ellipse 80% 60% at 50% -10%, rgba(${rgb},0.18) 0%, transparent 70%)` }} />

@@ -128,7 +128,7 @@ export default function CuotaPage() {
   return (
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col pb-32">
       {/* ── Header ── */}
-      <div className="px-5 pt-12 pb-4 flex items-center gap-3">
+      <div className="px-5 pt-20 pb-4 flex items-center gap-3">
         <button onClick={() => router.back()}
           className="flex items-center justify-center w-8 h-8 rounded-full active:opacity-60 transition-opacity"
           style={{ background: 'rgba(255,255,255,0.06)' }}>

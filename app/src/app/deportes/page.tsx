@@ -185,7 +185,7 @@ export default function DeportesPage() {
     <main className="min-h-screen flex flex-col" style={{ background: BG }}>
 
       {/* ── Header ── */}
-      <div className="relative px-5 pt-12 pb-6 overflow-hidden">
+      <div className="relative px-5 pt-20 pb-6 overflow-hidden">
         <div className="pointer-events-none absolute inset-0"
           style={{ background: `radial-gradient(ellipse 70% 50% at 50% 0%, rgba(${rgb},0.14) 0%, transparent 70%)` }} />
 
