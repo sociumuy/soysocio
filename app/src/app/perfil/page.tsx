@@ -77,7 +77,7 @@ export default function PerfilPage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-[#0A0A0C] flex items-center justify-center">
+    <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
       <div className="w-5 h-5 border border-white/20 border-t-white/60 rounded-full animate-spin" />
     </main>
   )
@@ -86,7 +86,7 @@ export default function PerfilPage() {
   const precio    = getPrecioCuota(socio?.categoria)
 
   return (
-    <main className="min-h-screen bg-[#0A0A0C] flex flex-col pb-36">
+    <main className="min-h-screen bg-[#0D0D0D] flex flex-col pb-36">
 
       {/* ── Header ── */}
       <div className="px-6 pt-20 mb-10">

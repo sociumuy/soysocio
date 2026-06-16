@@ -1,12 +1,24 @@
 @import "tailwindcss";
 
 :root {
+  /* ── Brand ── */
   --gold: #C8940A;
   --dark: #0D0D0D;
   --club-primary: #C8940A;
   --club-primary-rgb: 200, 148, 10;
   --club-secondary: #1B2D6E;
   --club-navy: #1B2D6E;
+
+  /* ── Design system tokens ── */
+  --ds-bg:        #0D0D0D;
+  --ds-surface:   rgba(255,255,255,0.04);
+  --ds-surface-2: rgba(255,255,255,0.07);
+  --ds-border:    rgba(255,255,255,0.07);
+  --ds-gold:      #C8940A;
+  --ds-text-1:    #ffffff;
+  --ds-text-2:    rgba(255,255,255,0.55);
+  --ds-text-3:    rgba(255,255,255,0.28);
+  --ds-label:     rgba(255,255,255,0.18);
 }
 
 @theme inline {

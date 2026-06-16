@@ -48,7 +48,7 @@ export default function ClubPage() {
   const logoUrl = club?.logo_url ?? LOGO
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: '#0A0A0C' }}>
+    <main className="min-h-screen flex flex-col" style={{ background: '#0D0D0D' }}>
 
       {/* ── Volver ── */}
       <div className="px-6 pt-20 mb-14">

@@ -10,7 +10,7 @@ import Chip from '@/components/Chip'
 import { getStoredClub } from '@/lib/club-storage'
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
-const BG = '#08101f'
+const BG = '#0D0D0D'
 
 type Deporte = 'rugby' | 'hockey' | 'futbol'
 
