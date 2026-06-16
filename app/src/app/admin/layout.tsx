@@ -99,7 +99,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* ── Top bar ── */}
         <header
           className="w-full flex-shrink-0 flex items-center justify-between px-4 py-3 z-10 relative"
-          style={{ background: '#08101f', borderBottom: `1px solid rgba(${rgb},0.18)` }}
+          style={{ background: '#0D0D0D', borderBottom: `1px solid rgba(${rgb},0.18)` }}
         >
           <div className="flex items-center gap-2.5">
             <button
@@ -152,7 +152,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 260 }}
                 className="absolute top-0 left-0 z-50 flex flex-col"
-                style={{ width: 260, height: '100%', background: '#08101f' }}
+                style={{ width: 260, height: '100%', background: '#0D0D0D' }}
               >
                 {/* Club header */}
                 <div className="px-5 pt-8 pb-5 flex items-center gap-3"
