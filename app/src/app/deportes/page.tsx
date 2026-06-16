@@ -245,17 +245,31 @@ export default function DeportesPage() {
             transition={{ duration: 0.25, ease }}
             className="flex flex-col gap-4"
           >
-            {/* Banner del deporte */}
-            <div className="rounded-2xl p-5 overflow-hidden relative"
-              style={{ background: `linear-gradient(135deg, ${deporte.acento} 0%, ${deporte.acento}99 100%)` }}>
-              <div className="pointer-events-none absolute top-0 right-0 w-32 h-32 opacity-10"
-                style={{ background: `radial-gradient(circle, #fff 0%, transparent 70%)`, transform: 'translate(30%,-30%)' }} />
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-3">
-                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{ICONOS[activo]}</span>
-                  <h2 className="text-white font-serif text-2xl font-semibold">{deporte.nombre}</h2>
+            {/* Banner del deporte — editorial */}
+            <div className="rounded-2xl overflow-hidden relative" style={{ background: '#111', minHeight: '110px' }}>
+              {/* Sport color accent line top */}
+              <div style={{ height: '2px', background: deporte.acento }} />
+              {/* Oversized sport name as background text */}
+              <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 overflow-hidden select-none"
+                style={{ opacity: 0.05 }}>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '88px', fontWeight: 800, color: '#fff', lineHeight: 1, whiteSpace: 'nowrap', paddingRight: '8px' }}>
+                  {deporte.nombre.toUpperCase()}
+                </span>
+              </div>
+              {/* Glow del deporte */}
+              <div className="pointer-events-none absolute bottom-0 left-0 w-40 h-40"
+                style={{ background: `radial-gradient(circle at bottom left, ${deporte.acento}18 0%, transparent 65%)` }} />
+              {/* Content */}
+              <div className="relative z-10 px-5 pt-4 pb-5">
+                <div className="flex items-center gap-2.5 mb-2.5">
+                  <span style={{ color: deporte.acento }}>{ICONOS[activo]}</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: deporte.acento }}>
+                    {deporte.nombre}
+                  </span>
                 </div>
-                <p className="text-white/65 text-sm leading-relaxed">{deporte.descripcion}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6, color: 'rgba(255,255,255,0.50)' }}>
+                  {deporte.descripcion}
+                </p>
               </div>
             </div>
 
