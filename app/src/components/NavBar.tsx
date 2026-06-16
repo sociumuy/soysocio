@@ -12,7 +12,7 @@ const items = [
     label: 'Inicio',
     href: '/home',
     icon: (active: boolean) => (
-      <svg width="19" height="19" viewBox="0 0 24 24" fill={active ? 'var(--club-primary)' : 'none'}
+      <svg width="18" height="18" viewBox="0 0 24 24" fill={active ? 'var(--club-primary)' : 'none'}
         stroke={active ? 'var(--club-primary)' : '#4a4a4a'} strokeWidth="1.6" strokeLinecap="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
         <polyline points="9 22 9 12 15 12 15 22" />
@@ -23,7 +23,7 @@ const items = [
     label: 'Deportes',
     href: '/deportes',
     icon: (active: boolean) => (
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
         stroke={active ? 'var(--club-primary)' : '#4a4a4a'} strokeWidth="1.6" strokeLinecap="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M14.83 9.17l4.24-4.24M14.83 9.17l3.53 3.53M4.93 19.07l4.24-4.24" />
@@ -34,7 +34,7 @@ const items = [
     label: 'Novedades',
     href: '/novedades',
     icon: (active: boolean) => (
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
         stroke={active ? 'var(--club-primary)' : '#4a4a4a'} strokeWidth="1.6" strokeLinecap="round">
         <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z" />
         <path d="M4 6a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2" />
@@ -45,10 +45,23 @@ const items = [
     ),
   },
   {
+    label: 'Reservas',
+    href: '/reservas',
+    icon: (active: boolean) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+        stroke={active ? 'var(--club-primary)' : '#4a4a4a'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 9h16M4 9a8 8 0 0 0 16 0" />
+        <line x1="9" y1="13" x2="9" y2="17" />
+        <line x1="15" y1="13" x2="15" y2="17" />
+        <path d="M7 21h10" />
+      </svg>
+    ),
+  },
+  {
     label: 'Club',
     href: '/club',
     icon: (active: boolean) => (
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
         stroke={active ? 'var(--club-primary)' : '#4a4a4a'} strokeWidth="1.6" strokeLinecap="round">
         <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7l-9-5z" />
       </svg>
@@ -58,7 +71,7 @@ const items = [
     label: 'Perfil',
     href: '/perfil',
     icon: (active: boolean) => (
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
         stroke={active ? 'var(--club-primary)' : '#4a4a4a'} strokeWidth="1.6" strokeLinecap="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
@@ -110,7 +123,7 @@ export default function NavBar() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '3px',
-                width: '52px',
+                width: '46px',
                 height: '44px',
                 borderRadius: '999px',
                 cursor: 'pointer',
