@@ -1,12 +1,12 @@
-﻿'use client'
+'use client'
 
 export const dynamic = 'force-dynamic'
 
 import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
 import NavBar from '@/components/NavBar'
-import PremiumButton from '@/components/PremiumButton'
 
 type Socio = {
   nombre: string
@@ -26,40 +26,29 @@ const PRECIOS_CUOTA: Record<string, number> = {
   'Cuota Amigo':    890,
 }
 
-function getPrecioCuota(categoria?: string): number {
-  if (!categoria) return 3490
-  return PRECIOS_CUOTA[categoria] ?? 3490
+function getPrecioCuota(cat?: string) {
+  return PRECIOS_CUOTA[cat ?? ''] ?? 3490
 }
 
 export default function PerfilPage() {
-  const [socio, setSocio] = useState<Socio | null>(null)
+  const [socio, setSocio]     = useState<Socio | null>(null)
   const [fotoUrl, setFotoUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [subiendo, setSubiendo] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
+  const fileRef  = useRef<HTMLInputElement>(null)
+  const router   = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
     async function cargar() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
-
-      const { data } = await supabase
-        .from('socios')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
+      const { data } = await supabase.from('socios').select('*').eq('id', user.id).single()
       setSocio(data)
-
       if (data?.foto_url) {
-        const { data: url } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(data.foto_url)
+        const { data: url } = supabase.storage.from('avatars').getPublicUrl(data.foto_url)
         setFotoUrl(url.publicUrl)
       }
-
       setLoading(false)
     }
     cargar()
@@ -68,24 +57,17 @@ export default function PerfilPage() {
   async function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-
     setSubiendo(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-
-    const ext = file.name.split('.').pop()
+    const ext  = file.name.split('.').pop()
     const path = `${user.id}/avatar.${ext}`
-
-    const { error } = await supabase.storage
-      .from('avatars')
-      .upload(path, file, { upsert: true })
-
+    const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
     if (!error) {
       await supabase.from('socios').update({ foto_url: path }).eq('id', user.id)
       const { data: url } = supabase.storage.from('avatars').getPublicUrl(path)
       setFotoUrl(url.publicUrl)
     }
-
     setSubiendo(false)
   }
 
@@ -94,160 +76,205 @@ export default function PerfilPage() {
     router.push('/login')
   }
 
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[var(--club-primary)] border-t-transparent rounded-full animate-spin" />
-      </main>
-    )
-  }
+  if (loading) return (
+    <main className="min-h-screen bg-[#0A0A0C] flex items-center justify-center">
+      <div className="w-5 h-5 border border-white/20 border-t-white/60 rounded-full animate-spin" />
+    </main>
+  )
 
-  const iniciales = socio
-    ? `${socio.nombre?.[0] ?? ''}${socio.apellido?.[0] ?? ''}`
-    : '?'
+  const iniciales = `${socio?.nombre?.[0] ?? ''}${socio?.apellido?.[0] ?? ''}`
+  const precio    = getPrecioCuota(socio?.categoria)
 
   return (
-    <main className="min-h-screen bg-[#0D0D0D] flex flex-col">
+    <main className="min-h-screen bg-[#0A0A0C] flex flex-col pb-36">
 
-      {/* Header oscuro */}
-      <div className="bg-[#0D0D0D] px-5 pt-20 pb-6">
-        <h1 className="text-white/40 text-[10px] uppercase tracking-[3px] mb-6">Mi Perfil</h1>
+      {/* ── Header ── */}
+      <div className="px-6 pt-20 mb-10">
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
+          letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)',
+          marginBottom: '20px',
+        }}>
+          Mi perfil
+        </p>
 
-        {/* Credencial del socio */}
-        <div className="relative rounded-2xl overflow-hidden p-5"
-          style={{ background: 'linear-gradient(135deg, #1B2D6E 0%, #0d1c4a 100%)' }}>
-          <div className="absolute inset-0 opacity-5"
-            style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)', backgroundSize: '10px 10px' }} />
-          <div className="absolute top-0 right-0 w-32 h-32 opacity-10"
-            style={{ background: 'radial-gradient(circle, rgba(200,148,10,0.8) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+        {/* ── Credencial ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="relative rounded-3xl overflow-hidden"
+          style={{ background: 'linear-gradient(145deg, #1a2952 0%, #0d1730 100%)', padding: '24px' }}
+        >
+          {/* Glow sutil */}
+          <div className="pointer-events-none absolute top-0 right-0 w-48 h-48 opacity-[0.07]"
+            style={{ background: 'radial-gradient(circle, #B8975A 0%, transparent 70%)', transform: 'translate(20%,-20%)' }} />
 
-          <div className="relative z-10 flex items-start justify-between mb-6">
+          {/* Top row */}
+          <div className="flex items-start justify-between mb-7">
             <div>
-              <p className="text-white/30 text-[9px] font-bold uppercase tracking-[3px] mb-1">Lobos Rugby Club</p>
-              <p className="text-white/20 text-[9px] tracking-wider">Punta del Este · Uruguay</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '8px', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)' }}>
+                Lobos Rugby Club
+              </p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '8px', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.15)', marginTop: '2px' }}>
+                Maldonado · Uruguay
+              </p>
             </div>
-            <img src="/lobos-logo.png" alt="Lobos" className="w-10 h-10 object-contain opacity-90" />
+            <img src="/lobos-logo.png" alt="Lobos" className="w-9 h-9 object-contain opacity-80" />
           </div>
 
-          <div className="relative z-10 flex items-center gap-4">
-            {/* Avatar — botón explícito con cámara */}
+          {/* Avatar + nombre */}
+          <div className="flex items-center gap-4 mb-7">
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="relative flex-shrink-0 group"
+              className="relative flex-shrink-0 active:opacity-70 transition-opacity"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center overflow-hidden border border-white/20">
-                {fotoUrl ? (
-                  <img src={fotoUrl} alt="foto" className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-white font-serif text-2xl font-semibold">{iniciales}</span>
-                )}
+              <div className="w-14 h-14 rounded-2xl overflow-hidden flex items-center justify-center"
+                style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)' }}>
+                {fotoUrl
+                  ? <img src={fotoUrl} alt="foto" className="w-full h-full object-cover" />
+                  : <span className="font-serif text-white text-xl font-semibold">{iniciales}</span>
+                }
               </div>
-              {/* Badge de cámara */}
-              <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ background: 'var(--club-primary)', border: '2px solid #0d1c4a' }}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
+                style={{ background: '#B8975A', border: '1.5px solid #0d1730' }}>
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                   <circle cx="12" cy="13" r="4"/>
                 </svg>
               </div>
             </button>
 
-            <div className="flex-1">
-              <h1 className="text-white font-serif text-xl font-semibold leading-tight">
-                {socio ? `${socio.nombre} ${socio.apellido}` : 'Mi Perfil'}
-              </h1>
-              <p className="text-white/50 text-xs mt-0.5 uppercase tracking-wider">{socio?.categoria ?? 'Activo'}</p>
+            <div>
+              <h2 className="font-serif text-white leading-tight" style={{ fontSize: '20px', fontWeight: 600, letterSpacing: '-0.02em' }}>
+                {socio ? `${socio.nombre} ${socio.apellido}` : '—'}
+              </h2>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.38)', marginTop: '2px', letterSpacing: '0.08em' }}>
+                {socio?.categoria ?? 'Socio'}
+              </p>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="mt-1.5 text-[10px] font-semibold uppercase tracking-widest active:opacity-60 transition-opacity"
-                style={{ color: 'rgba(var(--club-primary-rgb),0.7)' }}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#B8975A', marginTop: '6px', display: 'block' }}
+                className="active:opacity-50 transition-opacity"
               >
-                Cambiar foto →
+                Cambiar foto
               </button>
             </div>
           </div>
 
-          <div className="relative z-10 mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
+          {/* Footer de la credencial */}
+          <div className="flex items-end justify-between pt-5"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
             <div>
-              <p className="text-white/30 text-[9px] uppercase tracking-wider">N° de Socio</p>
-              <p className="text-white font-mono text-lg font-bold tracking-widest mt-0.5">
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', marginBottom: '4px' }}>
+                N° de socio
+              </p>
+              <p className="font-mono text-white" style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '0.12em' }}>
                 {socio?.numero_socio ? `#${socio.numero_socio}` : '—'}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-white/30 text-[9px] uppercase tracking-wider">Estado</p>
-              <div className={`flex items-center gap-1.5 mt-0.5 justify-end ${socio?.cuota_al_dia ? 'text-emerald-400' : 'text-red-400'}`}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', marginBottom: '4px' }}>
+                Estado
+              </p>
+              <div className="flex items-center gap-1.5 justify-end">
                 <span className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-emerald-400' : 'bg-red-400'}`} />
-                <span className="text-xs font-bold">{socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 700, color: socio?.cuota_al_dia ? '#34d399' : '#f87171' }}>
+                  {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
+                </span>
               </div>
             </div>
           </div>
 
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFoto} />
           {subiendo && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-3xl backdrop-blur-sm">
+              <div className="w-5 h-5 border border-white/30 border-t-white rounded-full animate-spin" />
             </div>
           )}
+        </motion.div>
+      </div>
+
+      {/* Divisor */}
+      <div className="mx-6 mb-10" style={{ height: '1px', background: 'rgba(255,255,255,0.07)' }} />
+
+      {/* ── Cuota ── */}
+      <div className="px-6 mb-10">
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', marginBottom: '20px' }}>
+          Cuota
+        </p>
+
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <p className="font-serif text-white" style={{ fontSize: '32px', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1 }}>
+              $U {precio.toLocaleString('es-UY')}
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.28)', marginTop: '5px' }}>
+              {socio?.categoria ?? 'Cuota mensual'} · por mes
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+            style={{ background: socio?.cuota_al_dia ? 'rgba(52,211,153,0.10)' : 'rgba(248,113,113,0.10)', border: `1px solid ${socio?.cuota_al_dia ? 'rgba(52,211,153,0.25)' : 'rgba(248,113,113,0.25)'}` }}>
+            <span className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-emerald-400' : 'bg-red-400'}`} />
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, color: socio?.cuota_al_dia ? '#34d399' : '#f87171' }}>
+              {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
+            </span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => router.push('/cuota')}
+          className="w-full py-3.5 rounded-2xl active:opacity-75 transition-opacity"
+          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.70)' }}
+        >
+          {socio?.cuota_al_dia ? 'Ver tabla de cuotas' : 'Ver cuotas →'}
+        </button>
+      </div>
+
+      {/* Divisor */}
+      <div className="mx-6 mb-10" style={{ height: '1px', background: 'rgba(255,255,255,0.07)' }} />
+
+      {/* ── Datos ── */}
+      <div className="px-6 mb-10">
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', marginBottom: '20px' }}>
+          Datos
+        </p>
+
+        <div className="flex flex-col">
+          {[
+            { label: 'Nombre completo', value: socio ? `${socio.nombre} ${socio.apellido}` : '—' },
+            { label: 'Categoría',       value: socio?.categoria  ?? '—' },
+            { label: 'N° de socio',     value: socio?.numero_socio ? `#${socio.numero_socio}` : '—' },
+          ].map(({ label, value }, i, arr) => (
+            <div key={label}
+              className={`flex items-center justify-between py-4 ${i < arr.length - 1 ? 'border-b' : ''}`}
+              style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.28)' }}>
+                {label}
+              </p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.75)' }}>
+                {value}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Contenido */}
-      <div className="flex-1 bg-[#F4F3EF] rounded-t-3xl px-5 pt-6 pb-8 flex flex-col gap-3">
+      {/* Divisor */}
+      <div className="mx-6 mb-10" style={{ height: '1px', background: 'rgba(255,255,255,0.07)' }} />
 
-        {/* Estado de cuota */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <div className="text-[#888] text-xs uppercase tracking-widest mb-3">Estado de cuenta</div>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[#0D0D0D] text-lg font-mono font-semibold">
-                $U {getPrecioCuota(socio?.categoria).toLocaleString('es-UY')}
-              </div>
-              <div className="text-[#aaa] text-xs mt-0.5">{socio?.categoria ?? 'Cuota mensual'}</div>
-            </div>
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${socio?.cuota_al_dia ? 'bg-[#EAF7EE] text-[#219653]' : 'bg-[#FEF0F0] text-[#C0392B]'}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-[#219653]' : 'bg-[#C0392B]'}`} />
-              {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
-            </div>
-          </div>
-          <div className="mt-4">
-            <button onClick={() => router.push('/cuota')}
-              className="w-full py-3.5 rounded-xl text-sm font-bold tracking-widest uppercase text-[#0D0D0D] transition-opacity active:opacity-80"
-              style={{ background: 'var(--club-primary)' }}>
-              {socio?.cuota_al_dia ? 'Ver historial' : 'Pagar cuota'}
-            </button>
-          </div>
-        </div>
-
-        {/* Datos personales */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <div className="text-[#888] text-xs uppercase tracking-widest mb-3">Datos personales</div>
-          <div className="flex flex-col gap-3">
-            {[
-              { label: 'Nombre', value: socio ? `${socio.nombre} ${socio.apellido}` : '—' },
-              { label: 'Categoría', value: socio?.categoria ?? '—' },
-              { label: 'N° de socio', value: socio?.numero_socio ?? '—' },
-            ].map((item, i) => (
-              <div key={i} className="flex justify-between items-center py-2 border-b border-[#F4F3EF] last:border-0">
-                <span className="text-[#aaa] text-xs">{item.label}</span>
-                <span className="text-[#0D0D0D] text-sm font-medium">{item.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Cerrar sesión */}
+      {/* ── Cerrar sesión ── */}
+      <div className="px-6">
         <button
           onClick={handleSignOut}
-          className="mt-2 w-full bg-white rounded-2xl py-4 text-[#C0392B] text-sm font-semibold shadow-sm hover:opacity-80 transition-opacity"
+          className="w-full py-4 rounded-2xl active:opacity-60 transition-opacity"
+          style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600, color: 'rgba(248,113,113,0.65)', background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.12)' }}
         >
           Cerrar sesión
         </button>
-
-        <div className="h-20" />
       </div>
 
       <NavBar />
