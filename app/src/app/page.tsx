@@ -13,7 +13,7 @@ const NAVY = '#1B2D6E'
 const GOLD = '#C8940A'
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
-const BG = '#08101f'
+const BG = '#0D0D0D'
 
 // Clubes demo para presentación — se muestran además de los de Supabase
 const DEMO_CLUBS: Club[] = [
@@ -182,7 +182,7 @@ export default function LandingPage() {
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center"
-                              style={{ background: GOLD, border: '2px solid #0f1d4e' }}
+                              style={{ background: GOLD, border: '2px solid #0D0D0D' }}
                             >
                               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round">
                                 <polyline points="20 6 9 17 4 12" />

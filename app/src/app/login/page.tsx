@@ -65,7 +65,7 @@ function LoginForm() {
   return (
     <main
       className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden"
-      style={{ background: `linear-gradient(160deg, #08101f 0%, rgba(${rgb}, 0.10) 50%, #08101f 100%)` }}
+      style={{ background: `linear-gradient(160deg, #0D0D0D 0%, rgba(${rgb}, 0.10) 50%, #0D0D0D 100%)` }}
     >
       {/* Glow ambiental del club */}
       <div

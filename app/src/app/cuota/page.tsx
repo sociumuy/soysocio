@@ -307,7 +307,7 @@ export default function CuotaPage() {
         </div>
 
         {/* ── Beneficio Itaú ── */}
-        <div className="rounded-2xl overflow-hidden" style={{ background: '#0f1c33' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
           <div style={{ height: '3px', background: 'linear-gradient(90deg, #C8940A, #f0b429)' }} />
           <div className="p-5">
             <div className="flex items-start justify-between mb-4">
