@@ -2,76 +2,213 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import NavBar from '@/components/NavBar'
-import { loadStripe } from '@stripe/stripe-js'
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
-
-const STRIPE_APPEARANCE = {
-  theme: 'night' as const,
-  variables: {
-    colorPrimary:    '#C8940A',
-    colorBackground: '#111111',
-    colorText:       '#ffffff',
-    colorDanger:     '#f87171',
-    fontFamily:      'DM Sans, system-ui, sans-serif',
-    borderRadius:    '12px',
-    spacingUnit:     '4px',
-  },
-  rules: {
-    '.Input': {
-      border:     '1px solid rgba(255,255,255,0.10)',
-      background: 'rgba(255,255,255,0.06)',
-    },
-    '.Input:focus': {
-      border:    '1px solid rgba(200,148,10,0.55)',
-      boxShadow: '0 0 0 3px rgba(200,148,10,0.12)',
-    },
-    '.Label': { color: 'rgba(255,255,255,0.55)', fontSize: '11px' },
-  },
+// ── Tipos MP SDK ─────────────────────────────────────────────────────────────
+declare global {
+  interface Window {
+    MercadoPago: new (key: string, opts?: { locale: string }) => MpInstance
+  }
+}
+interface MpInstance {
+  cardForm: (config: MpCardFormConfig) => MpCardForm
+}
+interface MpCardForm {
+  getCardFormData: () => { token: string; installments: string; payment_method_id: string; issuerId: string }
+  unmount: () => void
+}
+interface MpCardFormConfig {
+  amount: string
+  iframe: boolean
+  form: Record<string, { id: string; placeholder?: string } | { id: string }>
+  callbacks: {
+    onFormMounted?: (err: unknown) => void
+    onSubmit: (event: Event) => void
+    onFetching?: (resource: string) => void
+  }
 }
 
-// ── Formulario de pago embebido ──────────────────────────────────────────────
-function PagoForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
-  const stripe   = useStripe()
-  const elements = useElements()
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState<string | null>(null)
-
-  async function handlePagar(e: React.FormEvent) {
-    e.preventDefault()
-    if (!stripe || !elements) return
-
-    setLoading(true)
-    setError(null)
-
-    const { error: stripeError } = await stripe.confirmPayment({
-      elements,
-      redirect: 'if_required',
+function loadMpSdk(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve()
+  if ((window as { MercadoPago?: unknown }).MercadoPago) return Promise.resolve()
+  if (document.getElementById('mp-sdk')) {
+    return new Promise(resolve => {
+      const check = setInterval(() => {
+        if ((window as { MercadoPago?: unknown }).MercadoPago) { clearInterval(check); resolve() }
+      }, 50)
     })
+  }
+  return new Promise(resolve => {
+    const s = document.createElement('script')
+    s.id = 'mp-sdk'
+    s.src = 'https://sdk.mercadopago.com/js/v2'
+    s.onload = () => resolve()
+    document.head.appendChild(s)
+  })
+}
 
-    if (stripeError) {
-      setError(stripeError.message ?? 'Error al procesar el pago')
-      setLoading(false)
-    } else {
-      onSuccess()
+// ── Formulario de pago MP ─────────────────────────────────────────────────────
+function MpCardForm({
+  amount,
+  socioId,
+  email,
+  onSuccess,
+  onCancel,
+}: {
+  amount: number
+  socioId: string
+  email: string
+  onSuccess: () => void
+  onCancel: () => void
+}) {
+  const cardFormRef = useRef<MpCardForm | null>(null)
+  const [loading,   setLoading]   = useState(false)
+  const [error,     setError]     = useState<string | null>(null)
+  const [mounted,   setMounted]   = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    async function init() {
+      await loadMpSdk()
+      if (!active) return
+
+      const mp = new window.MercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!, { locale: 'es-UY' })
+
+      cardFormRef.current = mp.cardForm({
+        amount: String(amount),
+        iframe: true,
+        form: {
+          id:                  { id: 'form-mp' },
+          cardNumber:          { id: 'mp-cardNumber',          placeholder: '0000 0000 0000 0000' },
+          expirationDate:      { id: 'mp-expirationDate',      placeholder: 'MM/YY' },
+          securityCode:        { id: 'mp-securityCode',        placeholder: 'CVV' },
+          cardholderName:      { id: 'mp-cardholderName',      placeholder: 'Nombre como aparece en la tarjeta' },
+          issuer:              { id: 'mp-issuer' },
+          installments:        { id: 'mp-installments' },
+          identificationType:  { id: 'mp-identificationType' },
+          identificationNumber:{ id: 'mp-identificationNumber' },
+          cardholderEmail:     { id: 'mp-cardholderEmail' },
+        },
+        callbacks: {
+          onFormMounted: (err) => {
+            if (err) { console.error('MP mount error:', err); return }
+            if (active) setMounted(true)
+          },
+          onSubmit: async (event) => {
+            event.preventDefault()
+            if (!cardFormRef.current) return
+            setLoading(true)
+            setError(null)
+
+            const { token, installments, payment_method_id, issuerId } =
+              cardFormRef.current.getCardFormData()
+
+            try {
+              const res  = await fetch('/api/mp/create-payment', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ socio_id: socioId, token, installments, payment_method_id, issuer_id: issuerId, email }),
+              })
+              const data = await res.json()
+              if (!res.ok) throw new Error(data.error ?? 'Pago rechazado')
+              if (data.status === 'approved') {
+                onSuccess()
+              } else {
+                setError('Tu pago está siendo procesado. Te notificaremos cuando se confirme.')
+                setLoading(false)
+              }
+            } catch (err: unknown) {
+              setError(err instanceof Error ? err.message : 'Error inesperado')
+              setLoading(false)
+            }
+          },
+        },
+      })
     }
+
+    init()
+    return () => {
+      active = false
+      cardFormRef.current?.unmount()
+    }
+  }, [amount, socioId, email, onSuccess])
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.10)', borderRadius: '12px',
+    padding: '12px 14px', color: '#fff', fontSize: '13px', fontFamily: 'var(--font-body)',
+    outline: 'none',
+  }
+  const iframeBox: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)',
+    borderRadius: '12px', height: '42px', overflow: 'hidden',
+  }
+  const labelStyle: React.CSSProperties = {
+    display: 'block', fontFamily: 'var(--font-body)', fontSize: '9px',
+    letterSpacing: '0.18em', textTransform: 'uppercase',
+    color: 'rgba(255,255,255,0.28)', marginBottom: '6px',
+  }
+  const selectStyle: React.CSSProperties = {
+    ...inputStyle, appearance: 'none',
+    background: 'rgba(255,255,255,0.06)',
   }
 
   return (
-    <form onSubmit={handlePagar} className="flex flex-col gap-4">
-      <PaymentElement />
+    <form id="form-mp" className="flex flex-col gap-3">
+      {/* Skeleton mientras carga el SDK */}
+      {!mounted && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {[1,2,3].map(i => (
+            <div key={i} style={{ height: '42px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', animation: 'pulse 1.5s infinite' }} />
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: mounted ? 'flex' : 'none', flexDirection: 'column', gap: '12px' }}>
+
+        <div>
+          <label style={labelStyle}>Número de tarjeta</label>
+          <div id="mp-cardNumber" style={iframeBox} />
+        </div>
+
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <label style={labelStyle}>Vencimiento</label>
+            <div id="mp-expirationDate" style={iframeBox} />
+          </div>
+          <div className="flex-1">
+            <label style={labelStyle}>CVV</label>
+            <div id="mp-securityCode" style={iframeBox} />
+          </div>
+        </div>
+
+        <div>
+          <label style={labelStyle}>Titular</label>
+          <input id="mp-cardholderName" type="text" style={inputStyle} />
+        </div>
+
+        <div>
+          <label style={labelStyle}>Cuotas</label>
+          <select id="mp-installments" style={selectStyle} />
+        </div>
+
+        {/* Campos requeridos por MP SDK, ocultos */}
+        <select id="mp-issuer" style={{ display: 'none' }} />
+        <select id="mp-identificationType" style={{ display: 'none' }} />
+        <input id="mp-identificationNumber" type="text" style={{ display: 'none' }} />
+        <input id="mp-cardholderEmail" type="email" defaultValue={email} style={{ display: 'none' }} />
+
+      </div>
 
       {error && (
         <p style={{
-          fontFamily: 'var(--font-body)', fontSize: '12px',
-          color: '#f87171', background: 'rgba(239,68,68,0.10)',
-          border: '1px solid rgba(239,68,68,0.18)',
+          fontFamily: 'var(--font-body)', fontSize: '12px', color: '#f87171',
+          background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.18)',
           borderRadius: '10px', padding: '10px 14px',
         }}>
           {error}
@@ -84,19 +221,16 @@ function PagoForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: ()
             flex: 1, padding: '12px', borderRadius: '12px',
             fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
             color: 'rgba(255,255,255,0.45)',
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           }}>
           Cancelar
         </button>
-        <button type="submit" disabled={loading || !stripe}
+        <button type="submit" disabled={loading || !mounted}
           style={{
             flex: 2, padding: '12px', borderRadius: '12px',
             fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 700,
-            color: '#fff',
-            background: loading ? 'rgba(200,148,10,0.5)' : '#C8940A',
-            opacity: !stripe ? 0.4 : 1,
-            transition: 'background 0.2s',
+            color: '#fff', background: loading ? 'rgba(200,148,10,0.5)' : '#C8940A',
+            opacity: !mounted ? 0.4 : 1, transition: 'background 0.2s',
           }}>
           {loading ? (
             <span className="flex items-center justify-center gap-2">
@@ -110,6 +244,8 @@ function PagoForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: ()
   )
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+
 type Socio = {
   id: string
   nombre: string
@@ -121,15 +257,15 @@ type Socio = {
 
 type ModaloPago = 'transferencia' | 'tarjeta'
 
-const RECARGO_TARJETA = 0.05 // 5% — cubre Stripe (~2.9%) + comisión DelClub (2%)
+const RECARGO_TARJETA = 0.05
 
 const CUOTAS = [
-  { tipo: 'Mayores +22',   base: 3490, descripcion: 'Acceso completo al club y disciplinas deportivas', destacada: true  },
-  { tipo: 'Cuota Familiar', base: 6590, descripcion: '2 adultos + 2 menores de 21 años',                destacada: true  },
-  { tipo: 'Juveniles -21', base: 2890, descripcion: 'Socios de 13 a 21 años',                           destacada: false },
-  { tipo: 'Infantiles -13', base: 2190, descripcion: 'Socios menores de 13 años',                       destacada: false },
-  { tipo: 'Fitness',        base: 2190, descripcion: 'Gym, Yoga, Dance, Funcional y más',               destacada: false },
-  { tipo: 'Cuota Amigo',   base: 890,  descripcion: 'Solo actividades sociales, sin deporte',           destacada: false, minor: true },
+  { tipo: 'Mayores +22',    base: 3490, descripcion: 'Acceso completo al club y disciplinas deportivas', destacada: true  },
+  { tipo: 'Cuota Familiar', base: 6590, descripcion: '2 adultos + 2 menores de 21 años',                 destacada: true  },
+  { tipo: 'Juveniles -21',  base: 2890, descripcion: 'Socios de 13 a 21 años',                           destacada: false },
+  { tipo: 'Infantiles -13', base: 2190, descripcion: 'Socios menores de 13 años',                        destacada: false },
+  { tipo: 'Fitness',        base: 2190, descripcion: 'Gym, Yoga, Dance, Funcional y más',                destacada: false },
+  { tipo: 'Cuota Amigo',   base: 890,   descripcion: 'Solo actividades sociales, sin deporte',           destacada: false, minor: true },
 ]
 
 const PRECIOS_MAP: Record<string, number> = {
@@ -151,39 +287,18 @@ function getPrecio(categoria: string, modo: ModaloPago): number {
 }
 
 export default function CuotaPage() {
-  const [socio, setSocio]           = useState<Socio | null>(null)
-  const [loading, setLoading]       = useState(true)
-  const [modo, setModo]             = useState<ModaloPago>('tarjeta')
-  const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [pagoExito, setPagoExito]   = useState(false)
-  const [pagoLoading, setPagoLoading] = useState(false)
-  const [pagoError, setPagoError]   = useState<string | null>(null)
-  const router  = useRouter()
+  const [socio,        setSocio]        = useState<Socio | null>(null)
+  const [email,        setEmail]        = useState('')
+  const [loading,      setLoading]      = useState(true)
+  const [modo,         setModo]         = useState<ModaloPago>('tarjeta')
+  const [showCardForm, setShowCardForm] = useState(false)
+  const [pagoExito,    setPagoExito]    = useState(false)
+  const router   = useRouter()
   const supabase = createClient()
-
-  const handleIniciarPago = useCallback(async () => {
-    if (!socio) return
-    setPagoLoading(true)
-    setPagoError(null)
-    try {
-      const res  = await fetch('/api/stripe/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ socio_id: socio.id }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Error al iniciar el pago')
-      setClientSecret(data.client_secret)
-    } catch (err: unknown) {
-      setPagoError(err instanceof Error ? err.message : 'Error inesperado')
-    } finally {
-      setPagoLoading(false)
-    }
-  }, [socio])
 
   const handlePagoExitoso = useCallback(() => {
     setPagoExito(true)
-    setClientSecret(null)
+    setShowCardForm(false)
     setSocio(prev => prev ? { ...prev, cuota_al_dia: true } : prev)
   }, [])
 
@@ -191,6 +306,7 @@ export default function CuotaPage() {
     async function cargar() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
+      if (user.email) setEmail(user.email)
       const { data } = await supabase
         .from('socios')
         .select('id, nombre, apellido, numero_socio, categoria, cuota_al_dia')
@@ -208,11 +324,11 @@ export default function CuotaPage() {
     </main>
   )
 
-  const categoria       = socio?.categoria ?? 'Mayores +22'
-  const precioBase      = PRECIOS_MAP[categoria] ?? 3490
-  const precioTarjeta   = Math.round(precioBase * (1 + RECARGO_TARJETA))
-  const precioSocio     = getPrecio(categoria, modo)
-  const recargo         = precioTarjeta - precioBase
+  const categoria     = socio?.categoria ?? 'Mayores +22'
+  const precioBase    = PRECIOS_MAP[categoria] ?? 3490
+  const precioTarjeta = Math.round(precioBase * (1 + RECARGO_TARJETA))
+  const precioSocio   = getPrecio(categoria, modo)
+  const recargo       = precioTarjeta - precioBase
 
   return (
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col pb-32">
@@ -258,7 +374,7 @@ export default function CuotaPage() {
                 <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.20)' }}>/ mes</span>
               </div>
             </div>
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${socio?.cuota_al_dia ? 'bg-emerald-950 text-emerald-400' : 'bg-red-950 text-red-400'}`}
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-emerald-950 text-emerald-400' : 'bg-red-950 text-red-400'}`}
               style={{ fontFamily: 'var(--font-body)', fontSize: '11px' }}>
               <span className={`w-1.5 h-1.5 rounded-full ${socio?.cuota_al_dia ? 'bg-emerald-400' : 'bg-red-400'}`} />
               {socio?.cuota_al_dia ? 'Al día' : 'Pendiente'}
@@ -287,44 +403,35 @@ export default function CuotaPage() {
             </motion.div>
           )}
 
-          {/* Formulario embebido */}
-          {clientSecret && !pagoExito && (
-            <motion.div key="form"
+          {/* Formulario de tarjeta MP */}
+          {showCardForm && !pagoExito && (
+            <motion.div key="form-mp"
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '20px' }}>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '16px' }}>
                 Datos de pago
               </p>
-              <Elements stripe={stripePromise} options={{ clientSecret, appearance: STRIPE_APPEARANCE }}>
-                <PagoForm
-                  onSuccess={handlePagoExitoso}
-                  onCancel={() => setClientSecret(null)}
-                />
-              </Elements>
+              <MpCardForm
+                amount={precioTarjeta}
+                socioId={socio?.id ?? ''}
+                email={email}
+                onSuccess={handlePagoExitoso}
+                onCancel={() => setShowCardForm(false)}
+              />
             </motion.div>
           )}
 
-          {/* Tarjeta — botón Stripe */}
-          {!socio?.cuota_al_dia && !clientSecret && !pagoExito && modo === 'tarjeta' && (
+          {/* Botón iniciar pago con tarjeta */}
+          {!socio?.cuota_al_dia && !showCardForm && !pagoExito && modo === 'tarjeta' && (
             <motion.div key="cta-tarjeta" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              {pagoError && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: '#f87171', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: '10px', padding: '10px 14px', marginBottom: '10px' }}>
-                  {pagoError}
-                </p>
-              )}
-              <button onClick={handleIniciarPago} disabled={pagoLoading}
-                style={{ width: '100%', padding: '14px', borderRadius: '14px', fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#C8940A', opacity: pagoLoading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
-                {pagoLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Preparando pago...
-                  </span>
-                ) : `Pagar con tarjeta — $U ${formatPrecio(precioSocio)}`}
+              <button onClick={() => setShowCardForm(true)}
+                style={{ width: '100%', padding: '14px', borderRadius: '14px', fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#C8940A' }}>
+                {`Pagar con tarjeta — $U ${formatPrecio(precioTarjeta)}`}
               </button>
             </motion.div>
           )}
 
-          {/* Transferencia — instrucciones bancarias */}
+          {/* Instrucciones de transferencia */}
           {!socio?.cuota_al_dia && !pagoExito && modo === 'transferencia' && (
             <motion.div key="cta-transferencia"
               initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
@@ -372,7 +479,7 @@ export default function CuotaPage() {
           </p>
           <div className="flex rounded-xl p-1" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
             {(['tarjeta', 'transferencia'] as ModaloPago[]).map((m) => (
-              <button key={m} onClick={() => { setModo(m); setClientSecret(null) }}
+              <button key={m} onClick={() => { setModo(m); setShowCardForm(false) }}
                 className="flex-1 relative py-2.5 rounded-lg transition-all active:opacity-80"
                 style={{ zIndex: 1 }}>
                 {modo === m && (
@@ -389,8 +496,7 @@ export default function CuotaPage() {
                 </span>
                 <span style={{
                   display: 'block', position: 'relative', zIndex: 2,
-                  fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
-                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.05em',
                   color: m === 'transferencia'
                     ? (modo === 'transferencia' ? '#4ade80' : 'rgba(74,222,128,0.45)')
                     : (modo === 'tarjeta' ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)'),
@@ -405,7 +511,6 @@ export default function CuotaPage() {
         {/* ── Cards de cuotas ── */}
         <div className="flex flex-col gap-2">
           {CUOTAS.map((c) => {
-            const precioBase    = c.base
             const precioMostrar = modo === 'tarjeta' ? Math.round(c.base * (1 + RECARGO_TARJETA)) : c.base
             const esMiCuota     = c.tipo === categoria
             return (
@@ -413,9 +518,7 @@ export default function CuotaPage() {
                 style={{
                   background: esMiCuota ? 'rgba(var(--club-primary-rgb),0.12)' : c.destacada ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.03)',
                   border: esMiCuota ? '1px solid rgba(var(--club-primary-rgb),0.35)' : c.destacada ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(255,255,255,0.04)',
-                  borderRadius: '14px',
-                  padding: c.minor ? '12px 16px' : '14px 16px',
-                  opacity: c.minor ? 0.75 : 1,
+                  borderRadius: '14px', padding: c.minor ? '12px 16px' : '14px 16px', opacity: c.minor ? 0.75 : 1,
                 }}>
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -444,7 +547,7 @@ export default function CuotaPage() {
                     </AnimatePresence>
                     {modo === 'tarjeta' && (
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.25)' }}>
-                        base ${formatPrecio(precioBase)}
+                        base ${formatPrecio(c.base)}
                       </span>
                     )}
                   </div>
@@ -460,12 +563,8 @@ export default function CuotaPage() {
           <div className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '38px', fontWeight: 800, color: '#f0b429', lineHeight: 1, letterSpacing: '-0.03em' }}>
-                  5% OFF
-                </div>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.70)', marginTop: '4px' }}>
-                  en tu cuota mensual
-                </div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '38px', fontWeight: 800, color: '#f0b429', lineHeight: 1, letterSpacing: '-0.03em' }}>5% OFF</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.70)', marginTop: '4px' }}>en tu cuota mensual</div>
               </div>
               <div className="flex flex-col items-end gap-1">
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>itaú</div>
@@ -497,62 +596,16 @@ export default function CuotaPage() {
           </p>
           <div className="flex flex-col gap-3">
             {[
-              {
-                icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                ),
-                texto: 'Los pagos por transferencia deben realizarse entre el 1º y el 10º de cada mes. Pasada esa fecha se aplica un recargo del 10%.',
-              },
-              {
-                icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                ),
-                texto: 'Cuota Familiar: 2 adultos y 2 menores de 21 años. Un tercer o cuarto menor abona el 50% de la cuota. Todos los integrantes deben estar registrados en el sistema.',
-              },
-              {
-                icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" />
-                  </svg>
-                ),
-                texto: 'Cuota Fitness: incluye todas las actividades del gimnasio o SUM — Yoga, Dance, Funcional, Gym, y más.',
-              },
-              {
-                icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /><polyline points="16 11 18 13 22 9" />
-                  </svg>
-                ),
-                texto: 'Cuota Amigo: participan solamente de las actividades sociales, sin actividad deportiva.',
-              },
-              {
-                icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                ),
-                texto: 'La cuota se abona durante los 12 meses del año, independientemente del uso de las instalaciones.',
-              },
-              {
-                icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" />
-                  </svg>
-                ),
-                texto: 'Baja: el socio que no siga viniendo debe solicitar y completar el formulario de baja en secretaría.',
-              },
+              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>, texto: 'Los pagos por transferencia deben realizarse entre el 1º y el 10º de cada mes. Pasada esa fecha se aplica un recargo del 10%.' },
+              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>, texto: 'Cuota Familiar: 2 adultos y 2 menores de 21 años. Un tercer o cuarto menor abona el 50% de la cuota.' },
+              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" /></svg>, texto: 'Cuota Fitness: incluye todas las actividades del gimnasio o SUM — Yoga, Dance, Funcional, Gym, y más.' },
+              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>, texto: 'Cuota Amigo: participan solamente de las actividades sociales, sin actividad deportiva.' },
+              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>, texto: 'La cuota se abona durante los 12 meses del año, independientemente del uso de las instalaciones.' },
+              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>, texto: 'Baja: el socio que no siga viniendo debe solicitar y completar el formulario de baja en secretaría.' },
             ].map(({ icon, texto }, i) => (
               <div key={i} className="flex items-start gap-3">
-                <div style={{ color: 'rgba(255,255,255,0.30)', marginTop: '1px', flexShrink: 0 }}>
-                  {icon}
-                </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
-                  {texto}
-                </p>
+                <div style={{ color: 'rgba(255,255,255,0.30)', marginTop: '1px', flexShrink: 0 }}>{icon}</div>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{texto}</p>
               </div>
             ))}
           </div>

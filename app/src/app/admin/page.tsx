@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAdmin, tieneAcceso } from '@/lib/admin-context'
 import AccesoDenegado from '@/components/AccesoDenegado'
-import { getStoredClub } from '@/lib/club-storage'
 
 type Stats = { totalSocios: number; sociosAlDia: number; sociosPendientes: number }
 
@@ -16,8 +15,6 @@ export default function AdminDashboard() {
   const admin  = useAdmin()
   const [stats, setStats]         = useState<Stats | null>(null)
   const [loading, setLoading]     = useState(true)
-  const [stripeConectado, setStripeConectado] = useState<boolean | null>(null)
-  const [stripeLoading, setStripeLoading]     = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -29,36 +26,11 @@ export default function AdminDashboard() {
         sociosPendientes: socios.filter(s => !s.cuota_al_dia).length,
       })
       setLoading(false)
-
-      // Verificar si el club ya tiene Stripe conectado
-      const club = getStoredClub()
-      if (club?.id) {
-        const { data } = await supabase
-          .from('clubes')
-          .select('stripe_account_id')
-          .eq('id', club.id)
-          .single()
-        setStripeConectado(!!data?.stripe_account_id)
-      }
     }
     cargar()
   }, [])
 
-  async function handleConectarStripe() {
-    const club = getStoredClub()
-    if (!club?.id) return
-    setStripeLoading(true)
-    const res  = await fetch('/api/stripe/onboard-club', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ club_id: club.id }),
-    })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
-    else setStripeLoading(false)
-  }
-
-  if (!admin) return null
+if (!admin) return null
   if (!tieneAcceso(admin.rol, 'dashboard')) return <AccesoDenegado />
 
   const METRICAS = [
@@ -125,42 +97,21 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* ── Stripe Connect ── */}
-      {stripeConectado !== null && (
-        <div className="mt-6">
-          <div className="text-[#888] text-[10px] uppercase tracking-widest mb-3">Cobros</div>
-          {stripeConectado ? (
-            <div className="rounded-2xl p-4 flex items-center gap-3 bg-white shadow-sm">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(74,222,128,0.12)' }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </div>
-              <div>
-                <div className="text-sm font-bold text-[#0D0D0D]">Cobros activos</div>
-                <div className="text-xs text-[#aaa]">Los socios pueden pagar su cuota online</div>
-              </div>
-            </div>
-          ) : (
-            <button onClick={handleConectarStripe} disabled={stripeLoading}
-              className="w-full rounded-2xl p-4 text-left shadow-sm flex items-center justify-between transition-opacity active:opacity-80"
-              style={{ background: '#0D0D0D', opacity: stripeLoading ? 0.6 : 1 }}>
-              <div>
-                <div className="text-sm font-bold text-white">Activar cobros online</div>
-                <div className="text-xs" style={{ color: 'var(--club-primary)' }}>
-                  {stripeLoading ? 'Redirigiendo...' : 'Conectá tu cuenta bancaria para recibir pagos'}
-                </div>
-              </div>
-              {stripeLoading
-                ? <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round">
-                    <polyline points="9 18 15 12 9 6"/>
-                  </svg>
-              }
-            </button>
-          )}
+      {/* ── Cobros online ── */}
+      <div className="mt-6">
+        <div className="text-[#888] text-[10px] uppercase tracking-widest mb-3">Cobros</div>
+        <div className="rounded-2xl p-4 flex items-center gap-3 bg-white shadow-sm">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(74,222,128,0.12)' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <div>
+            <div className="text-sm font-bold text-[#0D0D0D]">Cobros activos</div>
+            <div className="text-xs text-[#aaa]">Los socios pueden pagar su cuota online vía MercadoPago</div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
