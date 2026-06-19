@@ -1,7 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
+  const limited = await checkRateLimit(request, 'invitar-socio')
+  if (limited) return limited
+
   const { nombre, apellido, email, numero_socio, categoria, club_id } = await request.json()
 
   const supabase = createClient(

@@ -1,10 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { stripe, CUOTA_AMOUNTS, DELCLUB_FEE_PERCENT } from '@/lib/stripe'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 // POST /api/stripe/create-payment-intent
 // Crea un PaymentIntent con el split automático: 98% al club, 2% a DelClub.
 export async function POST(request: Request) {
+  const limited = await checkRateLimit(request, 'stripe/create-payment-intent')
+  if (limited) return limited
+
   const { socio_id } = await request.json()
 
   if (!socio_id) {

@@ -1,11 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 // POST /api/stripe/onboard-club
 // Crea una cuenta Stripe Express para el club y devuelve el link de onboarding.
 // El admin del club accede a este link una sola vez para conectar su cuenta bancaria.
 export async function POST(request: Request) {
+  const limited = await checkRateLimit(request, 'stripe/onboard-club')
+  if (limited) return limited
+
   const { club_id } = await request.json()
 
   if (!club_id) {
