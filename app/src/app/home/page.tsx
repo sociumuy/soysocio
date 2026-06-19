@@ -125,10 +125,10 @@ export default function HomePage() {
       <div className="relative bg-[#0D0D0D] px-5 pt-16 pb-8 overflow-hidden">
         <GrainOverlay opacity={0.05} />
 
-        {/* Radial glow ó top right */}
+        {/* Radial glow ‚Äî top right */}
         <div className="pointer-events-none absolute top-0 right-0 w-80 h-80 opacity-[0.14]"
           style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.8) 0%, transparent 65%)', transform: 'translate(40%,-40%)' }} />
-        {/* Radial glow ó top left, dimmer */}
+        {/* Radial glow ‚Äî top left, dimmer */}
         <div className="pointer-events-none absolute top-0 left-0 w-56 h-56 opacity-[0.07]"
           style={{ background: 'radial-gradient(circle, rgba(var(--club-primary-rgb),0.6) 0%, transparent 70%)', transform: 'translate(-40%,-40%)' }} />
 
@@ -153,7 +153,7 @@ export default function HomePage() {
 
           {/* App mark + Club info */}
           <div className="flex items-center gap-3">
-            {/* DelClub "dc" ó app identity mark */}
+            {/* DelClub "dc" ‚Äî app identity mark */}
             <span className="flex-shrink-0" style={{
               fontFamily: 'var(--font-display)',
               fontSize: '26px',
@@ -187,19 +187,19 @@ export default function HomePage() {
               }}>
                 {clubNombre}
               </span>
-              {/* EN LÕNEA ó en la misma lÌnea */}
+              {/* EN L√çNEA ‚Äî en la misma l√≠nea */}
               <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-65"
                   style={{ animation: 'ping-ring 1.4s cubic-bezier(0,0,0.2,1) infinite' }} />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
               </span>
               <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.15em', color: 'rgba(52,211,153,0.8)', textTransform: 'uppercase' }}>
-                En lÌnea
+                En l√≠nea
               </span>
             </div>
           </div>
 
-          {/* Salir ó ghost with gradient border */}
+          {/* Salir ‚Äî ghost with gradient border */}
           <button onClick={async () => { await supabase.auth.signOut(); router.push('/') }}
             className="relative overflow-hidden text-white/25 hover:text-white/60 transition-colors text-xs px-3 py-1.5 rounded-lg">
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
@@ -231,7 +231,7 @@ export default function HomePage() {
             {socio?.nombre ?? 'Socio'}
           </motion.h1>
 
-          {/* ACTIVO badge ó rectangular outline */}
+          {/* ACTIVO badge ‚Äî rectangular outline */}
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -247,8 +247,8 @@ export default function HomePage() {
             <span className="text-[var(--club-primary)] text-[10px] font-bold tracking-widest uppercase">
               {socio?.categoria ?? 'Socio'}
             </span>
-            <span className="text-white/15 text-[10px]">∑</span>
-            <span className="text-white/35 text-[10px] font-mono">N∞ {socio?.numero_socio ?? 'ó'}</span>
+            <span className="text-white/15 text-[10px]">¬∑</span>
+            <span className="text-white/35 text-[10px] font-mono">N¬∞ {socio?.numero_socio ?? '‚Äî'}</span>
           </motion.div>
         </div>
 
@@ -289,14 +289,14 @@ export default function HomePage() {
               style={{ borderRadius: '16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
               transition={{ layout: { duration: 0.4, ease } }}
             >
-              {/* LÌnea superior de color */}
+              {/* L√≠nea superior de color */}
               <div style={{ height: '2px', background: socio?.cuota_al_dia ? 'var(--club-primary)' : '#e53e3e' }} />
 
               <div className="px-4 py-4 flex items-center justify-between gap-4">
                 {/* Izquierda: label + monto */}
                 <div>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', display: 'block', marginBottom: '6px' }}>
-                    {socios.length > 1 ? `Cuota ∑ ${socio?.nombre}` : 'Mi cuota'}
+                    {socios.length > 1 ? `Cuota ¬∑ ${socio?.nombre}` : 'Mi cuota'}
                   </span>
                   <div className="flex items-baseline gap-1">
                     <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.18)', fontWeight: 500 }}>$</span>
@@ -307,13 +307,13 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Derecha: estado + acciÛn */}
+                {/* Derecha: estado + acci√≥n */}
                 <div className="flex flex-col items-end gap-2.5">
                   <span style={{
                     fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.04em',
                     color: socio?.cuota_al_dia ? 'var(--club-primary)' : '#fc8181',
                   }}>
-                    {socio?.cuota_al_dia ? 'Al dÌa' : 'Pendiente'}
+                    {socio?.cuota_al_dia ? 'Al d√≠a' : 'Pendiente'}
                   </span>
                   <button
                     onClick={(e) => { e?.stopPropagation(); router.push('/cuota') }}
@@ -338,7 +338,7 @@ export default function HomePage() {
                     <div className="h-px mx-4" style={{ background: 'rgba(255,255,255,0.06)' }} />
                     <div className="px-4 py-4">
                       <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '12px' }}>
-                        ⁄ltimos 3 meses
+                        √öltimos 3 meses
                       </p>
                       {[
                         { mes: 'Junio 2026', estado: socio?.cuota_al_dia },
@@ -367,13 +367,13 @@ export default function HomePage() {
               const minutoActual = ahora.getHours() * 60 + ahora.getMinutes()
 
               type Act = { hora: string; min: number; nombre: string; tag: string }
-              const GYM_M: Act  = { hora: '08:00', min: 480,  nombre: 'Gym ∑ Sala',    tag: 'Fitness' }
+              const GYM_M: Act  = { hora: '08:00', min: 480,  nombre: 'Gym ¬∑ Sala',    tag: 'Fitness' }
               const FUNC: Act   = { hora: '08:15', min: 495,  nombre: 'Funcional',      tag: 'Fitness' }
               const ZUMBA: Act  = { hora: '08:30', min: 510,  nombre: 'Zumba',          tag: 'Fitness' }
               const YOGA: Act   = { hora: '08:30', min: 510,  nombre: 'Yoga',           tag: 'Fitness' }
               const PILATES: Act= { hora: '09:30', min: 570,  nombre: 'Pilates',        tag: 'Fitness' }
               const FUNC2: Act  = { hora: '09:30', min: 570,  nombre: 'Funcional',      tag: 'Fitness' }
-              const GYM_T: Act  = { hora: '16:00', min: 960,  nombre: 'Gym ∑ Sala',    tag: 'Fitness' }
+              const GYM_T: Act  = { hora: '16:00', min: 960,  nombre: 'Gym ¬∑ Sala',    tag: 'Fitness' }
               const HOCKEY: Act = { hora: '18:00', min: 1080, nombre: 'Hockey Mamis',   tag: 'Hockey'  }
 
               const semana: Record<number, Act[]> = {
@@ -440,7 +440,7 @@ export default function HomePage() {
                               textTransform: 'uppercase',
                               color: esActual ? 'rgba(var(--club-primary-rgb),0.65)' : 'rgba(255,255,255,0.15)',
                             }}>
-                              {esActual ? 'En curso' : esProximo ? 'PrÛximo' : a.tag}
+                              {esActual ? 'En curso' : esProximo ? 'Pr√≥ximo' : a.tag}
                             </span>
                           </div>
                         )
@@ -467,9 +467,9 @@ export default function HomePage() {
             </div>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
               {[
-                { titulo: 'Convocatoria Rugby Primera ó Pretemporada 2026', fecha: 'Jun 2026', tag: 'Rugby' },
+                { titulo: 'Convocatoria Rugby Primera ‚Äî Pretemporada 2026', fecha: 'Jun 2026', tag: 'Rugby' },
                 { titulo: 'Hockey Mamis: horarios de temporada confirmados', fecha: 'May 2026', tag: 'Hockey' },
-                { titulo: 'Copa Lobos Infantil de F˙tbol ó °Inscribite!', fecha: 'May 2026', tag: 'F˙tbol' },
+                { titulo: 'Copa Lobos Infantil de F√∫tbol ‚Äî ¬°Inscribite!', fecha: 'May 2026', tag: 'F√∫tbol' },
               ].map((n, i) => (
                 <motion.button key={i}
                   onClick={() => router.push('/novedades')}
@@ -496,7 +496,7 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* -- PrÛximo partido -- */}
+          {/* -- Pr√≥ximo partido -- */}
           <motion.div variants={stagger.item}>
             <motion.div
               whileTap={{ scale: 0.98 }}
@@ -516,7 +516,7 @@ export default function HomePage() {
                   const hoy = new Date(); hoy.setHours(0,0,0,0)
                   const partido = new Date('2026-06-14')
                   const diff = Math.round((partido.getTime() - hoy.getTime()) / 86400000)
-                  const label = diff > 1 ? `Faltan ${diff} dÌas` : diff === 1 ? 'MaÒana' : diff === 0 ? 'Hoy' : null
+                  const label = diff > 1 ? `Faltan ${diff} d√≠as` : diff === 1 ? 'Ma√±ana' : diff === 0 ? 'Hoy' : null
                   return (
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-1.5">
@@ -524,7 +524,7 @@ export default function HomePage() {
                           <ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)" />
                           <line x1="12" y1="4" x2="12" y2="20" />
                         </svg>
-                        <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">PrÛximo Partido ∑ Rugby Primera</span>
+                        <span className="text-white/40 text-[9px] font-bold uppercase tracking-[3px]">Pr√≥ximo Partido ¬∑ Rugby Primera</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {label && (
