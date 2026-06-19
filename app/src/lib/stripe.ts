@@ -1,8 +1,14 @@
 import Stripe from 'stripe'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  typescript: true,
-})
+let _stripe: Stripe | null = null
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) throw new Error('STRIPE_SECRET_KEY not set')
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { typescript: true })
+  }
+  return _stripe
+}
+export const stripe = { get paymentIntents() { return getStripe().paymentIntents }, get accounts() { return getStripe().accounts }, get accountLinks() { return getStripe().accountLinks }, get webhooks() { return getStripe().webhooks } }
 
 // Cuota amounts in UYU centésimos (×100 for Stripe)
 export const CUOTA_AMOUNTS: Record<string, number> = {
