@@ -18,7 +18,7 @@ interface MpInstance {
   cardForm: (config: MpCardFormConfig) => MpCardForm
 }
 interface MpCardForm {
-  getCardFormData: () => { token: string; installments: string; payment_method_id: string; issuerId: string }
+  getCardFormData: () => { token: string; installments: string; paymentMethodId: string; issuerId: string }
   unmount: () => void
 }
 interface MpCardFormConfig {
@@ -115,14 +115,14 @@ function MpCardForm({
             setLoading(true)
             setError(null)
 
-            const { token, installments, payment_method_id, issuerId } =
+            const { token, installments, paymentMethodId, issuerId } =
               cardFormRef.current.getCardFormData()
 
             try {
               const res  = await fetch('/api/mp/create-payment', {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({ socio_id: socioId, token, installments, payment_method_id, issuer_id: issuerId, email }),
+                body:    JSON.stringify({ socio_id: socioId, token, installments, payment_method_id: paymentMethodId, issuer_id: issuerId, email }),
               })
               const data = await res.json()
               if (!res.ok) throw new Error(data.error ?? 'Pago rechazado')
