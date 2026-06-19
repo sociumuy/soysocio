@@ -322,7 +322,7 @@ export default function CuotaPage() {
       const { data } = await supabase
         .from('socios')
         .select('id, nombre, apellido, numero_socio, categoria, cuota_al_dia')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .single()
       setSocio(data)
       setLoading(false)

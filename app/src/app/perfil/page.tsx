@@ -43,7 +43,7 @@ export default function PerfilPage() {
     async function cargar() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
-      const { data } = await supabase.from('socios').select('*').eq('id', user.id).single()
+      const { data } = await supabase.from('socios').select('*').eq('user_id', user.id).single()
       setSocio(data)
       if (data?.foto_url) {
         const { data: url } = supabase.storage.from('avatars').getPublicUrl(data.foto_url)
@@ -64,7 +64,7 @@ export default function PerfilPage() {
     const path = `${user.id}/avatar.${ext}`
     const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
     if (!error) {
-      await supabase.from('socios').update({ foto_url: path }).eq('id', user.id)
+      await supabase.from('socios').update({ foto_url: path }).eq('user_id', user.id)
       const { data: url } = supabase.storage.from('avatars').getPublicUrl(path)
       setFotoUrl(url.publicUrl)
     }

@@ -47,7 +47,8 @@ export async function POST(request: Request) {
   })
 
   if (socioError) {
-    return NextResponse.json({ error: socioError.message }, { status: 400 })
+    console.error('invitar-socio error:', JSON.stringify(socioError))
+    return NextResponse.json({ error: socioError.message, code: socioError.code }, { status: 400 })
   }
 
   const yaExistia = !!inviteError
