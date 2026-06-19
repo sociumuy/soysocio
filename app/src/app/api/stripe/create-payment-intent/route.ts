@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Socio no encontrado' }, { status: 404 })
   }
 
-  const club = socio.clubes as { stripe_account_id: string | null; nombre: string } | null
+  const club = socio.clubes as unknown as { stripe_account_id: string | null; nombre: string } | null
 
   if (!club?.stripe_account_id) {
     return NextResponse.json(
