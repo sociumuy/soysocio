@@ -19,11 +19,15 @@ export async function POST(request: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  const { data: socio } = await supabase
+  const { data: socio, error: socioError } = await supabase
     .from('socios')
-    .select('id, categoria, club_id, nombre, apellido')
+    .select('id, categoria, nombre, apellido')
     .eq('id', socio_id)
     .single()
+
+  if (socioError) {
+    console.error('Supabase error:', socioError)
+  }
 
   if (!socio) {
     return NextResponse.json({ error: 'Socio no encontrado' }, { status: 404 })
@@ -43,7 +47,7 @@ export async function POST(request: Request) {
       payment_method_id,
       issuer_id:          issuer_id ? Number(issuer_id) : undefined,
       payer:              { email: email ?? 'socio@delclub.app' },
-      metadata:           { socio_id: socio.id, club_id: socio.club_id },
+      metadata:           { socio_id: socio.id },
     },
   })
 
@@ -52,7 +56,6 @@ export async function POST(request: Request) {
       supabase.from('socios').update({ cuota_al_dia: true }).eq('id', socio_id),
       supabase.from('pagos').insert({
         socio_id,
-        club_id:       socio.club_id,
         monto:         amount,
         moneda:        'UYU',
         mp_payment_id: String(result.id),
