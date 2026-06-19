@@ -193,12 +193,8 @@ function MpCardForm({
           <input id="mp-cardholderName" type="text" style={inputStyle} />
         </div>
 
-        <div>
-          <label style={labelStyle}>Cuotas</label>
-          <select id="mp-installments" style={selectStyle} />
-        </div>
-
-        {/* Campos requeridos por MP SDK, ocultos */}
+        {/* Campos requeridos por MP SDK, ocultos visualmente */}
+        <select id="mp-installments" style={{ display: 'none' }} />
         <select id="mp-issuer" style={{ display: 'none' }} />
         <select id="mp-identificationType" style={{ display: 'none' }} />
         <input id="mp-identificationNumber" type="text" style={{ display: 'none' }} />
@@ -226,12 +222,18 @@ function MpCardForm({
           }}>
           Cancelar
         </button>
-        <button type="submit" disabled={loading || !mounted}
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => {
+            const form = document.getElementById('form-mp') as HTMLFormElement | null
+            form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+          }}
           style={{
             flex: 2, padding: '12px', borderRadius: '12px',
             fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 700,
             color: '#fff', background: loading ? 'rgba(200,148,10,0.5)' : '#C8940A',
-            opacity: !mounted ? 0.4 : 1, transition: 'background 0.2s',
+            transition: 'background 0.2s',
           }}>
           {loading ? (
             <span className="flex items-center justify-center gap-2">
