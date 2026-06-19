@@ -119,70 +119,26 @@ type Socio = {
   cuota_al_dia: boolean
 }
 
-type ModaloPago = 'transferencia' | 'debito'
+type ModaloPago = 'transferencia' | 'tarjeta'
+
+const RECARGO_TARJETA = 0.05 // 5% — cubre Stripe (~2.9%) + comisión DelClub (2%)
 
 const CUOTAS = [
-  {
-    tipo: 'Mayores +22',
-    transferencia: 3490,
-    debito: 2950,
-    descripcion: 'Acceso completo al club y disciplinas deportivas',
-    destacada: true,
-  },
-  {
-    tipo: 'Cuota Familiar',
-    transferencia: 6590,
-    debito: 6100,
-    descripcion: '2 adultos + 2 menores de 21 años',
-    destacada: true,
-  },
-  {
-    tipo: 'Juveniles -21',
-    transferencia: 2890,
-    debito: 2390,
-    descripcion: 'Socios de 13 a 21 años',
-    destacada: false,
-  },
-  {
-    tipo: 'Infantiles -13',
-    transferencia: 2190,
-    debito: 1890,
-    descripcion: 'Socios menores de 13 años',
-    destacada: false,
-  },
-  {
-    tipo: 'Fitness',
-    transferencia: 2190,
-    debito: 1890,
-    descripcion: 'Gym, Yoga, Dance, Funcional y más',
-    destacada: false,
-  },
-  {
-    tipo: 'Cuota Amigo',
-    transferencia: 890,
-    debito: 790,
-    descripcion: 'Solo actividades sociales, sin deporte',
-    destacada: false,
-    minor: true,
-  },
+  { tipo: 'Mayores +22',   base: 3490, descripcion: 'Acceso completo al club y disciplinas deportivas', destacada: true  },
+  { tipo: 'Cuota Familiar', base: 6590, descripcion: '2 adultos + 2 menores de 21 años',                destacada: true  },
+  { tipo: 'Juveniles -21', base: 2890, descripcion: 'Socios de 13 a 21 años',                           destacada: false },
+  { tipo: 'Infantiles -13', base: 2190, descripcion: 'Socios menores de 13 años',                       destacada: false },
+  { tipo: 'Fitness',        base: 2190, descripcion: 'Gym, Yoga, Dance, Funcional y más',               destacada: false },
+  { tipo: 'Cuota Amigo',   base: 890,  descripcion: 'Solo actividades sociales, sin deporte',           destacada: false, minor: true },
 ]
 
 const PRECIOS_MAP: Record<string, number> = {
   'Infantiles -13': 2190,
-  'Juveniles -21': 2890,
-  'Mayores +22': 3490,
+  'Juveniles -21':  2890,
+  'Mayores +22':    3490,
   'Cuota Familiar': 6590,
-  'Fitness': 2190,
-  'Cuota Amigo': 890,
-}
-
-const PRECIOS_MAP_DEBITO: Record<string, number> = {
-  'Infantiles -13': 1890,
-  'Juveniles -21': 2390,
-  'Mayores +22': 2950,
-  'Cuota Familiar': 6100,
-  'Fitness': 1890,
-  'Cuota Amigo': 790,
+  'Fitness':        2190,
+  'Cuota Amigo':    890,
 }
 
 function formatPrecio(n: number): string {
@@ -190,14 +146,14 @@ function formatPrecio(n: number): string {
 }
 
 function getPrecio(categoria: string, modo: ModaloPago): number {
-  const map = modo === 'transferencia' ? PRECIOS_MAP : PRECIOS_MAP_DEBITO
-  return map[categoria] ?? 3490
+  const base = PRECIOS_MAP[categoria] ?? 3490
+  return modo === 'tarjeta' ? Math.round(base * (1 + RECARGO_TARJETA)) : base
 }
 
 export default function CuotaPage() {
   const [socio, setSocio]           = useState<Socio | null>(null)
   const [loading, setLoading]       = useState(true)
-  const [modo, setModo]             = useState<ModaloPago>('transferencia')
+  const [modo, setModo]             = useState<ModaloPago>('tarjeta')
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [pagoExito, setPagoExito]   = useState(false)
   const [pagoLoading, setPagoLoading] = useState(false)
@@ -252,10 +208,11 @@ export default function CuotaPage() {
     </main>
   )
 
-  const categoria = socio?.categoria ?? 'Mayores +22'
-  const precioSocio = getPrecio(categoria, modo)
-  const precioSocioAlt = getPrecio(categoria, modo === 'transferencia' ? 'debito' : 'transferencia')
-  const ahorro = PRECIOS_MAP[categoria] - PRECIOS_MAP_DEBITO[categoria] || 0
+  const categoria       = socio?.categoria ?? 'Mayores +22'
+  const precioBase      = PRECIOS_MAP[categoria] ?? 3490
+  const precioTarjeta   = Math.round(precioBase * (1 + RECARGO_TARJETA))
+  const precioSocio     = getPrecio(categoria, modo)
+  const recargo         = precioTarjeta - precioBase
 
   return (
     <main className="min-h-screen bg-[#0D0D0D] flex flex-col pb-32">
@@ -347,32 +304,51 @@ export default function CuotaPage() {
             </motion.div>
           )}
 
-          {/* Botón pagar — solo si la cuota está pendiente y no hay form abierto */}
-          {!socio?.cuota_al_dia && !clientSecret && !pagoExito && (
-            <motion.div key="cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          {/* Tarjeta — botón Stripe */}
+          {!socio?.cuota_al_dia && !clientSecret && !pagoExito && modo === 'tarjeta' && (
+            <motion.div key="cta-tarjeta" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {pagoError && (
-                <p style={{
-                  fontFamily: 'var(--font-body)', fontSize: '12px', color: '#f87171',
-                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)',
-                  borderRadius: '10px', padding: '10px 14px', marginBottom: '10px',
-                }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: '#f87171', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: '10px', padding: '10px 14px', marginBottom: '10px' }}>
                   {pagoError}
                 </p>
               )}
               <button onClick={handleIniciarPago} disabled={pagoLoading}
-                style={{
-                  width: '100%', padding: '14px', borderRadius: '14px',
-                  fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700,
-                  color: '#fff', background: '#C8940A',
-                  opacity: pagoLoading ? 0.6 : 1, transition: 'opacity 0.2s',
-                }}>
+                style={{ width: '100%', padding: '14px', borderRadius: '14px', fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#C8940A', opacity: pagoLoading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
                 {pagoLoading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Preparando pago...
                   </span>
-                ) : `Pagar cuota — $U ${formatPrecio(precioSocio)}`}
+                ) : `Pagar con tarjeta — $U ${formatPrecio(precioSocio)}`}
               </button>
+            </motion.div>
+          )}
+
+          {/* Transferencia — instrucciones bancarias */}
+          {!socio?.cuota_al_dia && !pagoExito && modo === 'transferencia' && (
+            <motion.div key="cta-transferencia"
+              initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '18px' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '14px' }}>
+                Datos para transferir
+              </p>
+              <div className="flex flex-col gap-3">
+                {[
+                  { label: 'Banco',    valor: 'Banco República (BROU)' },
+                  { label: 'Titular',  valor: 'Lobos Rugby Club' },
+                  { label: 'Cuenta',   valor: '001234567-00001' },
+                  { label: 'Monto',    valor: `$U ${formatPrecio(precioBase)}` },
+                  { label: 'Concepto', valor: `Cuota ${socio?.nombre ?? ''} ${socio?.apellido ?? ''} — ${new Date().toLocaleDateString('es-UY', { month: 'long', year: 'numeric' })}` },
+                ].map(({ label, valor }) => (
+                  <div key={label} className="flex justify-between items-start gap-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px' }}>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.30)', flexShrink: 0 }}>{label}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#fff', textAlign: 'right' }}>{valor}</span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.30)', marginTop: '14px', lineHeight: 1.5 }}>
+                Una vez realizada la transferencia, el administrador del club confirmará el pago en un plazo de 24–48hs hábiles.
+              </p>
             </motion.div>
           )}
 
@@ -389,14 +365,14 @@ export default function CuotaPage() {
           </p>
         </div>
 
-        {/* ── Toggle Transferencia / Débito ── */}
+        {/* ── Toggle Transferencia / Tarjeta ── */}
         <div>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '10px' }}>
             Modalidad de pago
           </p>
           <div className="flex rounded-xl p-1" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}>
-            {(['transferencia', 'debito'] as ModaloPago[]).map((m) => (
-              <button key={m} onClick={() => setModo(m)}
+            {(['tarjeta', 'transferencia'] as ModaloPago[]).map((m) => (
+              <button key={m} onClick={() => { setModo(m); setClientSecret(null) }}
                 className="flex-1 relative py-2.5 rounded-lg transition-all active:opacity-80"
                 style={{ zIndex: 1 }}>
                 {modo === m && (
@@ -407,20 +383,20 @@ export default function CuotaPage() {
                 <span style={{
                   fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
                   color: modo === m ? '#fff' : 'rgba(255,255,255,0.35)',
-                  position: 'relative', zIndex: 2,
+                  position: 'relative', zIndex: 2, display: 'block',
                 }}>
-                  {m === 'transferencia' ? 'Transferencia' : 'Débito automático'}
+                  {m === 'tarjeta' ? 'Tarjeta online' : 'Transferencia'}
                 </span>
-                {m === 'debito' && (
-                  <span style={{
-                    display: 'block', position: 'relative', zIndex: 2,
-                    fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
-                    color: modo === 'debito' ? '#4ade80' : 'rgba(74,222,128,0.45)',
-                    letterSpacing: '0.05em',
-                  }}>
-                    más barato
-                  </span>
-                )}
+                <span style={{
+                  display: 'block', position: 'relative', zIndex: 2,
+                  fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  color: m === 'transferencia'
+                    ? (modo === 'transferencia' ? '#4ade80' : 'rgba(74,222,128,0.45)')
+                    : (modo === 'tarjeta' ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)'),
+                }}>
+                  {m === 'transferencia' ? 'sin recargo' : `+5% ($U ${formatPrecio(recargo)})`}
+                </span>
               </button>
             ))}
           </div>
@@ -429,23 +405,14 @@ export default function CuotaPage() {
         {/* ── Cards de cuotas ── */}
         <div className="flex flex-col gap-2">
           {CUOTAS.map((c) => {
-            const precio = modo === 'transferencia' ? c.transferencia : c.debito
-            const diferencia = c.transferencia - c.debito
-            const esMiCuota = c.tipo === categoria
+            const precioBase    = c.base
+            const precioMostrar = modo === 'tarjeta' ? Math.round(c.base * (1 + RECARGO_TARJETA)) : c.base
+            const esMiCuota     = c.tipo === categoria
             return (
-              <motion.div key={c.tipo}
-                layout
+              <motion.div key={c.tipo} layout
                 style={{
-                  background: esMiCuota
-                    ? `rgba(var(--club-primary-rgb),0.12)`
-                    : c.destacada
-                      ? 'rgba(255,255,255,0.055)'
-                      : 'rgba(255,255,255,0.03)',
-                  border: esMiCuota
-                    ? '1px solid rgba(var(--club-primary-rgb),0.35)'
-                    : c.destacada
-                      ? '1px solid rgba(255,255,255,0.07)'
-                      : '1px solid rgba(255,255,255,0.04)',
+                  background: esMiCuota ? 'rgba(var(--club-primary-rgb),0.12)' : c.destacada ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.03)',
+                  border: esMiCuota ? '1px solid rgba(var(--club-primary-rgb),0.35)' : c.destacada ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(255,255,255,0.04)',
                   borderRadius: '14px',
                   padding: c.minor ? '12px 16px' : '14px 16px',
                   opacity: c.minor ? 0.75 : 1,
@@ -453,21 +420,11 @@ export default function CuotaPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: c.minor ? '12px' : '14px',
-                        fontWeight: 700,
-                        color: esMiCuota ? 'var(--club-primary)' : '#fff',
-                      }}>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: c.minor ? '12px' : '14px', fontWeight: 700, color: esMiCuota ? 'var(--club-primary)' : '#fff' }}>
                         {c.tipo}
                       </span>
                       {esMiCuota && (
-                        <span style={{
-                          fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
-                          color: 'var(--club-primary)', letterSpacing: '0.08em',
-                          background: 'rgba(var(--club-primary-rgb),0.15)',
-                          padding: '1px 6px', borderRadius: '99px',
-                        }}>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700, color: 'var(--club-primary)', letterSpacing: '0.08em', background: 'rgba(var(--club-primary-rgb),0.15)', padding: '1px 6px', borderRadius: '99px' }}>
                           TU CUOTA
                         </span>
                       )}
@@ -481,23 +438,13 @@ export default function CuotaPage() {
                       <motion.span key={`${c.tipo}-${modo}`}
                         initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.18 }}
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: c.minor ? '16px' : '20px',
-                          fontWeight: 700,
-                          color: esMiCuota ? 'var(--club-primary)' : '#fff',
-                          letterSpacing: '-0.02em',
-                          lineHeight: 1,
-                        }}>
-                        ${formatPrecio(precio)}
+                        style={{ fontFamily: 'var(--font-body)', fontSize: c.minor ? '16px' : '20px', fontWeight: 700, color: esMiCuota ? 'var(--club-primary)' : '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                        ${formatPrecio(precioMostrar)}
                       </motion.span>
                     </AnimatePresence>
-                    {modo === 'debito' && diferencia > 0 && (
-                      <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                        color: '#4ade80',
-                      }}>
-                        −${diferencia}
+                    {modo === 'tarjeta' && (
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.25)' }}>
+                        base ${formatPrecio(precioBase)}
                       </span>
                     )}
                   </div>

@@ -40,7 +40,10 @@ export async function POST(request: Request) {
     )
   }
 
-  const amount = CUOTA_AMOUNTS[socio.categoria] ?? CUOTA_AMOUNTS['Mayores +22']
+  // El monto base incluye el recargo del 5% que paga el socio al elegir tarjeta.
+  // Esto cubre: ~2.9% Stripe + 2% DelClub commission.
+  const RECARGO = 1.05
+  const amount = Math.round((CUOTA_AMOUNTS[socio.categoria] ?? CUOTA_AMOUNTS['Mayores +22']) * RECARGO)
   const applicationFee = Math.round(amount * DELCLUB_FEE_PERCENT)
 
   const paymentIntent = await stripe.paymentIntents.create({
