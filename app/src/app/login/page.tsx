@@ -19,6 +19,7 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState<string | null>(null)
+  const [aceptado, setAceptado] = useState(false)
 
   const router   = useRouter()
   const supabase = createClient()
@@ -229,10 +230,40 @@ function LoginForm() {
               </motion.p>
             )}
 
+            {/* Checkbox T&C */}
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <div
+                onClick={() => setAceptado(!aceptado)}
+                style={{
+                  width: 18, height: 18, borderRadius: '5px', flexShrink: 0, marginTop: '1px',
+                  background: aceptado ? primary : 'rgba(255,255,255,0.06)',
+                  border: `1.5px solid ${aceptado ? primary : 'rgba(255,255,255,0.15)'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {aceptado && (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </div>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.40)', lineHeight: 1.5 }}>
+                Acepto los{' '}
+                <a href="/terminos" target="_blank" style={{ color: primary, textDecoration: 'underline' }}>
+                  Términos y Condiciones
+                </a>
+                {' '}y la{' '}
+                <a href="/privacidad" target="_blank" style={{ color: primary, textDecoration: 'underline' }}>
+                  Política de Privacidad
+                </a>
+              </span>
+            </label>
+
             {/* Botón flat premium */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !aceptado}
               className="w-full mt-2 py-3.5 rounded-xl text-sm font-bold uppercase tracking-[3px] transition-opacity active:opacity-75 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ background: primary, color: '#fff' }}
             >
