@@ -193,11 +193,20 @@ function MpCardForm({
           <input id="mp-cardholderName" type="text" style={inputStyle} />
         </div>
 
-        {/* Campos requeridos por MP SDK, ocultos visualmente */}
+        <div className="flex gap-3">
+          <div style={{ width: '110px', flexShrink: 0 }}>
+            <label style={labelStyle}>Documento</label>
+            <select id="mp-identificationType" style={selectStyle} />
+          </div>
+          <div className="flex-1">
+            <label style={labelStyle}>Número</label>
+            <input id="mp-identificationNumber" type="text" style={inputStyle} placeholder="12345678" />
+          </div>
+        </div>
+
+        {/* Campos ocultos requeridos por MP SDK */}
         <select id="mp-installments" style={{ display: 'none' }} />
         <select id="mp-issuer" style={{ display: 'none' }} />
-        <select id="mp-identificationType" style={{ display: 'none' }} />
-        <input id="mp-identificationNumber" type="text" style={{ display: 'none' }} />
         <input id="mp-cardholderEmail" type="email" defaultValue={email} style={{ display: 'none' }} />
 
       </div>
