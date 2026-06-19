@@ -2,11 +2,113 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import NavBar from '@/components/NavBar'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+
+const STRIPE_APPEARANCE = {
+  theme: 'night' as const,
+  variables: {
+    colorPrimary:    '#C8940A',
+    colorBackground: '#111111',
+    colorText:       '#ffffff',
+    colorDanger:     '#f87171',
+    fontFamily:      'DM Sans, system-ui, sans-serif',
+    borderRadius:    '12px',
+    spacingUnit:     '4px',
+  },
+  rules: {
+    '.Input': {
+      border:     '1px solid rgba(255,255,255,0.10)',
+      background: 'rgba(255,255,255,0.06)',
+    },
+    '.Input:focus': {
+      border:    '1px solid rgba(200,148,10,0.55)',
+      boxShadow: '0 0 0 3px rgba(200,148,10,0.12)',
+    },
+    '.Label': { color: 'rgba(255,255,255,0.55)', fontSize: '11px' },
+  },
+}
+
+// ── Formulario de pago embebido ──────────────────────────────────────────────
+function PagoForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
+  const stripe   = useStripe()
+  const elements = useElements()
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState<string | null>(null)
+
+  async function handlePagar(e: React.FormEvent) {
+    e.preventDefault()
+    if (!stripe || !elements) return
+
+    setLoading(true)
+    setError(null)
+
+    const { error: stripeError } = await stripe.confirmPayment({
+      elements,
+      redirect: 'if_required',
+    })
+
+    if (stripeError) {
+      setError(stripeError.message ?? 'Error al procesar el pago')
+      setLoading(false)
+    } else {
+      onSuccess()
+    }
+  }
+
+  return (
+    <form onSubmit={handlePagar} className="flex flex-col gap-4">
+      <PaymentElement />
+
+      {error && (
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: '12px',
+          color: '#f87171', background: 'rgba(239,68,68,0.10)',
+          border: '1px solid rgba(239,68,68,0.18)',
+          borderRadius: '10px', padding: '10px 14px',
+        }}>
+          {error}
+        </p>
+      )}
+
+      <div className="flex gap-3 mt-1">
+        <button type="button" onClick={onCancel}
+          style={{
+            flex: 1, padding: '12px', borderRadius: '12px',
+            fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+            color: 'rgba(255,255,255,0.45)',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}>
+          Cancelar
+        </button>
+        <button type="submit" disabled={loading || !stripe}
+          style={{
+            flex: 2, padding: '12px', borderRadius: '12px',
+            fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 700,
+            color: '#fff',
+            background: loading ? 'rgba(200,148,10,0.5)' : '#C8940A',
+            opacity: !stripe ? 0.4 : 1,
+            transition: 'background 0.2s',
+          }}>
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Procesando...
+            </span>
+          ) : 'Confirmar pago'}
+        </button>
+      </div>
+    </form>
+  )
+}
 
 type Socio = {
   id: string
@@ -93,11 +195,41 @@ function getPrecio(categoria: string, modo: ModaloPago): number {
 }
 
 export default function CuotaPage() {
-  const [socio, setSocio] = useState<Socio | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [modo, setModo] = useState<ModaloPago>('transferencia')
-  const router = useRouter()
+  const [socio, setSocio]           = useState<Socio | null>(null)
+  const [loading, setLoading]       = useState(true)
+  const [modo, setModo]             = useState<ModaloPago>('transferencia')
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const [pagoExito, setPagoExito]   = useState(false)
+  const [pagoLoading, setPagoLoading] = useState(false)
+  const [pagoError, setPagoError]   = useState<string | null>(null)
+  const router  = useRouter()
   const supabase = createClient()
+
+  const handleIniciarPago = useCallback(async () => {
+    if (!socio) return
+    setPagoLoading(true)
+    setPagoError(null)
+    try {
+      const res  = await fetch('/api/stripe/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ socio_id: socio.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Error al iniciar el pago')
+      setClientSecret(data.client_secret)
+    } catch (err: unknown) {
+      setPagoError(err instanceof Error ? err.message : 'Error inesperado')
+    } finally {
+      setPagoLoading(false)
+    }
+  }, [socio])
+
+  const handlePagoExitoso = useCallback(() => {
+    setPagoExito(true)
+    setClientSecret(null)
+    setSocio(prev => prev ? { ...prev, cuota_al_dia: true } : prev)
+  }, [])
 
   useEffect(() => {
     async function cargar() {
@@ -176,6 +308,75 @@ export default function CuotaPage() {
             </div>
           </div>
         </div>
+
+        {/* ── Pago de cuota ── */}
+        <AnimatePresence mode="wait">
+
+          {/* Éxito */}
+          {pagoExito && (
+            <motion.div key="exito"
+              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+              style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.20)', borderRadius: '16px', padding: '20px' }}
+              className="flex items-center gap-4">
+              <div style={{ width: 40, height: 40, borderRadius: '10px', background: 'rgba(74,222,128,0.14)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700, color: '#4ade80' }}>¡Pago confirmado!</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.45)', marginTop: '2px' }}>Tu cuota quedó registrada al día.</p>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Formulario embebido */}
+          {clientSecret && !pagoExito && (
+            <motion.div key="form"
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '20px' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '16px' }}>
+                Datos de pago
+              </p>
+              <Elements stripe={stripePromise} options={{ clientSecret, appearance: STRIPE_APPEARANCE }}>
+                <PagoForm
+                  onSuccess={handlePagoExitoso}
+                  onCancel={() => setClientSecret(null)}
+                />
+              </Elements>
+            </motion.div>
+          )}
+
+          {/* Botón pagar — solo si la cuota está pendiente y no hay form abierto */}
+          {!socio?.cuota_al_dia && !clientSecret && !pagoExito && (
+            <motion.div key="cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {pagoError && (
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '12px', color: '#f87171',
+                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)',
+                  borderRadius: '10px', padding: '10px 14px', marginBottom: '10px',
+                }}>
+                  {pagoError}
+                </p>
+              )}
+              <button onClick={handleIniciarPago} disabled={pagoLoading}
+                style={{
+                  width: '100%', padding: '14px', borderRadius: '14px',
+                  fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700,
+                  color: '#fff', background: '#C8940A',
+                  opacity: pagoLoading ? 0.6 : 1, transition: 'opacity 0.2s',
+                }}>
+                {pagoLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Preparando pago...
+                  </span>
+                ) : `Pagar cuota — $U ${formatPrecio(precioSocio)}`}
+              </button>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
 
         {/* ── Alerta fecha de pago ── */}
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
