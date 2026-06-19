@@ -24,11 +24,21 @@ interface MpCardForm {
 interface MpCardFormConfig {
   amount: string
   iframe: boolean
-  form: Record<string, { id: string; placeholder?: string } | { id: string }>
+  form: {
+    id: string
+    cardNumber:           { id: string; placeholder?: string }
+    expirationDate:       { id: string; placeholder?: string }
+    securityCode:         { id: string; placeholder?: string }
+    cardholderName:       { id: string; placeholder?: string }
+    issuer:               { id: string }
+    installments:         { id: string }
+    identificationType:   { id: string }
+    identificationNumber: { id: string }
+    cardholderEmail:      { id: string }
+  }
   callbacks: {
     onFormMounted?: (err: unknown) => void
     onSubmit: (event: Event) => void
-    onFetching?: (resource: string) => void
   }
 }
 
@@ -83,7 +93,7 @@ function MpCardForm({
         amount: String(amount),
         iframe: true,
         form: {
-          id:                  { id: 'form-mp' },
+          id:                  'form-mp',
           cardNumber:          { id: 'mp-cardNumber',          placeholder: '0000 0000 0000 0000' },
           expirationDate:      { id: 'mp-expirationDate',      placeholder: 'MM/YY' },
           securityCode:        { id: 'mp-securityCode',        placeholder: 'CVV' },
@@ -134,9 +144,9 @@ function MpCardForm({
     init()
     return () => {
       active = false
-      cardFormRef.current?.unmount()
+      try { cardFormRef.current?.unmount() } catch { /* ignore SDK cleanup errors */ }
     }
-  }, [amount, socioId, email, onSuccess])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const inputStyle: React.CSSProperties = {
     width: '100%', background: 'rgba(255,255,255,0.06)',
@@ -160,16 +170,7 @@ function MpCardForm({
 
   return (
     <form id="form-mp" className="flex flex-col gap-3">
-      {/* Skeleton mientras carga el SDK */}
-      {!mounted && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {[1,2,3].map(i => (
-            <div key={i} style={{ height: '42px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', animation: 'pulse 1.5s infinite' }} />
-          ))}
-        </div>
-      )}
-
-      <div style={{ display: mounted ? 'flex' : 'none', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', opacity: mounted ? 1 : 0.4, transition: 'opacity 0.3s' }}>
 
         <div>
           <label style={labelStyle}>Número de tarjeta</label>
